@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include <vector>
+#include "Graph.h"
 
 
 class MainWindow;
@@ -12,17 +13,10 @@ class GraphView : public QMainWindow {
 public:
     explicit GraphView(QWidget* parent = nullptr);
     void paintEvent(QPaintEvent*) override;
-
-    template <typename T>
-    void DrawPlayingObject(QPainter* p, const T& objects) {
-        for (const auto& object : objects) {
-            object.Draw(p);
-        }
-    }
-
-
+    void setGraph(std::unique_ptr<Graph> graph);
 private:
     MainWindow* parent_;
+    std::unique_ptr<Graph> graph_;
 };
 
 

@@ -17,10 +17,12 @@ set(SOURCES
         main.cpp
         MainWindow.cpp MainWindow.h
         Point.h
-        IDrawing.h
-        BasicDrawing.cpp BasicDrawing.h
+        DrawingStrategy.h
+        MinimalisticDrawingStrategy.cpp MinimalisticDrawingStrategy.h
         GraphView.cpp GraphView.h
-        )
+        Graph.h
+        Node.cpp Node.h Edge.cpp Edge.h Graph.cpp)
+
 qt5_wrap_ui(SOURCES mainwindow.ui)
 
 add_executable(Team3 ${SOURCES})

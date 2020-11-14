@@ -4,8 +4,6 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-#include <cstdlib>
-
 #include "MainWindow.h"
 
 GraphView::GraphView(QWidget *parent)
@@ -18,6 +16,12 @@ GraphView::GraphView(QWidget *parent)
 void GraphView::paintEvent(QPaintEvent *) {
     QPainter p;
     p.begin(this);
-    p.drawLine(0, 0, 100, 100);
+    p.drawLine(20, 20, 120, 120);
+    p.drawLine(120, 20, 20, 120);
+    p.drawLine(240, 20, 120, 120);
     p.end();
+}
+
+void GraphView::setGraph(std::unique_ptr<Graph> graph) {
+    graph_ = std::unique_ptr<Graph>(std::move(graph));
 }
