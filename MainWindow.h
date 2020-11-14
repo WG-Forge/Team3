@@ -18,6 +18,7 @@ private:
 private slots:
     void on_load_graph_clicked();
     void on_exit_clicked();
+    void on_styleBox_currentTextChanged(const QString &text);
 };
 
 

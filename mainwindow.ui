@@ -16,7 +16,7 @@
    <string>Graph</string>
   </property>
 
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="centralWidget">
 
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">

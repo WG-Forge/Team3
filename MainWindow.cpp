@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 
 #include <QDebug>
+#include <QFileDialog>
+#include <iostream>
 
 #include "GraphView.h"
 
@@ -16,6 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::on_load_graph_clicked() {
+    QString fileName = QFileDialog::getOpenFileName(
+                                        this,
+                                        tr("Load graph"), "",
+                                        tr("Graph (*.json)"));
+    //std::cout << fileName.toStdString();
     /*graphView_->NewGame(
             static_cast<utils::TextureType>(ui_->background_box->currentIndex()),
             ui_->map_box->currentText());
@@ -24,6 +31,10 @@ void MainWindow::on_load_graph_clicked() {
     ui_->pause->setEnabled(true);
     ui_->pause->setText("Pause");
     ui_->state_label->setText("");*/
+}
+
+void MainWindow::on_styleBox_currentTextChanged(const QString &text) {
+    //std::cout << text.toStdString() << std::endl;
 }
 
 void MainWindow::on_exit_clicked() {
