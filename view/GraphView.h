@@ -4,8 +4,10 @@
 #include <QMainWindow>
 
 #include <vector>
-#include "Graph.h"
-
+#include "../graph/Graph.h"
+#include "../drawing/Circle.h"
+#include "../drawing/Point.h"
+#include "../drawing/Line.h"
 
 class MainWindow;
 
@@ -14,9 +16,11 @@ public:
     explicit GraphView(QWidget* parent = nullptr);
     void paintEvent(QPaintEvent*) override;
     void setGraph(std::unique_ptr<Graph> graph);
+    void setStrategy(std::unique_ptr<DrawingStrategy> strategy);
 private:
     MainWindow* parent_;
     std::unique_ptr<Graph> graph_;
+    std::unique_ptr<DrawingStrategy> strategy_;
 };
 
 

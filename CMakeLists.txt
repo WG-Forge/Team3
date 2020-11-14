@@ -16,12 +16,16 @@ include_directories(
 set(SOURCES
         main.cpp
         MainWindow.cpp MainWindow.h
-        Point.h
-        DrawingStrategy.h
-        MinimalisticDrawingStrategy.cpp MinimalisticDrawingStrategy.h
-        GraphView.cpp GraphView.h
-        Graph.h
-        Node.cpp Node.h Edge.cpp Edge.h Graph.cpp)
+        drawing/Point.h
+        drawing/DrawingStrategy.h
+        drawing/MinimalisticDrawingStrategy.cpp drawing/MinimalisticDrawingStrategy.h
+        view/GraphView.cpp view/GraphView.h
+        graph/Graph.h
+        graph/Node.cpp graph/Node.h
+        graph/Edge.cpp graph/Edge.h
+        graph/Graph.cpp
+        drawing/Shape.cpp drawing/Shape.h
+        drawing/Circle.cpp drawing/Circle.h drawing/Line.cpp drawing/Line.h drawing/DrawingStrategy.cpp)
 
 qt5_wrap_ui(SOURCES mainwindow.ui)
 

@@ -4,7 +4,8 @@
 #include <QMainWindow>
 
 #include "ui_mainwindow.h"
-#include "GraphView.h"
+#include "view/GraphView.h"
+#include "drawing/MinimalisticDrawingStrategy.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -14,7 +15,6 @@ public:
 private:
     std::unique_ptr<Ui::MainWindow> ui_;
     std::unique_ptr<GraphView> graphView_;
-
 private slots:
     void on_load_graph_clicked();
     void on_exit_clicked();
