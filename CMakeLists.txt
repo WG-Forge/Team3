@@ -8,6 +8,12 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_CXX_STANDARD 14)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+include(FindPkgConfig)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(JSONCPP jsoncpp)
+link_libraries(${JSONCPP_LIBRARIES})
+
 
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}
@@ -29,6 +35,7 @@ set(SOURCES
         drawing/Line.cpp drawing/Line.h
         drawing/DrawingStrategy.cpp
         drawing/ClassicalDrawingStrategy.cpp drawing/ClassicalDrawingStrategy.h
+        builder/JSONReader.cpp builder/JSONReader.h
         )
 
 qt5_wrap_ui(SOURCES mainwindow.ui)
@@ -37,3 +44,4 @@ qt5_add_resources(SOURCES resources.qrc)
 add_executable(Team3 ${SOURCES})
 
 target_link_libraries(Team3 Qt5::Widgets)
+target_link_libraries(Team3 ${JSONCPP_LIBRARIES})

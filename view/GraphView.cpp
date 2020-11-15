@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QDebug>
+//#include <iostream>
 
 #include "../MainWindow.h"
 
@@ -25,6 +26,7 @@ void GraphView::paintEvent(QPaintEvent*) {
 }
 
 void GraphView::setGraph(std::unique_ptr<Graph> graph) {
+//    std::cout << "\ni'm in set graph";
     graph_ = std::unique_ptr<Graph>(std::move(graph));
 }
 

@@ -9,6 +9,7 @@
 #include "drawing/Point.h"
 #include "drawing/Line.h"
 #include "drawing/ClassicalDrawingStrategy.h"
+#include "builder/JSONReader.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -25,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::on_load_graph_clicked() {
     QString fileName = QFileDialog::getOpenFileName(
                                         this,
-                                        tr("Load graph"), "",
+                                        tr("Load graph"),
+                                        "../graphsJSON",
                                         tr("Graph (*.json)"));
     //std::cout << fileName.toStdString();
     if (!fileName.isEmpty()) {
@@ -46,7 +48,7 @@ void MainWindow::on_load_graph_clicked() {
         graph->edges[1]->setShape(std::make_unique<Line>(Point(20, 300), Point(150, 300)));
         graph->edges[2]->setShape(std::make_unique<Line>(Point(40, 10), Point(40, 100)));
         graph->edges[3]->setShape(std::make_unique<Line>(Point(400, 400), Point(420, 350)));
-
+        //std::unique_ptr<Graph> graph = JSONReader::readGraph(fileName.toStdString());
         graphView_->setGraph(std::move(graph));
         graphView_->update();
     }
