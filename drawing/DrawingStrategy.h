@@ -7,9 +7,12 @@
 class DrawingStrategy {
 protected:
     QPainter* painter_;
+    QString background_;
 public:
     void setPainter(QPainter* painter);
     void clearPainter();
+    explicit DrawingStrategy(QString background);
+    QString getBackground();
     virtual ~DrawingStrategy() {};
     virtual void drawLine(Point p1, Point p2) = 0;
     virtual void drawCircle(Point center, int r) = 0;
