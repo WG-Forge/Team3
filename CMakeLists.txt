@@ -25,9 +25,14 @@ set(SOURCES
         graph/Edge.cpp graph/Edge.h
         graph/Graph.cpp
         drawing/Shape.cpp drawing/Shape.h
-        drawing/Circle.cpp drawing/Circle.h drawing/Line.cpp drawing/Line.h drawing/DrawingStrategy.cpp)
+        drawing/Circle.cpp drawing/Circle.h
+        drawing/Line.cpp drawing/Line.h
+        drawing/DrawingStrategy.cpp
+        drawing/ClassicalDrawingStrategy.cpp drawing/ClassicalDrawingStrategy.h
+        )
 
 qt5_wrap_ui(SOURCES mainwindow.ui)
+qt5_add_resources(SOURCES resources.qrc)
 
 add_executable(Team3 ${SOURCES})
 

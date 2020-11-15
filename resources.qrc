@@ -1,0 +1,6 @@
+<RCC>
+    <qresource>
+        <file>images/circus.png</file>
+        <file>images/track.png</file>
+    </qresource>
+</RCC>
