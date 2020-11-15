@@ -32,4 +32,5 @@ void GraphView::setGraph(std::unique_ptr<Graph> graph) {
 
 void GraphView::setStrategy(std::unique_ptr<DrawingStrategy> strategy) {
     strategy_ = std::move(strategy);
+    setStyleSheet(strategy_->getBackground());
 }

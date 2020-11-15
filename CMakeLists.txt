@@ -36,7 +36,7 @@ set(SOURCES
         drawing/DrawingStrategy.cpp
         drawing/ClassicalDrawingStrategy.cpp drawing/ClassicalDrawingStrategy.h
         builder/JSONReader.cpp builder/JSONReader.h
-        )
+        drawing/RotationCalculator.cpp drawing/RotationCalculator.h)
 
 qt5_wrap_ui(SOURCES mainwindow.ui)
 qt5_add_resources(SOURCES resources.qrc)
