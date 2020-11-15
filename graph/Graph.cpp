@@ -1,8 +1,11 @@
 #include "Graph.h"
+#include "iostream"
 
 Graph::Graph(int idx, std::string name)
                                     : idx_(idx)
-                                    , name_(name) {}
+                                    , name_(name) {
+//    std::cout << "graph was born\n";
+}
 
 void Graph::addNode(std::shared_ptr<Node> node) {
     nodes.push_back(std::shared_ptr<Node>(node));
@@ -20,3 +23,7 @@ void Graph::draw(DrawingStrategy* strategy) {
         edge->draw(strategy);
     }
 }
+
+//Graph::~Graph() {
+//    std::cout << "graph was died\n";
+//}
