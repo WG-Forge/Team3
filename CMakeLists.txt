@@ -25,11 +25,16 @@ set(SOURCES
         graph/Edge.cpp graph/Edge.h
         graph/Graph.cpp
         drawing/Shape.cpp drawing/Shape.h
-        drawing/Circle.cpp drawing/Circle.h drawing/Line.cpp drawing/Line.h drawing/DrawingStrategy.cpp
         libraries/dist/json/json.h libraries/dist/json/json-forwards.h libraries/dist/jsoncpp.cpp
-        builder/JSONReader.cpp builder/JSONReader.h)
+        drawing/Circle.cpp drawing/Circle.h
+        drawing/Line.cpp drawing/Line.h
+        drawing/DrawingStrategy.cpp
+        drawing/ClassicalDrawingStrategy.cpp drawing/ClassicalDrawingStrategy.h
+        builder/JSONReader.cpp builder/JSONReader.h
+        drawing/RotationCalculator.cpp drawing/RotationCalculator.h)
 
 qt5_wrap_ui(SOURCES mainwindow.ui)
+qt5_add_resources(SOURCES resources.qrc)
 
 add_executable(Team3 ${SOURCES})
 
