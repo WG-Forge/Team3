@@ -2,7 +2,7 @@
 
 
 ClassicalDrawingStrategy::ClassicalDrawingStrategy()
-        : DrawingStrategy("background-image:url(:/images/background-space.jpg);")
+        : DrawingStrategy("background-image:url(:/resources/images/background-space.jpg);")
         , r_(std::make_unique<RotationCalculator>())
         , railwayWidth_(2)
         , penColor_ (Qt::red) {}
@@ -23,7 +23,7 @@ void ClassicalDrawingStrategy::drawLine(Point p1, Point p2) {
 void ClassicalDrawingStrategy::drawCircle(Point center, int r) {
     painter_->drawPixmap(
             center.x-r, center.y-r, 2*r, 2*r,
-            QPixmap((":/images/circus.png"))
+            QPixmap((":/resources/images/circus.png"))
             );
 }
 

@@ -3,7 +3,7 @@
 
 //#include <jsoncpp/json/json.h>
 #include "../graph/Graph.h"
-#include "../libraries/dist/json/json.h"
+#include "../../libraries/dist/json/json.h"
 
 
 class JSONReader {
