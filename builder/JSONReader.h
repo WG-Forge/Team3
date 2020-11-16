@@ -1,8 +1,9 @@
 #ifndef TEAM3_JSONREADER_H
 #define TEAM3_JSONREADER_H
 
-#include <jsoncpp/json/json.h>
+//#include <jsoncpp/json/json.h>
 #include "../graph/Graph.h"
+#include "../libraries/dist/json/json.h"
 
 
 class JSONReader {
