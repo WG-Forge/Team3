@@ -42,6 +42,5 @@ std::unique_ptr<Graph> JSONReader::readGraph(const std::string& fileName) {
     }
 
 //    std::cout << "after edges\n" << graph->nodes[1]->idx_;
-//    return std::move(std::make_unique<Graph>(graph));
     return std::move(graph);
 }
