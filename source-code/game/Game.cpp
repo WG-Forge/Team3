@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../drawing/Point.h"
+#include "../builder/JSONReader.h"
 
 Game::Game(std::unique_ptr<Configuration> config)
                         : config_(std::unique_ptr<Configuration>(std::move(config)))
@@ -20,11 +21,13 @@ Game::Game(std::unique_ptr<Configuration> config)
 
     graph_->nodes[0]->setPosition(std::make_unique<Point>(50, 50));
     graph_->nodes[1]->setPosition(std::make_unique<Point>(100, 100));
-    //std::unique_ptr<Graph> graph = JSONReader::readGraph(fileName.toStdString());
-
+    std::unique_ptr<Graph> graph = JSONReader::readGraph(
+            "/Users/apple/Documents/Wargaming/Team3/graphsJSON/small_graph.json");
 }
 
 Game& Game::launchGame() {
+    camera_ = std::make_unique<sf::View>(sf::FloatRect(0,0, config_->width, config_->height));
+    camera_->zoom(1);
     window_->create(sf::VideoMode(config_->width, config_->height), config_->title);
     window_->setFramerateLimit(config_->framerateLimit);
 
@@ -37,6 +40,7 @@ Game& Game::launchGame() {
             }
         }
         window_->clear(sf::Color::White);
+        window_->setView(*camera_);
         renderer_->render(graph_.get());
         window_->display();
     }

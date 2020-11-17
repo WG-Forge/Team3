@@ -15,6 +15,7 @@ private:
     std::unique_ptr<sf::RenderWindow> window_;
     std::unique_ptr<Graph> graph_;
     std::unique_ptr<Renderer> renderer_;
+    std::unique_ptr<sf::View> camera_;
 public:
     Game(std::unique_ptr<Configuration> config);
     Game& launchGame();
