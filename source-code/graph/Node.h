@@ -1,19 +1,18 @@
 #ifndef TEAM3_NODE_H
 #define TEAM3_NODE_H
 
-
-#include "../drawing/Shape.h"
+#include <memory>
+#include "../drawing/Point.h"
 
 class Node {
 private:
-
     int post_idx_;
-    std::unique_ptr<Shape> shape_;
+    std::unique_ptr<Point> position_;
 public:
     int idx_;
     Node(int idx, int post_idx);
-    void setShape(std::unique_ptr<Shape> shape);
-    void draw(DrawingStrategy* strategy);
+    void setPosition(std::unique_ptr<Point> position);
+    Point getPosition() const;
 };
 
 

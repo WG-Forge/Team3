@@ -1,10 +1,15 @@
-#include <QApplication>
+#include <SFML/Graphics.hpp>
+#include <time.h>
+#include <string>
 
-#include "MainWindow.h"
+#include "game/Game.h"
 
-int main(int argc, char **argv) {
-    QApplication app(argc, argv);
-    MainWindow w;
-    w.show();
-    return QApplication::exec();
+using namespace sf;
+
+int main() {
+    srand(time(0));
+
+    Game game (std::make_unique<Configuration>(600, 480, 60, "Graph"));
+    game.launchGame();
+    return 0;
 }

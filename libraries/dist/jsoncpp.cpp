@@ -1019,7 +1019,7 @@ String Reader::getLocationLineAndColumn(Location location) const {
   int line, column;
   getLocationLineAndColumn(location, line, column);
   char buffer[18 + 16 + 16 + 1];
-  jsoncpp_snprintf(buffer, sizeof(buffer), "Line %d, Column %d", line, column);
+  jsoncpp_snprintf(buffer, sizeof(buffer), "Rails %d, Column %d", line, column);
   return buffer;
 }
 
@@ -2066,7 +2066,7 @@ String OurReader::getLocationLineAndColumn(Location location) const {
   int line, column;
   getLocationLineAndColumn(location, line, column);
   char buffer[18 + 16 + 16 + 1];
-  jsoncpp_snprintf(buffer, sizeof(buffer), "Line %d, Column %d", line, column);
+  jsoncpp_snprintf(buffer, sizeof(buffer), "Rails %d, Column %d", line, column);
   return buffer;
 }
 

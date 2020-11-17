@@ -24,21 +24,21 @@ std::unique_ptr<Graph> JSONReader::readGraph(const std::string& fileName) {
         throw std::invalid_argument("error");
     }
 
-    std::map<int, std::shared_ptr<Node>> nodes;
+    std::map<int, std::unique_ptr<Node>> nodes;
     std::unique_ptr<Graph> graph(new Graph(root["idx"].asInt(), root["name"].asString()));
 
-    for (auto point : root["points"]){
+    for (auto point : root["points"]) {
         int idx = point["idx"].asInt(), post_idx = point["post_idx"].asInt();
-        nodes[idx] = std::make_shared<Node>(idx, post_idx);
-        graph->addNode(nodes[idx]);
+        nodes[idx] = std::make_unique<Node>(idx, post_idx);
+        graph->addNode(std::move(nodes[idx]));
     }
 
 //    std::cout << "after nodes\n";
     for(auto line : root["lines"]){
         graph->addEdge(std::make_unique<Edge>(line["idx"].asInt(),
                                              line["length"].asInt(),
-                                             std::move(nodes[line["points"][0].asInt()]),
-                                             std::move(nodes[line["points"][1].asInt()])));
+                                             nodes[line["points"][0].asInt()].get(),
+                                             nodes[line["points"][1].asInt()].get()));
     }
 
 //    std::cout << "after edges\n" << graph->nodes[1]->idx_;
