@@ -4,10 +4,10 @@ Node::Node(int idx, int post_idx)
                             : idx_(idx)
                             , post_idx_(post_idx) {}
 
-void Node::setShape(std::unique_ptr<Shape> shape) {
-    shape_ = std::move(shape);
+void Node::setPosition(std::unique_ptr<Point> position) {
+    position_ = std::move(position);
 }
 
-void Node::draw(DrawingStrategy *strategy) {
-    shape_->draw(strategy);
+Point Node::getPosition() const {
+    return Point(position_.get());
 }
