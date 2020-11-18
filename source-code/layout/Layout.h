@@ -12,7 +12,6 @@
 
 #include <boost/graph/topology.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <boost/graph/circle_layout.hpp>
 #include <boost/graph/random_layout.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/gursoy_atun_layout.hpp>

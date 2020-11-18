@@ -1,0 +1,6 @@
+[requires]
+jsoncpp/1.9.0@theirix/stable
+boost/1.71.0
+
+[generators]
+cmake
