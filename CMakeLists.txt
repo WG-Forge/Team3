@@ -8,13 +8,6 @@ include_directories(source-code)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-find_package(SFML REQUIRED
-        system
-        window
-        graphics
-        network
-        audio)
-
 set(SOURCES
         source-code/main.cpp
         source-code/game/Game.cpp source-code/game/Game.h
@@ -30,12 +23,5 @@ set(SOURCES
         )
 
 add_executable(Team3 ${SOURCES})
-
-target_link_libraries(Team3
-        sfml-graphics
-        sfml-window
-        sfml-system
-        sfml-network
-        sfml-audio)
 
 target_link_libraries(Team3 ${CONAN_LIBS})

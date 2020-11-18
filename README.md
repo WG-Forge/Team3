@@ -18,3 +18,9 @@ C++
 
 В проекте используется менеджер зависимостей [Conan](https://docs.conan.io/en/latest/).
 
+Для корректной подрузки зависимостей надо также добавить [Bincrafters repo](https://bincrafters.github.io)
+
+```
+conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+```
+
