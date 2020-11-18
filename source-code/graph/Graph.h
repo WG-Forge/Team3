@@ -13,7 +13,6 @@ class Graph {
 private:
     int idx_;
     std::string name_;
-    int n_;
 public:
     std::map<int, std::unique_ptr<Node>> nodes;
     std::map<int, std::unique_ptr<Edge>> edges;
