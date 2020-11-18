@@ -19,8 +19,8 @@ Game::Game(std::unique_ptr<Configuration> config)
     graph_->addEdge(std::make_unique<Edge>(4, 5,
                                            graph_->nodes[1].get(), graph_->nodes[2].get()));
 
-    graph_->nodes[1]->setPosition(std::make_unique<Point>(50, 50));
-    graph_->nodes[2]->setPosition(std::make_unique<Point>(100, 100));
+    graph_->nodes[1]->setPosition(Point(50, 50));
+    graph_->nodes[2]->setPosition(Point(100, 100));
     std::unique_ptr<Graph> graph = JSONReader::readGraph(
             "../graphsJSON/small_graph.json");
 }
