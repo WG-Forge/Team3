@@ -30,5 +30,7 @@ conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-co
 conan install ..
 ```
 
-Для получения большей информации перейдите в [Conan getting started](https://docs.conan.io/en/latest/getting_started.html)
+Если вы используете Linux убедитесь, что в файле conan.conf переменная окружения CONAN_SYSREQUIRES_MODE установлена как enabled (и строчка не закомментирована!). Больше информации по ссылке [Environment variables](https://docs.conan.io/en/latest/reference/env_vars.html#conan-sysrequires-mode)
+
+Для получения большей информации о Conan перейдите в [Getting started](https://docs.conan.io/en/latest/getting_started.html)
 
