@@ -8,10 +8,10 @@ class Node {
 private:
     int idx_;
     int post_idx_;
-    std::unique_ptr<Point> position_;
+    Point position_;
 public:
     Node(int idx, int post_idx);
-    void setPosition(std::unique_ptr<Point> position);
+    void setPosition(Point position);
     Point getPosition() const;
     int getId();
 };
