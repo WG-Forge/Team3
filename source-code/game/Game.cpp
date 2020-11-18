@@ -11,18 +11,18 @@ Game::Game(std::unique_ptr<Configuration> config)
     graph_->addNode(std::make_unique<Node>(1, 2));
     graph_->addNode(std::make_unique<Node>(2, 3));
     graph_->addEdge(std::make_unique<Edge>(1, 5,
-                                           graph_->nodes[0].get(), graph_->nodes[1].get()));
+                                           graph_->nodes[1].get(), graph_->nodes[2].get()));
     graph_->addEdge(std::make_unique<Edge>(2, 5,
-                                           graph_->nodes[0].get(), graph_->nodes[1].get()));
+                                           graph_->nodes[1].get(), graph_->nodes[2].get()));
     graph_->addEdge(std::make_unique<Edge>(3, 5,
-                                           graph_->nodes[0].get(), graph_->nodes[1].get()));
+                                           graph_->nodes[1].get(), graph_->nodes[2].get()));
     graph_->addEdge(std::make_unique<Edge>(4, 5,
-                                           graph_->nodes[0].get(), graph_->nodes[1].get()));
+                                           graph_->nodes[1].get(), graph_->nodes[2].get()));
 
-    graph_->nodes[0]->setPosition(std::make_unique<Point>(50, 50));
-    graph_->nodes[1]->setPosition(std::make_unique<Point>(100, 100));
+    graph_->nodes[1]->setPosition(std::make_unique<Point>(50, 50));
+    graph_->nodes[2]->setPosition(std::make_unique<Point>(100, 100));
     std::unique_ptr<Graph> graph = JSONReader::readGraph(
-            "/Users/apple/Documents/Wargaming/Team3/graphsJSON/small_graph.json");
+            "../graphsJSON/small_graph.json");
 }
 
 Game& Game::launchGame() {

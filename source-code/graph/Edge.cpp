@@ -13,3 +13,7 @@ Node *Edge::getFirstNode() {
 Node *Edge::getSecondNode() {
     return secondNode_;
 }
+
+int Edge::getId() {
+    return idx_;
+}

@@ -11,3 +11,7 @@ void Node::setPosition(std::unique_ptr<Point> position) {
 Point Node::getPosition() const {
     return Point(position_.get());
 }
+
+int Node::getId() {
+    return idx_;
+}

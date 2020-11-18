@@ -21,7 +21,7 @@ set(SOURCES
         libraries/dist/json/json.h libraries/dist/json/json-forwards.h libraries/dist/jsoncpp.cpp
         source-code/builder/JSONReader.cpp source-code/builder/JSONReader.h
         source-code/drawing/RotationCalculator.cpp source-code/drawing/RotationCalculator.h
-        source-code/drawing/Renderer.cpp source-code/drawing/Renderer.h source-code/game/Configuration.cpp source-code/game/Configuration.h)
+        source-code/drawing/Renderer.cpp source-code/drawing/Renderer.h source-code/game/Configuration.cpp source-code/game/Configuration.h source-code/graph/City.cpp source-code/graph/City.h source-code/graph/Market.cpp source-code/graph/Market.h source-code/graph/Storage.cpp source-code/graph/Storage.h)
 
 add_executable(Team3 ${SOURCES})
 

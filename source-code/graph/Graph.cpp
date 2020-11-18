@@ -3,16 +3,18 @@
 
 Graph::Graph(int idx, std::string name)
                                     : idx_(idx)
-                                    , name_(name) {
-//    std::cout << "graph was born\n";
-}
+                                    , name_(name) {}
 
 void Graph::addEdge(std::unique_ptr<Edge> edge) {
-    edges.push_back(std::unique_ptr<Edge>(std::move(edge)));
+    Edge* tempEdge = edge.get();
+    adjacencyList[tempEdge->getFirstNode()->getId()].push_back(tempEdge->getSecondNode()->getId());
+    adjacencyList[tempEdge->getSecondNode()->getId()].push_back(tempEdge->getFirstNode()->getId());
+    edges[tempEdge->getId()] = std::unique_ptr<Edge>(std::move(edge));
 }
 
 void Graph::addNode(std::unique_ptr<Node> node) {
-     nodes.push_back(std::unique_ptr<Node>(std::move(node)));
+    Node* tempNode = node.get();
+    nodes[tempNode->getId()] = std::unique_ptr<Node>(std::move(node));
 }
 
 //Graph::~Graph() {

@@ -7,8 +7,8 @@ Renderer::Renderer(sf::RenderWindow *window)
 void Renderer::render(Graph* g) {
 
     for (auto const& edge : g->edges) {
-        Point p1 = Point(edge->getFirstNode()->getPosition());
-        Point p2 = Point(edge->getSecondNode()->getPosition());
+        Point p1 = Point(edge.second->getFirstNode()->getPosition());
+        Point p2 = Point(edge.second->getSecondNode()->getPosition());
         Point upperP1 = rotationCalculator_->calcUpperLineP1(p1, p2, 2);
         Point upperP2 = rotationCalculator_->calcUpperLineP2(p1, p2, 2);
         Point lowerP1 = rotationCalculator_->calcLowerLineP1(p1, p2, 2);
@@ -27,7 +27,7 @@ void Renderer::render(Graph* g) {
     }
     for (auto const& node : g->nodes) {
         sf::CircleShape c(10);
-        c.setPosition(node->getPosition().x-10, node->getPosition().y-10);
+        c.setPosition(node.second->getPosition().x-10, node.second->getPosition().y-10);
         c.setFillColor(sf::Color(200, 200, 150));
         window_->draw(c);
     }

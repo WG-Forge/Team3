@@ -15,6 +15,7 @@ public:
     Edge(int idx, int length, Node* firstNode, Node* secondNode);
     Node* getFirstNode();
     Node* getSecondNode();
+    int getId();
 };
 
 
