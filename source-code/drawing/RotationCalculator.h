@@ -2,7 +2,8 @@
 #define TEAM3_ROTATIONCALCULATOR_H
 
 #include <math.h>
-#include "Point.h"
+
+#include <drawing/Point.h>
 
 class RotationCalculator {
 private:
