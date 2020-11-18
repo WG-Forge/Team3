@@ -16,8 +16,8 @@ void Renderer::render(Graph* g) {
 
         sf::Vertex line[] =
                 {
-                        sf::Vertex(sf::Vector2f(upperP1.x, upperP1.y), sf::Color::Red),
-                        sf::Vertex(sf::Vector2f(upperP2.x, upperP2.y), sf::Color::Red),
+//                        sf::Vertex(sf::Vector2f(upperP1.x, upperP1.y), sf::Color::Red),
+//                        sf::Vertex(sf::Vector2f(upperP2.x, upperP2.y), sf::Color::Red),
                         sf::Vertex(sf::Vector2f(lowerP1.x, lowerP1.y), sf::Color::Red),
                         sf::Vertex(sf::Vector2f(lowerP2.x, lowerP2.y), sf::Color::Red)
                 };
@@ -26,8 +26,8 @@ void Renderer::render(Graph* g) {
         //window_->drawDottedLine(p1.x, p1.y, p2.x, p2.y);
     }
     for (auto const& node : g->nodes) {
-        sf::CircleShape c(10);
-        c.setPosition(node->getPosition().x-10, node->getPosition().y-10);
+        sf::CircleShape c(5);
+        c.setPosition(node->getPosition().x-5, node->getPosition().y-5);
         c.setFillColor(sf::Color(200, 200, 150));
         window_->draw(c);
     }

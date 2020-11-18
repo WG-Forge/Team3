@@ -1,5 +1,7 @@
 #include "RotationCalculator.h"
+
 #include <iostream>
+
 Point RotationCalculator::calcUpperLineP1(Point p1, Point p2, int d) {
     double diag = calcDiagonal(p1, p2);
     int x = p2.x + calcBias(p1.y, p2.y, d, diag);

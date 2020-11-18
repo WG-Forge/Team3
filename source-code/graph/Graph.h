@@ -1,12 +1,13 @@
 #ifndef TEAM3_GRAPH_H
 #define TEAM3_GRAPH_H
 
+#include <map>
 #include <memory>
 #include <vector>
-#include <map>
 #include <string>
-#include "Node.h"
-#include "Edge.h"
+
+#include <graph/Node.h>
+#include <graph/Edge.h>
 
 class Graph {
 private:
