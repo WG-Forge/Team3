@@ -17,6 +17,7 @@ public:
     int getIndex() const;
     Node* getFirstNode();
     Node* getSecondNode();
+    int getId();
 };
 
 

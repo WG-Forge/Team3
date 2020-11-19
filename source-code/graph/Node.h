@@ -6,13 +6,14 @@
 
 class Node {
 private:
+    int idx_;
     int post_idx_;
     Point position_;
 public:
-    int idx_;
     Node(int idx, int post_idx);
     void setPosition(Point position);
     Point getPosition() const;
+    int getId();
 };
 
 

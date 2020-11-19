@@ -11,3 +11,7 @@ void Node::setPosition(Point position) {
 Point Node::getPosition() const {
     return position_;
 }
+
+int Node::getId() {
+    return idx_;
+}

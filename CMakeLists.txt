@@ -17,8 +17,11 @@ set(SOURCES
         source-code/graph/Edge.cpp source-code/graph/Edge.h
         source-code/builder/JSONReader.cpp source-code/builder/JSONReader.h
         source-code/drawing/RotationCalculator.cpp source-code/drawing/RotationCalculator.h
-        source-code/drawing/Renderer.cpp source-code/drawing/Renderer.h
-        source-code/game/Configuration.cpp source-code/game/Configuration.h
+        source-code/drawing/Renderer.cpp source-code/drawing/Renderer.h 
+        source-code/game/Configuration.cpp source-code/game/Configuration.h 
+        source-code/graph/City.cpp source-code/graph/City.h 
+        source-code/graph/Market.cpp source-code/graph/Market.h 
+        source-code/graph/Storage.cpp source-code/graph/Storage.h
         source-code/layout/Layout.h source-code/layout/Layout.cpp
         )
 
