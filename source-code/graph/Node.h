@@ -2,7 +2,7 @@
 #define TEAM3_NODE_H
 
 #include <memory>
-#include "../drawing/Point.h"
+#include <drawing/Point.h>
 
 class Node {
 private:

@@ -1,13 +1,15 @@
 #ifndef TEAM3_GAME_H
 #define TEAM3_GAME_H
 
-#include <SFML/Graphics.hpp>
 #include <time.h>
 #include <string>
 #include <memory>
-#include "../graph/Graph.h"
-#include "Configuration.h"
-#include "../drawing/Renderer.h"
+
+#include <SFML/Graphics.hpp>
+
+#include <graph/Graph.h>
+#include <drawing/Renderer.h>
+#include <game/Configuration.h>
 
 class Game {
 private:

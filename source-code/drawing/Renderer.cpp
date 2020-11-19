@@ -25,10 +25,11 @@ void Renderer::render(Graph* g) {
         window_->draw(line, 4, sf::Lines);
         //window_->drawDottedLine(p1.x, p1.y, p2.x, p2.y);
     }
+
     for (auto const& node : g->nodes) {
-        sf::CircleShape c(10);
-        c.setPosition(node.second->getPosition().x-10, node.second->getPosition().y-10);
-        c.setFillColor(sf::Color(200, 200, 150));
+        sf::CircleShape c(5);
+        c.setPosition(node->getPosition().x-5, node->getPosition().y-5);
+        c.setFillColor(sf::Color(0, 0, 0));
         window_->draw(c);
     }
 }

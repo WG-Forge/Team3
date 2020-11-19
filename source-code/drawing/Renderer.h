@@ -2,10 +2,12 @@
 #define TEAM3_RENDERER_H
 
 #include <memory>
-#include <SFML/Graphics/RenderWindow.hpp>
+
 #include <SFML/Graphics/CircleShape.hpp>
-#include "../graph/Graph.h"
-#include "RotationCalculator.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+
+#include <graph/Graph.h>
+#include <drawing/RotationCalculator.h>
 
 class Renderer {
 private:

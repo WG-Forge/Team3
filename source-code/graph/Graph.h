@@ -1,9 +1,9 @@
 #ifndef TEAM3_GRAPH_H
 #define TEAM3_GRAPH_H
 
+#include <map>
 #include <memory>
 #include <vector>
-#include <map>
 #include <string>
 #include <unordered_map>
 #include "Node.h"

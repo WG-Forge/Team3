@@ -1,18 +1,20 @@
 #ifndef TEAM3_EDGE_H
 #define TEAM3_EDGE_H
 
-
 #include <memory>
-#include "Node.h"
+
+#include <graph/Node.h>
 
 class Edge {
 private:
     int idx_;
-    int length_;
+    double length_;
     Node* firstNode_;
     Node* secondNode_;
 public:
-    Edge(int idx, int length, Node* firstNode, Node* secondNode);
+    Edge(int idx, double length, Node* firstNode, Node* secondNode);
+    double getLength() const;
+    int getIndex() const;
     Node* getFirstNode();
     Node* getSecondNode();
     int getId();
