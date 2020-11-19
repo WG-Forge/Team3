@@ -29,7 +29,7 @@ namespace layout {
 
         boost::graph_traits<BoostGraph>::vertex_iterator vI, vEnd;
         for (boost::tie(vI, vEnd) = boost::vertices(bGraph); *vI != graph.nodes.size(); ++vI) {
-            rangeToNode[*vI]->setPosition(std::make_unique<Point>(positionMap[*vI][0], positionMap[*vI][1]));
+            rangeToNode[*vI]->setPosition(Point(positionMap[*vI][0], positionMap[*vI][1]));
         }
     }
 }

@@ -7,7 +7,8 @@ Game::Game(std::unique_ptr<Configuration> config)
                         : config_(std::unique_ptr<Configuration>(std::move(config)))
                         , window_(std::make_unique<sf::RenderWindow>())
                         , renderer_(std::make_unique<Renderer>(window_.get())) {
-    graph_ = JSONReader::readGraph("../graphsJSON/big_graph.json");
+    graph_ = JSONReader::readGraph("../../graphsJSON/graph2.json");
+    layout::graphLayout(*graph_, 0, 0, config_->width, config_->height);
 }
 
 Game& Game::launchGame() {
@@ -15,9 +16,6 @@ Game& Game::launchGame() {
     camera_->zoom(1);
     window_->create(sf::VideoMode(config_->width, config_->height), config_->title);
     window_->setFramerateLimit(config_->framerateLimit);
-
-    // Layout calculation
-    layout::graphLayout(*graph_, 0, 0, config_->width, config_->height);
 
     while (window_->isOpen()) {
         sf::Event e;

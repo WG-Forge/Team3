@@ -3,10 +3,10 @@
 
 
 struct Point {
-    double x;
-    double y;
-    Point(double x, double y) : x(x), y(y) {}
-    Point(Point* p) : x(p->x), y(p->y) {}
+    int x;
+    int y;
+    Point() : x(0), y(0) {}
+    Point(int x, int y) : x(x), y(y) {}
 };
 
 
