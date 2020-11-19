@@ -7,7 +7,7 @@ Game::Game(std::unique_ptr<Configuration> config)
                         : config_(std::unique_ptr<Configuration>(std::move(config)))
                         , window_(std::make_unique<sf::RenderWindow>())
                         , renderer_(std::make_unique<Renderer>(window_.get())) {
-    graph_ = JSONReader::readGraph("../../graphsJSON/graph2.json");
+    graph_ = JSONReader::readGraph(config_->graphPath);
     layout::graphLayout(*graph_, 0, 0, config_->width, config_->height);
 }
 
