@@ -24,7 +24,7 @@ C++
 conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 ```
 
-Перед сборкой проекта необходимо из папки cmake-build-debug выполнить
+Перед сборкой проекта необходимо из папки build проекта (например cmake-build-debug) выполнить
 
 ```
 conan install ..
