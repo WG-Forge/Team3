@@ -7,7 +7,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <graph/Graph.h>
-#include <drawing/RotationCalculator.h>
+#include <utils/RotationCalculator.h>
 
 class Renderer {
 private:

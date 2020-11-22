@@ -7,9 +7,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <graph/Graph.h>
-#include <drawing/Renderer.h>
-#include <game/Configuration.h>
+#include "graph/Graph.h"
+#include "drawing/Renderer.h"
+#include "game/Configuration.h"
+#include "ServerConnection.h"
 
 class Game {
 private:
@@ -18,6 +19,7 @@ private:
     std::unique_ptr<Graph> graph_;
     std::unique_ptr<Renderer> renderer_;
     std::unique_ptr<sf::View> camera_;
+    std::unique_ptr<ServerConnection> connection_;
 public:
     Game(std::unique_ptr<Configuration> config);
     Game& launchGame();

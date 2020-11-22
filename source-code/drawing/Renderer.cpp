@@ -28,7 +28,7 @@ void Renderer::render(Graph* g) {
 
     for (auto const& node : g->nodes) {
         sf::CircleShape c(5);
-        c.setPosition(node->getPosition().x-5, node->getPosition().y-5);
+        c.setPosition(node.second->getPosition().x-5, node.second->getPosition().y-5);
         c.setFillColor(sf::Color(0, 0, 0));
         window_->draw(c);
     }
