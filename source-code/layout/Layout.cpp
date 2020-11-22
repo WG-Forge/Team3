@@ -11,14 +11,14 @@ namespace layout {
 
         size_t rangeIndex = 0;
         for (auto &vertex : graph.nodes) {
-            indexToRange[vertex->idx_] = rangeIndex;
-            rangeToNode[rangeIndex++] = vertex.get();
+            indexToRange[vertex.second->getId()] = rangeIndex;
+            rangeToNode[rangeIndex++] = vertex.second.get();
         }
 
         for (auto &edge : graph.edges) {
-            boost::add_edge(boost::vertex(indexToRange[edge->getFirstNode()->idx_], bGraph),
-                            boost::vertex(indexToRange[edge->getSecondNode()->idx_], bGraph),
-                            EdgeProperty(edge->getLength()),
+            boost::add_edge(boost::vertex(indexToRange[edge.second->getFirstNode()->getId()], bGraph),
+                            boost::vertex(indexToRange[edge.second->getSecondNode()->getId()], bGraph),
+                            EdgeProperty(edge.second->getLength()),
                             bGraph);
         }
 
