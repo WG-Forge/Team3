@@ -133,3 +133,23 @@ std::unique_ptr<Graph> JSONReader::parseLayer0(Json::Value root){
 //    std::cout << "after edges\n" << graph->nodes[1]->idx_;
     return std::move(graph);
 }
+
+void JSONReader::readLayer10(const std::string &rawJson, std::unique_ptr<Graph> graph) {
+    const auto rawJsonLength = static_cast<int>(rawJson.length());
+    JSONCPP_STRING err;
+    Json::Value root;
+
+    Json::CharReaderBuilder builder;
+    const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+    if (!reader->parse(rawJson.c_str(), rawJson.c_str() + rawJsonLength, &root, &err)) {
+        throw std::invalid_argument("Error");
+    }
+
+    for (auto coordinate : root["coordinates"]){
+        graph->nodes[coordinate["idx"].asInt()]->setPosition(Point(coordinate["x"].asInt(),
+                                                             coordinate["y"].asInt()));
+    }
+}
+
+
+
