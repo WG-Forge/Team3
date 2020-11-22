@@ -15,3 +15,5 @@ Point Node::getPosition() const {
 int Node::getId() {
     return idx_;
 }
+
+Node::Node(){}
