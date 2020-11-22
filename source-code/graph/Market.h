@@ -3,15 +3,18 @@
 
 
 #include <string>
+#include "Node.h"
 
-class Market {
+class Market : public Node {
 private:
     std::string name_;
     int product_;
     int product_capacity_;
     int replenishment_;
+    int idx_;
+    int point_idx_;
 public:
-    Market(const std::string &name, int product, int productCapacity, int replenishment);
+    Market(int idx, int point_idx, const std::string &name, int product, int productCapacity, int replenishment);
 };
 
 

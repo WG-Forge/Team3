@@ -3,11 +3,14 @@
 
 
 #include <string>
+#include "Node.h"
 
-class Storage {
+class Storage : public Node {
 public:
-    Storage(int armor, int armorCapacity, const std::string &name, int replenishment);
+    Storage(int idx, int point_idx, int armor, int armorCapacity, const std::string &name, int replenishment);
 private:
+    int idx_;
+    int point_idx;
     int armor_;
     int armor_capacity_;
     std::string name_;

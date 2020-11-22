@@ -11,6 +11,7 @@ private:
     Point position_;
 public:
     Node(int idx, int post_idx);
+
     void setPosition(Point position);
     Point getPosition() const;
     int getId();
