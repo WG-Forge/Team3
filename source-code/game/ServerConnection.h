@@ -4,7 +4,7 @@
 #include <boost/asio.hpp>
 #include <iostream>
 #include <memory>
-#include "utils/BinaryConverter.h"
+#include "utils/HexConverter.h"
 
 using namespace boost::asio;
 

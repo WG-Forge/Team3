@@ -1,6 +1,6 @@
-#include "BinaryConverter.h"
+#include "HexConverter.h"
 
-std::string BinaryConverter::intToHex(unsigned int n) {
+std::string HexConverter::intToHex(unsigned int n) {
     std::string hex;
     hex.push_back(n & 0xFF);
     hex.push_back((n >> 8) & 0xFF);
@@ -9,7 +9,7 @@ std::string BinaryConverter::intToHex(unsigned int n) {
     return hex;
 }
 
-std::string BinaryConverter::stringToHex(std::string s) {
+std::string HexConverter::stringToHex(std::string s) {
     std::stringstream ss;
     for(auto c : s) {
         char cHex = (int) c & 0xFF;
@@ -18,7 +18,7 @@ std::string BinaryConverter::stringToHex(std::string s) {
     return(ss.str());
 }
 
-int BinaryConverter::hexToInt(std::string hex) {
+int HexConverter::hexToInt(std::string hex) {
     int displayValue = 0;
     displayValue = (unsigned char) hex[0];
     displayValue |= (unsigned char) hex[1] << 8;
@@ -27,7 +27,7 @@ int BinaryConverter::hexToInt(std::string hex) {
     return displayValue;
 }
 
-std::string BinaryConverter::hexToString(std::string hex) {
+std::string HexConverter::hexToString(std::string hex) {
     std::string s;
     for(auto c : hex) {
         s.push_back(char(c));
