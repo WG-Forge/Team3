@@ -16,4 +16,3 @@ int Node::getId() {
     return idx_;
 }
 
-Node::Node(){}
