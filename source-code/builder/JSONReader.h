@@ -7,13 +7,14 @@
 
 class JSONReader {
 public:
-//    explicit JSONReader(std::string fileName);
     JSONReader() = default;
     static std::unique_ptr<Graph> readGraph(const std::string& fileName);
     static std::unique_ptr<Graph> readLayer1(const std::string& fileName);
+    static std::unique_ptr<Graph> readLayer0(const std::string& fileName);
 
-//private:
-//    std::string fileName_;
+private:
+    static std::unique_ptr<Graph> parseLayer0(Json::Value root);
+
 };
 
 #endif
