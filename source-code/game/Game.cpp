@@ -25,20 +25,24 @@ Game& Game::launchGame() {
             }
 
             if (e.type == sf::Event::MouseWheelMoved) {
-                camera_.zoom(e.mouseWheel.delta);
+                if (e.mouseWheel.delta > 0) {
+                    camera_.zoomOut(e.mouseWheel.x, e.mouseWheel.y, window_.get());
+                } else if (e.mouseWheel.delta < 0) {
+                    camera_.zoomIn(e.mouseWheel.x, e.mouseWheel.y, window_.get());
+                }
             }
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                camera_.move(-1, 0);
+                camera_.moveLeft(camera_.getMoveStep());
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                camera_.move(0, -1);
+                camera_.moveUp(camera_.getMoveStep());
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                camera_.move(1, 0);
+                camera_.moveRight(camera_.getMoveStep());
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                camera_.move(0, 1);
+                camera_.moveDown(camera_.getMoveStep());
             }
         }
         window_->clear(sf::Color::White);
