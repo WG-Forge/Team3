@@ -13,6 +13,7 @@ void Camera::zoom(double zoom, int x, int y, sf::RenderWindow* window) {
     window->setView(*camera_.get());
     const sf::Vector2f afterCoord{ window->mapPixelToCoords({x, y}) };
     const sf::Vector2f offsetCoords{ beforeCoord - afterCoord };
+    window->setView(oldCamera);
     if (offsetCoords.x > 0) {
         moveRight(offsetCoords.x);
     } else if (offsetCoords.x < 0) {
@@ -23,7 +24,6 @@ void Camera::zoom(double zoom, int x, int y, sf::RenderWindow* window) {
     } else if (offsetCoords.y < 0) {
         moveUp(-offsetCoords.y);
     }
-    window->setView(oldCamera);
 }
 
 void Camera::zoomIn(int x, int y, sf::RenderWindow* window) {

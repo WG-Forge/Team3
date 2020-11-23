@@ -13,14 +13,10 @@ private:
     int minHeight_ = 150;
     std::unique_ptr<sf::View> camera_;
     sf::FloatRect bounds_;
-    double moveOutLimitPortion_ = 0.4;
+    double moveOutLimitPortion_ = 0;
     int getLimitedOffset(int currentPosition, int offset, int size);
 
 public:
-    enum Sign {
-        PLUS = 1,
-        MINUS = -1,
-    };
     Camera(sf::FloatRect bounds);
     void zoom(double zoom, int x, int y, sf::RenderWindow* window);
     void zoomIn(int x, int y, sf::RenderWindow* window);
