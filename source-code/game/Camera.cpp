@@ -85,8 +85,5 @@ int Camera::getLimitedOffset(int currentPosition, int offset, int size) {
     if (moveLimit < 0) {
         limitedOffset += moveLimit;
     }
-    if (limitedOffset < 0) {
-        limitedOffset = 0;
-    }
     return limitedOffset;
 }
