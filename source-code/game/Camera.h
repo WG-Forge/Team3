@@ -15,6 +15,7 @@ private:
     sf::FloatRect bounds_;
     double moveOutLimitPortion_ = 0.4;
     int getLimitedOffset(int currentPosition, int offset, int size);
+
 public:
     enum Sign {
         PLUS = 1,

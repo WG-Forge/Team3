@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include <iostream>
 
 Camera::Camera(sf::FloatRect bounds)
                         : camera_(std::make_unique<sf::View>(bounds))
