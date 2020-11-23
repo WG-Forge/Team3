@@ -24,7 +24,9 @@ set(SOURCES
         source-code/graph/Storage.cpp source-code/graph/Storage.h
         source-code/layout/Layout.h source-code/layout/Layout.cpp
         source-code/game/ServerConnection.cpp source-code/game/ServerConnection.h
-        source-code/utils/HexConverter.cpp source-code/utils/HexConverter.h)
+        source-code/utils/HexConverter.cpp source-code/utils/HexConverter.h
+        source-code/game/Camera.cpp source-code/game/Camera.h
+        source-code/drawing/AssetManager.cpp source-code/drawing/AssetManager.h)
 
 add_executable(Team3 ${SOURCES})
 
