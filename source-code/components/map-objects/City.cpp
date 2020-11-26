@@ -1,6 +1,6 @@
 #include "City.h"
 
-City::City(int idx) : Post(idx) {}
+City::City(int idx) : Post(idx, "resources/images/city.png") {}
 
 void City::readLayer1(Json::Value root) {
     Post::readLayer1(root);

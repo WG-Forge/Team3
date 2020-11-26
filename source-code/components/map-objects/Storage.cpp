@@ -1,6 +1,6 @@
 #include "Storage.h"
 
-Storage::Storage(int idx) : Post(idx) {}
+Storage::Storage(int idx) : Post(idx, "resources/images/storage.png") {}
 
 void Storage::readLayer1(Json::Value root) {
     Post::readLayer1(root);

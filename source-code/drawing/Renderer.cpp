@@ -26,9 +26,18 @@ void Renderer::render(Graph* g) {
     }
 
     for (auto const& node : g->nodes) {
-        sf::CircleShape c(5);
-        c.setPosition(node.second->getPosition().x-5, node.second->getPosition().y-5);
-        c.setFillColor(sf::Color(0, 0, 0));
-        window_->draw(c);
+        sf::Sprite s;
+        sf::Texture* texture;
+        if (node.second->getPost()) {
+            texture = assetManager_.getOrLoadAsset(node.second->getPost()->getAsset());
+        } else {
+            texture = assetManager_.getOrLoadAsset("resources/images/unknown.png");
+        }
+        s = sf::Sprite(*texture);
+        s.scale((float) NODE_SIZE_ / texture->getSize().x,
+                (float) NODE_SIZE_ / texture->getSize().y);
+        s.setPosition(node.second->getPosition().x - NODE_SIZE_/2,
+                      node.second->getPosition().y - NODE_SIZE_/2);
+        window_->draw(s);
     }
 }

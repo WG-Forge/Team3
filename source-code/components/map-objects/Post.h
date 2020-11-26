@@ -8,10 +8,12 @@ class Post {
 protected:
     std::string name_;
     int idx_;
-
+    std::string asset_;
 public:
     explicit Post(int idx);
+    explicit Post(int idx, std::string asset);
     virtual void readLayer1(Json::Value root);
+    const std::string &getAsset() const;
 };
 
 

@@ -19,6 +19,7 @@ public:
     Point getPosition() const;
     int getId();
     void setPost(std::unique_ptr<Post> post);
+    Post* getPost();
 };
 
 
