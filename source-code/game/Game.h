@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "graph/Graph.h"
+#include "components/graph/Graph.h"
 #include "drawing/Renderer.h"
 #include "game/Configuration.h"
 #include "ServerConnection.h"
