@@ -19,3 +19,7 @@ int Node::getId() {
 void Node::setPost(std::unique_ptr<Post> post) {
     post_ = std::move(post);
 }
+
+Post *Node::getPost() {
+    return post_.get();
+}

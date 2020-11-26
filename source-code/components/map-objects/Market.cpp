@@ -1,7 +1,7 @@
 #include "Market.h"
 
 
-Market::Market(int idx) : Post(idx) {}
+Market::Market(int idx) : Post(idx, "resources/images/market.png") {}
 
 void Market::readLayer1(Json::Value root) {
     Post::readLayer1(root);

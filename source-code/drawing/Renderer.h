@@ -13,7 +13,8 @@ class Renderer {
 private:
     sf::RenderWindow* window_;
     RotationCalculator rotationCalculator_;
-    AssetManager assetManager;
+    AssetManager assetManager_;
+    const int NODE_SIZE_ = 20;
 public:
     Renderer(sf::RenderWindow* window);
     void render(Graph* g);
