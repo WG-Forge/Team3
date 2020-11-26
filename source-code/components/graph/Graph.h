@@ -6,8 +6,8 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "Node.h"
-#include "Edge.h"
+#include "components/graph/Node.h"
+#include "components/graph/Edge.h"
 
 class Graph {
 private:

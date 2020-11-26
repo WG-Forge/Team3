@@ -1,3 +1,4 @@
+#include <components/static/StaticStore.h>
 #include "Node.h"
 
 Node::Node(int idx, int post_idx)
@@ -14,5 +15,10 @@ Point Node::getPosition() const {
 
 int Node::getId() {
     return idx_;
+}
+
+void Node::readLayer0(Json::Value root) {
+    auto & post_idx = root["post_idx"];
+    post = (post_idx == nullptr) ? nullptr : StaticStore::posts[post_idx.asInt()];
 }
 

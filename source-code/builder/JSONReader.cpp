@@ -5,16 +5,16 @@
 #include <memory>
 #include <utility>
 #include <iostream>
-#include <graph/Market.h>
-#include <graph/City.h>
-#include <graph/Storage.h>
+#include <components/map-objects/Market.h>
+#include <components/map-objects/City.h>
+#include <components/map-objects/Storage.h>
+#include <components/static/StaticStore.h>
 
 //JSONReader::JSONReader(std::string fileName): fileName_(std::move(fileName)){}
 //
 //void JSONReader::setFileName(std::string fileName) {
 //    fileName_ = std::move(fileName);
 //}
-enum TYPES {CITY = 1, MARKET, STORAGE};
 
 std::unique_ptr<Graph> JSONReader::readGraph(const std::string& fileName) {
     Json::Value root;
@@ -59,56 +59,27 @@ std::unique_ptr<Graph> JSONReader::readLayer1(const std::string& rawJson) {
         throw std::invalid_argument("Error");
     }
 
-    std::map<int, Node*> nodes;
-    std::unique_ptr<Graph> graph(new Graph(root["idx"].asInt(), root["name"].asString()));
-
-    for (auto post : root["posts"]){
-        std::unique_ptr<Node> temp;
-        int type = post["type"].isInt();
-        switch (type) {
-            case CITY:
-                temp = std::make_unique<City>( post["idx"].asInt(),
-                                             post["point_idx"].asInt(),
-                                             post["armor"].asInt(),
-                                             post["armor_capacity"].asInt(),
-                                             post["level"].asInt(),
-                                             post["name"].asString(),
-                                             post["next_level_price"].asInt(),
-                                             post["player_idx"].asString(),
-                                             post["population"].asInt(),
-                                             post["population_capacity"].asInt(),
-                                             post["product"].asInt(),
-                                             post["product_capacity"].asInt(),
-                                             post["train_cooldown"].asInt());
-                nodes[post["idx"].asInt()] = temp.get();
+    for (const auto& post : root["posts"]){
+        int idx = root["idx"].asInt();
+        std::unique_ptr<Post> temp;
+        switch (root["type"].asInt()) {
+            case Type::CITY:
+                temp = std::make_unique<City>(idx);
                 break;
-            case MARKET:
-                temp = std::make_unique<Market>( post["idx"].asInt(),
-                                               post["point_idx"].asInt(),
-                                               post["name"].asString(),
-                                               post["product"].asInt(),
-                                               post["product_capacity"].asInt(),
-                                               post["replenishment"].asInt());
-                nodes[post["idx"].asInt()] = temp.get();
+            case Type::MARKET:
+                temp = std::make_unique<Market>(idx);
                 break;
-            case STORAGE:
-                temp = std::make_unique<Storage>( post["idx"].asInt(),
-                                               post["point_idx"].asInt(),
-                                               post["armor"].asInt(),
-                                               post["armor_capacity"].asInt(),
-                                               post["name"].asString(),
-                                               post["replenishment"].asInt());
-                nodes[post["idx"].asInt()] = temp.get();
-
+            case Type::STORAGE:
+                temp = std::make_unique<Storage>(idx);
                 break;
             default:
-                throw std::invalid_argument("Unknown type");
+                temp = std::make_unique<Post>(idx);
                 break;
         }
-        graph->addNode(std::move(temp));
-    }
 
-    return std::move(graph);
+        temp->readLayer1(post);
+        StaticStore::posts[idx] = temp.get();
+    }
 }
 
 
@@ -121,15 +92,39 @@ std::unique_ptr<Graph> JSONReader::parseLayer0(Json::Value root){
         std::unique_ptr<Node> temp = std::make_unique<Node>(idx, post_idx);
         nodes[idx] = temp.get();
         graph->addNode(std::move(temp));
+        StaticStore::nodes[post_idx] = temp.get();
     }
 
 //    std::cout << "after nodes\n";
     for(auto line : root["lines"]){
-        graph->addEdge(std::make_unique<Edge>(line["idx"].asInt(),
-                                              line["length"].asInt(),
+        std::unique_ptr<Edge> temp = std::make_unique<Edge>(line["idx"].asInt(),
+                                              line["length"].asDouble(),
                                               nodes[line["points"][0].asInt()],
-                                              nodes[line["points"][1].asInt()]));
+                                              nodes[line["points"][1].asInt()]);
+        graph->addEdge(std::move(temp));
+        StaticStore::edges[line["idx"].asInt()] = temp.get();
     }
-//    std::cout << "after edges\n" << graph->nodes[1]->idx_;
+
+//    std::cout << "after edges\n" << components->nodes[1]->idx_;
     return std::move(graph);
 }
+
+void JSONReader::readLayer10(const std::string &rawJson, std::unique_ptr<Graph> graph) {
+    const auto rawJsonLength = static_cast<int>(rawJson.length());
+    JSONCPP_STRING err;
+    Json::Value root;
+
+    Json::CharReaderBuilder builder;
+    const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+    if (!reader->parse(rawJson.c_str(), rawJson.c_str() + rawJsonLength, &root, &err)) {
+        throw std::invalid_argument("Error");
+    }
+
+    for (auto coordinate : root["coordinates"]){
+        graph->nodes[coordinate["idx"].asInt()]->setPosition(Point(coordinate["x"].asInt(),
+                                                             coordinate["y"].asInt()));
+    }
+}
+
+
+

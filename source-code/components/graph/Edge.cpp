@@ -1,4 +1,4 @@
-#include "Edge.h"
+#include "components/graph/Edge.h"
 
 Edge::Edge(int idx, double length, Node* firstNode, Node* secondNode)
                                         : idx_(idx)

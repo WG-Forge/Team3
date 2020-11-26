@@ -5,9 +5,8 @@
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-
-#include "graph/Graph.h"
-#include "utils/RotationCalculator.h"
+#include <components/graph/Graph.h>
+#include <utils/RotationCalculator.h>
 #include "AssetManager.h"
 
 class Renderer {

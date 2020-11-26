@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "components/graph/Graph.h"
 #include "iostream"
 
 Graph::Graph(int idx, std::string name)
@@ -18,5 +18,5 @@ void Graph::addNode(std::unique_ptr<Node> node) {
 }
 
 //Graph::~Graph() {
-//    std::cout << "graph was died\n";
+//    std::cout << "components was died\n";
 //}
