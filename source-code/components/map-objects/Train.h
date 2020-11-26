@@ -6,7 +6,6 @@
 class Train {
 private:
     int idx_ = 0;
-    int line_idx_ = 0;
     int player_idx_ = 0;
     int position_ = 0;
     int speed_ = 0;
@@ -15,7 +14,6 @@ private:
     int goods_ = 0;
     int level_ = 0;
     int next_level_price_ = 0;
-    Edge *edge_ = nullptr;
 
 public:
     explicit Train(int idx);

@@ -1,8 +1,6 @@
 #include "Storage.h"
 
-Storage::Storage(int idx) : Post(idx) {
-    type = Type::STORAGE;
-}
+Storage::Storage(int idx) : Post(idx) {}
 
 void Storage::readLayer1(Json::Value root) {
     Post::readLayer1(root);

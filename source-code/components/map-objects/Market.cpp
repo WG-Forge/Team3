@@ -1,9 +1,7 @@
 #include "Market.h"
 
 
-Market::Market(int idx) : Post(idx) {
-    type = Type::MARKET;
-}
+Market::Market(int idx) : Post(idx) {}
 
 void Market::readLayer1(Json::Value root) {
     Post::readLayer1(root);

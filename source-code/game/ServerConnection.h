@@ -2,7 +2,6 @@
 #define TEAM3_SERVERCONNECTION_H
 
 #include <boost/asio.hpp>
-#include <iostream>
 #include <memory>
 #include "utils/HexConverter.h"
 

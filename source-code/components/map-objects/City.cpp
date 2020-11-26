@@ -1,8 +1,6 @@
 #include "City.h"
 
-City::City(int idx) : Post(idx) {
-    type = Type::CITY;
-}
+City::City(int idx) : Post(idx) {}
 
 void City::readLayer1(Json::Value root) {
     Post::readLayer1(root);

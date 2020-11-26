@@ -35,7 +35,6 @@ std::string ServerConnection::getMap(int layer) {
     if (response.result == OKEY) {
         return response.data;
     }
-    std::cout << response.data;
     return "";
 }
 
