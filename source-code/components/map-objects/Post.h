@@ -3,7 +3,7 @@
 #include <json/json.h>
 #include <components/graph/Node.h>
 
-enum class Type { DEFAULT = 0, CITY, MARKET, STORAGE};
+enum Type { DEFAULT = 0, CITY = 1, MARKET = 2, STORAGE = 3};
 
 class Post {
 protected:
