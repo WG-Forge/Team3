@@ -9,7 +9,7 @@ std::string HexConverter::intToHex(unsigned int n) {
     return hex;
 }
 
-std::string HexConverter::stringToHex(std::string s) {
+std::string HexConverter::stringToHex(const std::string& s) {
     std::stringstream ss;
     for(auto c : s) {
         char cHex = (int) c & 0xFF;
@@ -19,15 +19,14 @@ std::string HexConverter::stringToHex(std::string s) {
 }
 
 int HexConverter::hexToInt(std::string hex) {
-    int displayValue = 0;
-    displayValue = (unsigned char) hex[0];
+    int displayValue = (unsigned char) hex[0];
     displayValue |= (unsigned char) hex[1] << 8;
     displayValue |= (unsigned char) hex[2] << 16;
     displayValue |= (unsigned char) hex[3] << 24;
     return displayValue;
 }
 
-std::string HexConverter::hexToString(std::string hex) {
+std::string HexConverter::hexToString(const std::string& hex) {
     std::string s;
     for(auto c : hex) {
         s.push_back(char(c));
