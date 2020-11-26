@@ -27,7 +27,9 @@ set(SOURCES
         source-code/utils/HexConverter.cpp source-code/utils/HexConverter.h
         source-code/components/map-objects/Train.cpp source-code/components/map-objects/Train.h
         source-code/components/map-objects/Post.cpp source-code/components/map-objects/Post.h
-        source-code/components/static/StaticStore.h source-code/components/static/StaticStore.cpp)
+        source-code/components/static/StaticStore.h source-code/components/static/StaticStore.cpp
+        source-code/game/Camera.cpp source-code/game/Camera.h
+        source-code/drawing/AssetManager.cpp source-code/drawing/AssetManager.h)
 
 add_executable(Team3 ${SOURCES})
 

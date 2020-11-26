@@ -9,7 +9,7 @@ using namespace sf;
 int main() {
     srand(time(0));
 
-    Game game (std::make_unique<Configuration>(
+    Game game (Configuration(
             640,
             480,
             60,
