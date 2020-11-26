@@ -15,11 +15,11 @@ private:
     int goods_ = 0;
     int level_ = 0;
     int next_level_price_ = 0;
-    Edge *edge = nullptr;
+    Edge *edge_ = nullptr;
 
 public:
     explicit Train(int idx);
-
+    void readLayer1(Json::Value root);
 };
 
 

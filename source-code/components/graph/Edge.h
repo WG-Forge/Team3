@@ -20,6 +20,7 @@ public:
     Node* getFirstNode();
     Node* getSecondNode();
     int getId();
+//    virtual void readLayer0()
 };
 
 
