@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include <time.h>
 #include <string>
 
@@ -7,15 +6,13 @@
 using namespace sf;
 
 int main() {
-    srand(time(0));
+    srand(time(nullptr));
 
     Game game (Configuration(
             640,
             480,
             60,
-            "Graph",
-            "../../graphsJSON/big_graph.json")
-            );
+            "Game"));
     game.launchGame();
     return 0;
 }
