@@ -8,7 +8,11 @@ Game::Game(Configuration config)
                         , window_(std::make_unique<sf::RenderWindow>())
                         , renderer_(window_.get())
                         , camera_(sf::FloatRect(0,0, config_.width, config_.height)) {
-    graph_ = JSONReader::readGraph(config_.graphPath);
+    //graph_ = JSONReader::readGraph(config_.graphPath);
+    connection_.login("Boris");
+    graph_ = std::move(JSONReader::readLayer0(connection_.getMap(0)));
+    JSONReader::readLayer1(connection_.getMap(1), graph_.get());
+    connection_.logout();
     layout::graphLayout(*graph_, 0, 0, config_.width, config_.height);
 }
 

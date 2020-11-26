@@ -1,4 +1,3 @@
-#include <components/static/StaticStore.h>
 #include "Train.h"
 
 Train::Train(int idx)
@@ -13,10 +12,4 @@ void Train::readLayer1(Json::Value root) {
     goods_ = root["goods"].asInt();
     level_ = root["level"].asInt();
     next_level_price_ = root["next_level_price"].asInt();
-    auto & line_idx = root["line_idx"];
-    if (line_idx != nullptr){
-        edge_ = (StaticStore::edges[line_idx.asInt()]);
-    } else{
-        std::invalid_argument("line_idx can't be nullptr");
-    }
 }
