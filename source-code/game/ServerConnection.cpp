@@ -46,11 +46,11 @@ ServerConnection::ResponseMessage ServerConnection::sendActionMessage(const Acti
     request += HexConverter::stringToHex(actionMessage.data);
     socket_.send(buffer(request));
 
-    char responseCode[4];
+    unsigned char responseCode[4];
     socket_.receive(buffer(responseCode, 4));
     int code = HexConverter::hexToInt(responseCode);
 
-    char responseSize[4];
+    unsigned char responseSize[4];
     socket_.receive(buffer(responseSize, 4));
     int size = HexConverter::hexToInt(responseSize);
 
