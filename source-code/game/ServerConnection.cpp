@@ -22,7 +22,7 @@ std::string ServerConnection::login(const std::string& name) {
 void ServerConnection::logout() {
     ServerConnection::ResponseMessage response =
             sendActionMessage(ActionMessage (LOGOUT, 0, ""));
-    if (!(response.result == OKEY)) {
+    if (response.result != OKEY) {
         throw "Bad response";
     }
 }
@@ -57,9 +57,9 @@ ServerConnection::ResponseMessage ServerConnection::sendActionMessage(const Acti
     char responseData[size];
     boost::asio::read(
             socket_, boost::asio::buffer(responseData, size),
-            boost::asio::transfer_all());
+            boost::asio::transfer_exactly(size));
     std::string data = HexConverter::hexToString(responseData);
-    data = data.substr(0, size);
+    //data = data.substr(0, size);
     return ServerConnection::ResponseMessage(Result(code), size, data);
 }
 
