@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include <graph/Graph.h>
+#include <components/graph/Graph.h>
 
 #include <boost/graph/topology.hpp>
 #include <boost/graph/graph_traits.hpp>

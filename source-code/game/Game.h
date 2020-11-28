@@ -7,19 +7,22 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <graph/Graph.h>
-#include <drawing/Renderer.h>
-#include <game/Configuration.h>
+#include "components/graph/Graph.h"
+#include "drawing/Renderer.h"
+#include "game/Configuration.h"
+#include "ServerConnection.h"
+#include "Camera.h"
 
 class Game {
 private:
-    std::unique_ptr<Configuration> config_;
+    Configuration config_;
     std::unique_ptr<sf::RenderWindow> window_;
     std::unique_ptr<Graph> graph_;
-    std::unique_ptr<Renderer> renderer_;
-    std::unique_ptr<sf::View> camera_;
+    Renderer renderer_;
+    ServerConnection connection_;
+    Camera camera_;
 public:
-    Game(std::unique_ptr<Configuration> config);
+    Game(Configuration config);
     Game& launchGame();
 };
 

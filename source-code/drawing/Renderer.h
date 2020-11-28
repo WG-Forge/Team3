@@ -5,14 +5,16 @@
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-
-#include <graph/Graph.h>
-#include <drawing/RotationCalculator.h>
+#include <components/graph/Graph.h>
+#include <utils/RotationCalculator.h>
+#include "AssetManager.h"
 
 class Renderer {
 private:
     sf::RenderWindow* window_;
-    std::unique_ptr<RotationCalculator> rotationCalculator_;
+    RotationCalculator rotationCalculator_;
+    AssetManager assetManager_;
+    const int NODE_SIZE_ = 20;
 public:
     Renderer(sf::RenderWindow* window);
     void render(Graph* g);

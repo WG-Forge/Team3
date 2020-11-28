@@ -1,18 +1,17 @@
 #include "Renderer.h"
 
 Renderer::Renderer(sf::RenderWindow *window)
-                            : window_(window)
-                            , rotationCalculator_(std::make_unique<RotationCalculator>()) {}
+                            : window_(window) {}
 
 void Renderer::render(Graph* g) {
 
     for (auto const& edge : g->edges) {
-        Point p1 = Point(edge->getFirstNode()->getPosition());
-        Point p2 = Point(edge->getSecondNode()->getPosition());
-        Point upperP1 = rotationCalculator_->calcUpperLineP1(p1, p2, 2);
-        Point upperP2 = rotationCalculator_->calcUpperLineP2(p1, p2, 2);
-        Point lowerP1 = rotationCalculator_->calcLowerLineP1(p1, p2, 2);
-        Point lowerP2 = rotationCalculator_->calcLowerLineP2(p1, p2, 2);
+        Point p1 = Point(edge.second->getFirstNode()->getPosition());
+        Point p2 = Point(edge.second->getSecondNode()->getPosition());
+        Point upperP1 = rotationCalculator_.calcUpperLineP1(p1, p2, 2);
+        Point upperP2 = rotationCalculator_.calcUpperLineP2(p1, p2, 2);
+        Point lowerP1 = rotationCalculator_.calcLowerLineP1(p1, p2, 2);
+        Point lowerP2 = rotationCalculator_.calcLowerLineP2(p1, p2, 2);
 
         sf::Vertex line[] =
                 {
@@ -27,9 +26,18 @@ void Renderer::render(Graph* g) {
     }
 
     for (auto const& node : g->nodes) {
-        sf::CircleShape c(5);
-        c.setPosition(node->getPosition().x-5, node->getPosition().y-5);
-        c.setFillColor(sf::Color(0, 0, 0));
-        window_->draw(c);
+        sf::Sprite s;
+        sf::Texture* texture;
+        if (node.second->getPost()) {
+            texture = assetManager_.getOrLoadAsset(node.second->getPost()->getAsset());
+        } else {
+            texture = assetManager_.getOrLoadAsset("resources/images/unknown.png");
+        }
+        s = sf::Sprite(*texture);
+        s.scale((float) NODE_SIZE_ / texture->getSize().x,
+                (float) NODE_SIZE_ / texture->getSize().y);
+        s.setPosition(node.second->getPosition().x - NODE_SIZE_/2,
+                      node.second->getPosition().y - NODE_SIZE_/2);
+        window_->draw(s);
     }
 }

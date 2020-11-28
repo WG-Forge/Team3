@@ -11,3 +11,15 @@ void Node::setPosition(Point position) {
 Point Node::getPosition() const {
     return position_;
 }
+
+int Node::getId() {
+    return idx_;
+}
+
+void Node::setPost(std::unique_ptr<Post> post) {
+    post_ = std::move(post);
+}
+
+Post *Node::getPost() {
+    return post_.get();
+}

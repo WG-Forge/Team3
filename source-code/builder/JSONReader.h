@@ -1,19 +1,20 @@
 #ifndef TEAM3_JSONREADER_H
 #define TEAM3_JSONREADER_H
 
-//#include <jsoncpp/json/json.h>
-#include <graph/Graph.h>
+#include <components/graph/Graph.h>
 #include <json/json.h>
 
 
 class JSONReader {
 public:
-//    explicit JSONReader(std::string fileName);
     JSONReader() = default;
     static std::unique_ptr<Graph> readGraph(const std::string& fileName);
+    static void readLayer1(const std::string& rawJson, Graph* graph);
+    static std::unique_ptr<Graph> readLayer0(const std::string& rawJson);
+    static void readLayer10(const std::string& rawJson, Graph* graph);
 
-//private:
-//    std::string fileName_;
+private:
+    static std::unique_ptr<Graph> parseLayer0(Json::Value root);
 };
 
 #endif
