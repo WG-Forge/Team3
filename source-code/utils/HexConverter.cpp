@@ -18,11 +18,11 @@ std::string HexConverter::stringToHex(const std::string& s) {
     return(ss.str());
 }
 
-int HexConverter::hexToInt(std::string hex) {
-    int displayValue = (unsigned char) hex[0];
-    displayValue |= (unsigned char) hex[1] << 8;
-    displayValue |= (unsigned char) hex[2] << 16;
-    displayValue |= (unsigned char) hex[3] << 24;
+int HexConverter::hexToInt(unsigned char* hex) {
+    int displayValue = hex[0];
+    displayValue |= hex[1] << 8;
+    displayValue |= hex[2] << 16;
+    displayValue |= hex[3] << 24;
     return displayValue;
 }
 
