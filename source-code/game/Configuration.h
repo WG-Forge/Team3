@@ -8,8 +8,7 @@ struct Configuration {
     int height;
     int framerateLimit;
     std::string title;
-    std::string graphPath;
-    Configuration(int width, int height, int framerateLimit, std::string title, std::string graphPath);
+    Configuration(int width, int height, int framerateLimit, std::string title);
 };
 
 

@@ -3,16 +3,23 @@
 
 #include <memory>
 #include <drawing/Point.h>
+#include <json/json.h>
+#include <components/map-objects/Post.h>
 
 class Node {
-private:
+protected:
+    int idx_;
     int post_idx_;
     Point position_;
+    std::unique_ptr<Post> post_;
 public:
-    int idx_;
     Node(int idx, int post_idx);
+
     void setPosition(Point position);
     Point getPosition() const;
+    int getId();
+    void setPost(std::unique_ptr<Post> post);
+    Post* getPost();
 };
 
 
