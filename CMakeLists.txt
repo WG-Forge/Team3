@@ -9,15 +9,27 @@ if(MSVC)
 endif()
 
 set(SOURCES
-            main.cpp
-            libs/jsoncpp/jsoncpp.cpp
+        main.cpp
+
+        src/Point.h
+        src/graph-components/Node.cpp src/graph-components/Node.h
+        src/graph-components/Town.cpp src/graph-components/Town.h
+        src/graph-components/Market.cpp src/graph-components/Market.h
+        src/graph-components/Storage.cpp src/graph-components/Storage.h
+        src/graph-components/Edge.cpp src/graph-components/Edge.h
+        src/agents/GraphAgent.cpp src/agents/GraphAgent.h
+
+        libs/jsoncpp/jsoncpp.cpp
         )
 
 find_package(Boost REQUIRED)
 
-include_directories(src
-            libs/jsoncpp
-            ${Boost_INCLUDE_DIRS}
+include_directories(
+        src
+        src/agents
+        src/graph-components
+        libs/jsoncpp
+        ${Boost_INCLUDE_DIRS}
         )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
