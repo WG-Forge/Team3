@@ -17,7 +17,11 @@ set(SOURCES
         src/graph-components/Market.cpp src/graph-components/Market.h
         src/graph-components/Storage.cpp src/graph-components/Storage.h
         src/graph-components/Edge.cpp src/graph-components/Edge.h
+        src/networking-components/Request.h
+        src/networking-components/Response.h
+        src/networking-components/JSONParser.cpp src/networking-components/JSONParser.h
         src/agents/GraphAgent.cpp src/agents/GraphAgent.h
+        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h
 
         libs/jsoncpp/jsoncpp.cpp
         )
@@ -28,6 +32,7 @@ include_directories(
         src
         src/agents
         src/graph-components
+        src/networking-components
         libs/jsoncpp
         ${Boost_INCLUDE_DIRS}
         )
