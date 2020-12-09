@@ -25,7 +25,7 @@ public:
 
     uint32_t getProduct() const;
 
-    std::string getName() const;
+    const std::string& getName() const;
 
     void setProduct(uint32_t product);
 };

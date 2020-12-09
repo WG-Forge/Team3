@@ -15,7 +15,7 @@ Town::Town(int32_t pointIdx, int32_t postIdx, Point coordinates, std::string pla
     armor_ = armor;
 }
 
-std::string Town::getPlayerIdx() const {
+const std::string& Town::getPlayerIdx() const {
     return playerIdx_;
 }
 
@@ -81,4 +81,8 @@ void Town::setProduct(uint32_t product) {
 
 void Town::setArmor(uint32_t armor) {
     armor_ = armor;
+}
+
+const std::string &Town::getName() const {
+    return name_;
 }

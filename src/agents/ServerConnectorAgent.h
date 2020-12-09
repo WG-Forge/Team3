@@ -5,14 +5,11 @@
 #include <boost/asio.hpp>
 #include <Request.h>
 #include <Response.h>
+#include <defines.h>
 
 using namespace boost::asio;
 
 class ServerConnectorAgent {
-public:
-    constexpr static std::string_view SERVER_HOSTNAME = "wgforge-srv.wargaming.net";
-    constexpr static std::string_view PORT = "443";
-
 private:
     io_service io_service_;
     ip::tcp::socket socket_;
@@ -22,5 +19,7 @@ public:
     ServerConnectorAgent();
     ~ServerConnectorAgent();
 
+    //TODO Handle exceptions, possibly thrown by
+    // ServerConnectorAgent::proceedRequest(const Request &request) (if its needed (?))
     Response proceedRequest(const Request& request);
 };

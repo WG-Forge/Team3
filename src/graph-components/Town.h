@@ -29,7 +29,7 @@ public:
          uint32_t productCapacity, uint32_t armorCapacity, uint32_t level, uint32_t population,
          uint32_t product, uint32_t armor, std::string name);
 
-    std::string getPlayerIdx() const;
+    const std::string& getPlayerIdx() const;
 
     uint32_t getNextLevelPrice() const;
     uint32_t getPopulationCapacity() const;
@@ -50,4 +50,6 @@ public:
     void setPopulation(uint32_t population);
     void setProduct(uint32_t product);
     void setArmor(uint32_t armor);
+
+    const std::string& getName() const;
 };

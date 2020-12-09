@@ -19,7 +19,7 @@ uint32_t Market::getProduct() const {
     return product_;
 }
 
-std::string Market::getName() const {
+const std::string& Market::getName() const {
     return name_;
 }
 

@@ -19,7 +19,7 @@ uint32_t Storage::getArmor() const {
     return armor_;
 }
 
-std::string Storage::getName() const {
+const std::string& Storage::getName() const {
     return name_;
 }
 

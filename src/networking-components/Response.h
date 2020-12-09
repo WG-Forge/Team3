@@ -14,6 +14,6 @@ struct Response {
     };
 
     Result resultCode;
-    uint32_t dataSize;
+    uint32_t dataSize; //because byte manipulations are provided for 4 byte integers
     std::string data;
 };

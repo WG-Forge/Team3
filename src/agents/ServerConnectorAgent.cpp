@@ -2,7 +2,7 @@
 
 ServerConnectorAgent::ServerConnectorAgent() : socket_(io_service_) {
     ip::tcp::resolver resolver(io_service_);
-    auto endpoints = resolver.resolve(SERVER_HOSTNAME, PORT);
+    auto endpoints = resolver.resolve(defines::server_info::SERVER_HOSTNAME, defines::server_info::PORT);
     endpoint_ = *boost::asio::connect(socket_, endpoints.begin(), endpoints.end());
 }
 
@@ -10,8 +10,6 @@ ServerConnectorAgent::~ServerConnectorAgent() {
     socket_.shutdown(ip::tcp::socket::shutdown_both);
     socket_.close();
 }
-
-//TODO handle exceptions, possibly thrown by ServerConnectorAgent::proceedRequest()
 
 Response ServerConnectorAgent::proceedRequest(const Request &request) {
     uint32_t actionCode = request.actionCode;

@@ -25,7 +25,7 @@ public:
 
     uint32_t getArmor() const;
 
-    std::string getName() const;
+    const std::string& getName() const;
 
     void setArmor(uint32_t product);
 };
