@@ -10,12 +10,11 @@ Game::Game(Configuration config)
                         , window_(std::make_unique<sf::RenderWindow>())
                         , renderer_(window_.get()) {
     //graph_ = JSONReader::readGraph(config_.graphPath);
-    connection_.login("Boris");
+    connection_.login("GymBoss");
     graph_ = std::move(JSONReader::readLayer0(connection_.getMap(0)));
     JSONReader::readLayer1(connection_.getMap(1), graph_.get());
     GameMap map = JSONReader::readLayer10(connection_.getMap(10), graph_.get());
     camera_ = std::make_unique<Camera>(sf::FloatRect(0,0, map.width, map.height));
-    connection_.logout();
     //layout::graphLayout(*graph_, 0, 0, config_.width, config_.height);
 }
 
@@ -60,4 +59,8 @@ Game& Game::launchGame() {
         window_->display();
     }
     return *this;
+}
+
+Game::~Game() {
+    connection_.logout();
 }

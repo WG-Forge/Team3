@@ -24,6 +24,7 @@ private:
 public:
     explicit Game(Configuration config);
     Game& launchGame();
+    ~Game();
 };
 
 
