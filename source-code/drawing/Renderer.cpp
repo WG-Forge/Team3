@@ -4,7 +4,12 @@ Renderer::Renderer(sf::RenderWindow *window)
                             : window_(window) {}
 
 void Renderer::render(Graph* g) {
+    renderEdges(g);
+    renderTrains(g);
+    renderNodes(g);
+}
 
+void Renderer::renderEdges(Graph* g) {
     for (auto const& edge : g->edges) {
         Point p1 = Point(edge.second->getFirstNode()->getPosition());
         Point p2 = Point(edge.second->getSecondNode()->getPosition());
@@ -23,7 +28,9 @@ void Renderer::render(Graph* g) {
 
         window_->draw(line, 4, sf::Lines);
     }
+}
 
+void Renderer::renderNodes(Graph *g) {
     for (auto const& node : g->nodes) {
         sf::Sprite s;
         sf::Texture* texture;
@@ -35,8 +42,33 @@ void Renderer::render(Graph* g) {
         s = sf::Sprite(*texture);
         s.scale((float) NODE_SIZE_ / texture->getSize().x,
                 (float) NODE_SIZE_ / texture->getSize().y);
-        s.setPosition(node.second->getPosition().x - NODE_SIZE_/2,
-                      node.second->getPosition().y - NODE_SIZE_/2);
+        s.setOrigin(texture->getSize().x/2, texture->getSize().y/2);
+        s.setPosition(node.second->getPosition().x,
+                      node.second->getPosition().y);
         window_->draw(s);
+    }
+}
+
+void Renderer::renderTrains(Graph *g) {
+    for (auto const& edge : g->edges) {
+        Train* train = edge.second->train;
+        if (train != nullptr
+                && train->getPosition() > 0
+                && train->getPosition() < edge.second->getLength()) {
+            Point p1 = Point(edge.second->getFirstNode()->getPosition());
+            Point p2 = Point(edge.second->getSecondNode()->getPosition());
+            Point train2DPosition = rotationCalculator_.calcPointOnLine(p1, p2, train->getPosition()/edge.second->getLength());
+            sf::Sprite s;
+            sf::Texture* texture;
+            texture = assetManager_.getOrLoadAsset("resources/images/train.png");
+            s = sf::Sprite(*texture);
+            s.setOrigin(texture->getSize().x/2, texture->getSize().y/2);
+            s.scale((float) TRAIN_SIZE_ / texture->getSize().x,
+                    (float) TRAIN_SIZE_ / texture->getSize().y);
+            s.setPosition(train2DPosition.x,
+                          train2DPosition.y);
+            s.rotate(rotationCalculator_.calcTrainRotation(p1, p2));
+            window_->draw(s);
+        }
     }
 }

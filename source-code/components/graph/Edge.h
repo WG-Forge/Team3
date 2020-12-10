@@ -3,8 +3,7 @@
 
 #include <memory>
 #include <components/graph/Node.h>
-
-class Train;
+#include <components/map-objects/Train.h>
 
 class Edge {
 private:

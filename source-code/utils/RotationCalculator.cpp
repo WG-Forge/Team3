@@ -37,3 +37,23 @@ double RotationCalculator::calcDiagonal(Point p1, Point p2) {
 double RotationCalculator::calcBias(int z1, int z2, int d, double diag) {
     return d*(z2-z1) / diag;
 }
+
+Point RotationCalculator::calcPointOnLine(Point p1, Point p2, double ratio) {
+    double x = p1.x+(p2.x - p1.x)*ratio;
+    double y = p1.y+(p2.y - p1.y)*ratio;
+    return Point(x, y);
+}
+
+float RotationCalculator::calcTrainRotation(Point p1, Point p2) {
+    double x = p2.x - p1.x;
+    double y = p2.y - p1.y;
+    if (x == 0) {
+        return 0;
+    } else {
+        return radToDeg(atan(y / x))+90;
+    }
+}
+
+double RotationCalculator::radToDeg(double rad) {
+    return rad*(180.0/M_PI);
+}
