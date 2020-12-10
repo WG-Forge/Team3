@@ -7,6 +7,10 @@
 #include <Response.h>
 #include <defines.h>
 
+//TODO NEWEST: Throw error codes, not exceptions
+//TODO Handle exceptions, possibly thrown by
+// ServerConnectorAgent::proceedRequest(const Request &request) (if its needed (?))
+
 using namespace boost::asio;
 
 class ServerConnectorAgent {
@@ -19,7 +23,5 @@ public:
     ServerConnectorAgent();
     ~ServerConnectorAgent();
 
-    //TODO Handle exceptions, possibly thrown by
-    // ServerConnectorAgent::proceedRequest(const Request &request) (if its needed (?))
     Response proceedRequest(const Request& request);
 };

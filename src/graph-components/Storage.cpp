@@ -1,8 +1,8 @@
 #include <Storage.h>
 
-Storage::Storage(int32_t pointIdx, int32_t postIdx, Point coordinates, uint32_t armorCapacity, uint32_t replenishment,
+Storage::Storage(int32_t pointIdx, int32_t postIdx, uint32_t armorCapacity, uint32_t replenishment,
                  uint32_t armor, std::string name) :
-        Node(pointIdx, postIdx, coordinates), name_(std::move(name)), armorCapacity_(armor),
+        Node(pointIdx, postIdx, Storage::TYPE), name_(std::move(name)), armorCapacity_(armorCapacity),
         replenishment_(replenishment) {
     armor_ = armor;
 }

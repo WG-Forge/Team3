@@ -17,8 +17,8 @@ private:
 
 public:
     Storage() = delete;
-    Storage(int32_t pointIdx, int32_t postIdx, Point coordinates, uint32_t productCapacity,
-            uint32_t replenishment, uint32_t product, std::string name);
+    Storage(int32_t pointIdx, int32_t postIdx, uint32_t armorCapacity,
+            uint32_t replenishment, uint32_t armor, std::string name);
 
     uint32_t getArmorCapacity() const;
     uint32_t getReplenishment() const;

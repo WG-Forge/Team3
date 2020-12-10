@@ -21,13 +21,14 @@ private:
     uint32_t armor_;
 
     const std::string name_;
+    bool isMine_;
 
 public:
     Town() = delete;
-    Town(int32_t pointIdx, int32_t postIdx, Point coordinates, std::string playerIdx,
+    Town(int32_t pointIdx, int32_t postIdx, std::string playerIdx,
          uint32_t nextLevelPrice, uint32_t populationCapacity,
          uint32_t productCapacity, uint32_t armorCapacity, uint32_t level, uint32_t population,
-         uint32_t product, uint32_t armor, std::string name);
+         uint32_t product, uint32_t armor, std::string name, bool isMine = false);
 
     const std::string& getPlayerIdx() const;
 
@@ -52,4 +53,6 @@ public:
     void setArmor(uint32_t armor);
 
     const std::string& getName() const;
+
+    bool isMine() const;
 };

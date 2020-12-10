@@ -1,9 +1,9 @@
 #include <Town.h>
 
-Town::Town(int32_t pointIdx, int32_t postIdx, Point coordinates, std::string playerIdx,
+Town::Town(int32_t pointIdx, int32_t postIdx, std::string playerIdx,
            uint32_t nextLevelPrice, uint32_t populationCapacity, uint32_t productCapacity, uint32_t armorCapacity,
-           uint32_t level, uint32_t population, uint32_t product, uint32_t armor, std::string  name) :
-           Node(pointIdx, postIdx, coordinates), playerIdx_(std::move(playerIdx)), name_(std::move(name)) {
+           uint32_t level, uint32_t population, uint32_t product, uint32_t armor, std::string name, bool isMine) :
+           Node(pointIdx, postIdx, Town::TYPE), playerIdx_(std::move(playerIdx)), name_(std::move(name)) {
     nextLevelPrice_ = nextLevelPrice;
     populationCapacity_ = populationCapacity;
     productCapacity_ = productCapacity;
@@ -13,6 +13,8 @@ Town::Town(int32_t pointIdx, int32_t postIdx, Point coordinates, std::string pla
     population_ = population;
     product_ = product;
     armor_ = armor;
+
+    isMine_ = isMine;
 }
 
 const std::string& Town::getPlayerIdx() const {
@@ -85,4 +87,8 @@ void Town::setArmor(uint32_t armor) {
 
 const std::string &Town::getName() const {
     return name_;
+}
+
+bool Town::isMine() const {
+    return isMine_;
 }

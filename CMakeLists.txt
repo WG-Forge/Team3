@@ -19,9 +19,10 @@ set(SOURCES
         src/graph-components/Market.cpp src/graph-components/Market.h
         src/graph-components/Storage.cpp src/graph-components/Storage.h
         src/graph-components/Edge.cpp src/graph-components/Edge.h
+        src/graph-components/EdgeCreationHelper.h
         src/networking-components/Request.h
         src/networking-components/Response.h
-        src/networking-components/JSONParser.cpp src/networking-components/JSONParser.h
+        src/networking-components/JSONReader.cpp src/networking-components/JSONReader.h
         src/agents/GraphAgent.cpp src/agents/GraphAgent.h
         src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h
         src/Player.h src/Player.cpp

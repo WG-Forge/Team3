@@ -3,18 +3,24 @@
 #include <Player.h>
 #include <GraphAgent.h>
 #include <ServerConnectorAgent.h>
-#include <JSONParser.h>
+#include <JSONReader.h>
+#include <Edge.h>
 #include <defines.h>
+
+//TODO NEWEST: Throw error codes, not exceptions
+//TODO Handle exceptions, possibly thrown by Action methods (if its needed (?))
+
+//TODO Function that runs through players and setups them
+//TODO Add upgradeAction(...), when Train class would be implemented
+//TODO Figure out, what crushes program when one calls gamesAction_() after logoutAction_()
 
 class Observer {
 private:
-    //TODO Function that runs through players and setups them
     std::vector<Player> players_; //first element is for our player
     GraphAgent graphAgent_;
     ServerConnectorAgent serverConnectorAgent_;
-    JSONParser jsonParser_;
+    JSONReader jsonParser_;
 
-    //TODO Handle exceptions, possibly thrown by Action methods (if its needed (?))
     Response loginAction_(const std::string& playerName,
                           const std::string& password = "",
                           const std::string& gameName = "",
@@ -24,10 +30,13 @@ private:
     Response playerAction_();
     Response mapAction_(uint32_t layerNumber);
     Response moveAction_(int32_t lineIdx, int32_t speed, int32_t trainIdx);
-//    Response upgradeAction_(const std::vector<Node*>& posts, vector of trains);
     Response turnAction_();
-    //TODO Figure out, what crushes program when one calls gamesAction_() after logoutAction_()
     Response gamesAction_();
+
+    void preserveLoginData_(JSON_OBJECT_AS_MAP& root);
+    void preserveLayer0Data_(JSON_OBJECT_AS_MAP& root);
+    void preserveLayer1Data_(JSON_OBJECT_AS_MAP& root);
+    void preserveLayer10Data_(JSON_OBJECT_AS_MAP& root);
 
 public:
     void launchGame();

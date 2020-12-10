@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-class Point {
+struct Point {
     uint32_t x;
     uint32_t y;
 };
