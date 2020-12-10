@@ -22,7 +22,6 @@ void Renderer::render(Graph* g) {
                 };
 
         window_->draw(line, 4, sf::Lines);
-        //window_->drawDottedLine(p1.x, p1.y, p2.x, p2.y);
     }
 
     for (auto const& node : g->nodes) {
