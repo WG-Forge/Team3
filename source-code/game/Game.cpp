@@ -3,17 +3,20 @@
 #include <builder/JSONReader.h>
 #include <layout/Layout.h>
 
+#include <utility>
+
 Game::Game(Configuration config)
-                        : config_(config)
+                        : config_(std::move(config))
                         , window_(std::make_unique<sf::RenderWindow>())
                         , renderer_(window_.get())
-                        , camera_(sf::FloatRect(0,0, config_.width, config_.height)) {
+                        , camera_(sf::FloatRect(0,0, 1000, 1000)) {
     //graph_ = JSONReader::readGraph(config_.graphPath);
     connection_.login("Boris");
     graph_ = std::move(JSONReader::readLayer0(connection_.getMap(0)));
     JSONReader::readLayer1(connection_.getMap(1), graph_.get());
+    JSONReader::readLayer10(connection_.getMap(10), graph_.get());
     connection_.logout();
-    layout::graphLayout(*graph_, 0, 0, config_.width, config_.height);
+    //layout::graphLayout(*graph_, 0, 0, config_.width, config_.height);
 }
 
 Game& Game::launchGame() {
