@@ -20,9 +20,9 @@ private:
     std::unique_ptr<Graph> graph_;
     Renderer renderer_;
     ServerConnection connection_;
-    Camera camera_;
+    std::unique_ptr<Camera> camera_;
 public:
-    Game(Configuration config);
+    explicit Game(Configuration config);
     Game& launchGame();
 };
 

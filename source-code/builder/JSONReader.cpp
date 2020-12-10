@@ -106,7 +106,7 @@ std::unique_ptr<Graph> JSONReader::parseLayer0(Json::Value root){
     return std::move(graph);
 }
 
-void JSONReader::readLayer10(const std::string &rawJson, Graph* graph) {
+GameMap JSONReader::readLayer10(const std::string &rawJson, Graph* graph) {
     const auto rawJsonLength = static_cast<int>(rawJson.length());
     JSONCPP_STRING err;
     Json::Value root;
@@ -121,6 +121,9 @@ void JSONReader::readLayer10(const std::string &rawJson, Graph* graph) {
         graph->nodes[coordinate["idx"].asInt()]->setPosition(Point(coordinate["x"].asInt(),
                                                              coordinate["y"].asInt()));
     }
+    return {root["idx"].asInt(),
+                   root["size"][0].asInt(),
+                   root["size"][1].asInt()};
 }
 
 

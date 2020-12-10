@@ -28,7 +28,8 @@ set(SOURCES
         source-code/components/map-objects/Train.cpp source-code/components/map-objects/Train.h
         source-code/components/map-objects/Post.cpp source-code/components/map-objects/Post.h
         source-code/game/Camera.cpp source-code/game/Camera.h
-        source-code/drawing/AssetManager.cpp source-code/drawing/AssetManager.h)
+        source-code/drawing/AssetManager.cpp source-code/drawing/AssetManager.h
+        source-code/game/GameMap.cpp source-code/game/GameMap.h)
 
 add_executable(Team3 ${SOURCES})
 

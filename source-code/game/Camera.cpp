@@ -8,9 +8,9 @@ Camera::Camera(sf::FloatRect bounds)
 
 void Camera::zoom(double zoom, int x, int y, sf::RenderWindow* window) {
     const sf::Vector2f beforeCoord{ window->mapPixelToCoords({x, y}) };
-    sf::View oldCamera = *camera_.get();
+    sf::View oldCamera = *camera_;
     camera_->zoom(zoom);
-    window->setView(*camera_.get());
+    window->setView(*camera_);
     const sf::Vector2f afterCoord{ window->mapPixelToCoords({x, y}) };
     const sf::Vector2f offsetCoords{ beforeCoord - afterCoord };
     window->setView(oldCamera);
