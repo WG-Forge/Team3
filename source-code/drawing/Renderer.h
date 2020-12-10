@@ -15,6 +15,10 @@ private:
     RotationCalculator rotationCalculator_;
     AssetManager assetManager_;
     const int NODE_SIZE_ = 20;
+    const int TRAIN_SIZE_ = 20;
+    void renderEdges(Graph* g);
+    void renderNodes(Graph* g);
+    void renderTrains(Graph* g);
 public:
     Renderer(sf::RenderWindow* window);
     void render(Graph* g);

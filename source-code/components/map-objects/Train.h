@@ -1,7 +1,7 @@
 #ifndef TEAM3_TRAIN_H
 #define TEAM3_TRAIN_H
 
-#include "components/graph/Edge.h"
+#include <json/json.h>
 
 class Train {
 private:
@@ -18,6 +18,8 @@ private:
 public:
     explicit Train(int idx);
     void readLayer1(Json::Value root);
+
+    int getPosition() const;
 };
 
 

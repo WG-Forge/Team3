@@ -13,3 +13,7 @@ void Train::readLayer1(Json::Value root) {
     level_ = root["level"].asInt();
     next_level_price_ = root["next_level_price"].asInt();
 }
+
+int Train::getPosition() const {
+    return position_;
+}
