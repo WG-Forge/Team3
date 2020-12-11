@@ -13,10 +13,10 @@ void Renderer::renderEdges(Graph* g) {
     for (auto const& edge : g->edges) {
         Point p1 = Point(edge.second->getFirstNode()->getPosition());
         Point p2 = Point(edge.second->getSecondNode()->getPosition());
-        Point upperP1 = rotationCalculator_.calcUpperLineP1(p1, p2, 2);
-        Point upperP2 = rotationCalculator_.calcUpperLineP2(p1, p2, 2);
-        Point lowerP1 = rotationCalculator_.calcLowerLineP1(p1, p2, 2);
-        Point lowerP2 = rotationCalculator_.calcLowerLineP2(p1, p2, 2);
+        Point upperP1 = rotationCalculator_.calcUpperLineP1(p1, p2, RAIL_DIST);
+        Point upperP2 = rotationCalculator_.calcUpperLineP2(p1, p2, RAIL_DIST);
+        Point lowerP1 = rotationCalculator_.calcLowerLineP1(p1, p2, RAIL_DIST);
+        Point lowerP2 = rotationCalculator_.calcLowerLineP2(p1, p2, RAIL_DIST);
 
         sf::Vertex line[] =
                 {

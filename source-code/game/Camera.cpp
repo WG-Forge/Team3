@@ -2,7 +2,8 @@
 
 Camera::Camera(sf::FloatRect bounds)
                         : camera_(std::make_unique<sf::View>(bounds))
-                        , bounds_(bounds) {
+                        , bounds_(bounds)
+                        , maxHeight_(std::max(bounds.height, bounds.width)){
     camera_->zoom(1);
 }
 

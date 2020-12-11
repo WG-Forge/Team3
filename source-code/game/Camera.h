@@ -2,15 +2,16 @@
 #define TEAM3_CAMERA_H
 
 #include <memory>
+#include <cmath>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class Camera {
 private:
-    int moveStep_ = 10;
+    int moveStep_ = 5;
     double zoomStep_ = 0.1;
-    int maxHeight_ = 750;
-    int minHeight_ = 150;
+    int maxHeight_;
+    int minHeight_ = 50;
     std::unique_ptr<sf::View> camera_;
     sf::FloatRect bounds_;
     double moveOutLimitPortion_ = 0.3;
