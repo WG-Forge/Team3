@@ -1,0 +1,7 @@
+[requires]
+jsoncpp/1.9.0@theirix/stable
+boost/1.74.0
+sfml/2.5.1@bincrafters/stable
+
+[generators]
+cmake

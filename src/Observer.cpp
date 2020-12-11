@@ -1,5 +1,7 @@
 #include <Observer.h>
 
+#include <iostream>
+
 //TODO Add parsing window size to preserveLayer10Data_(JSON_ROOT_AS_MAP& root)
 
 void Observer::launchGame() {
@@ -35,14 +37,14 @@ Response Observer::loginAction_(const std::string& playerName,
                                 uint32_t playersNumber) {
     Request request{Request::LOGIN};
 
-    request.data = std::string("{\"name\":\"").append(playerName).append("\"");
+    request.data = std::string(R"({"name":")").append(playerName).append("\"");
 
     if (!password.empty()) {
-        request.data.append(",\"password\":\"").append(password).append("\"");
+        request.data.append(R"(,"password":")").append(password).append("\"");
     }
 
     if (!gameName.empty()) {
-        request.data.append(",\"game\":\"").append(gameName).append("\"");
+        request.data.append(R"(,"game":")").append(gameName).append("\"");
     }
 
     if (turnsNumber >= 1) {

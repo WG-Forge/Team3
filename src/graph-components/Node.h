@@ -4,8 +4,6 @@
 #include <vector>
 #include <Point.h>
 
-//TODO Add protected vector of events to Node class
-
 class Edge;
 
 class Node {

@@ -7,7 +7,7 @@ ServerConnectorAgent::ServerConnectorAgent() : socket_(io_service_) {
 }
 
 ServerConnectorAgent::~ServerConnectorAgent() {
-    socket_.shutdown(ip::tcp::socket::shutdown_both);
+    //socket_.shutdown(ip::tcp::socket::shutdown_both);
     socket_.close();
 }
 
