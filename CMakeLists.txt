@@ -32,7 +32,8 @@ set(SOURCES
         src/game-components/Player.cpp src/game-components/Player.h
         src/configs/defines.h
         src/game-components/Train.cpp src/game-components/Train.h
-        src/game-components/Event.h)
+        src/game-components/Event.h
+        )
 
 if(WIN32)
     set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp)

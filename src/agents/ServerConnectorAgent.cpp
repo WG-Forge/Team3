@@ -6,6 +6,7 @@ ServerConnectorAgent::ServerConnectorAgent() : socket_(io_service_) {
     endpoint_ = *boost::asio::connect(socket_, endpoints.begin(), endpoints.end());
 }
 
+//TODO Figure out, what crushes program when one calls shutdown() using MacOS
 ServerConnectorAgent::~ServerConnectorAgent() {
     //socket_.shutdown(ip::tcp::socket::shutdown_both);
     socket_.close();

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <Node.h>
+#include <Train.h>
 
 class Town : public Node {
 public:
@@ -23,6 +24,8 @@ private:
     const std::string name_;
     bool isMine_;
 
+    std::vector<Train> trains_;
+
 public:
     Town() = delete;
     Town(int32_t pointIdx, int32_t postIdx, std::string playerIdx,
@@ -41,18 +44,15 @@ public:
     uint32_t getPopulation() const;
     uint32_t getProduct() const;
     uint32_t getArmor() const;
+    std::vector<Train>& getTrains();
+    const std::string& getName() const;
+    bool isMine() const;
 
-    void setNextLevelPrice(uint32_t nextLevelPrice);
-    void setPopulationCapacity(uint32_t populationCapacity);
-    void setProductCapacity(uint32_t productCapacity);
-    void setArmorCapacity(uint32_t armorCapacity);
-
-    void setLevel(uint32_t level);
     void setPopulation(uint32_t population);
     void setProduct(uint32_t product);
     void setArmor(uint32_t armor);
 
-    const std::string& getName() const;
-
-    bool isMine() const;
+    void upgrade(uint32_t level, uint32_t nextLevelPrice, uint32_t populationCapacity,
+                 uint32_t productCapacity, uint32_t armorCapacity);
+    void addTrain(const Train& train);
 };

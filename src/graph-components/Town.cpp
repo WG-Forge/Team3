@@ -53,24 +53,16 @@ uint32_t Town::getArmor() const {
     return armor_;
 }
 
-void Town::setNextLevelPrice(uint32_t nextLevelPrice) {
-    nextLevelPrice_ = nextLevelPrice;
+std::vector<Train>& Town::getTrains() {
+    return trains_;
 }
 
-void Town::setPopulationCapacity(uint32_t populationCapacity) {
-    populationCapacity_ = populationCapacity;
+const std::string& Town::getName() const {
+    return name_;
 }
 
-void Town::setProductCapacity(uint32_t productCapacity) {
-    productCapacity_ = productCapacity;
-}
-
-void Town::setArmorCapacity(uint32_t armorCapacity) {
-    armorCapacity_ = armorCapacity;
-}
-
-void Town::setLevel(uint32_t level) {
-    level_ = level;
+bool Town::isMine() const {
+    return isMine_;
 }
 
 void Town::setPopulation(uint32_t population) {
@@ -85,10 +77,15 @@ void Town::setArmor(uint32_t armor) {
     armor_ = armor;
 }
 
-const std::string &Town::getName() const {
-    return name_;
+void Town::upgrade(uint32_t level, uint32_t nextLevelPrice, uint32_t populationCapacity, uint32_t productCapacity,
+                   uint32_t armorCapacity) {
+    level_ = level;
+    nextLevelPrice_ = nextLevelPrice;
+    populationCapacity_ = populationCapacity;
+    productCapacity_ = productCapacity;
+    armorCapacity_ = armorCapacity;
 }
 
-bool Town::isMine() const {
-    return isMine_;
+void Town::addTrain(const Train& train) {
+    trains_.push_back(train);
 }

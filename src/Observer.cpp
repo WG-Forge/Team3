@@ -1,8 +1,8 @@
 #include <Observer.h>
 
-#include <iostream>
-
+//TODO Remove constructor arguments in agregated classes were possible (after testing different responses from server)
 //TODO Add parsing window size to preserveLayer10Data_(JSON_ROOT_AS_MAP& root)
+//TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
 
 void Observer::launchGame() {
     auto loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
@@ -186,6 +186,28 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                       post["armor"].asUInt(),
                                                       post["name"].asCString(),
                                                       isMine));
+
+                if (!playerIdx.empty()) {
+                    for (auto& train : root["trains"]) {
+                        if (playerIdx == train["player_idx"].asCString()) {
+                            Town* town = static_cast<Town*>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
+                            town->addTrain(Train(train["idx"].asInt(),
+                                                 train["line_idx"].asInt(),
+                                                 train["position"].asUInt(),
+                                                 train["speed"].asInt(),
+                                                 train["next_level_price"].asUInt(),
+                                                 train["goods_capacity"].asUInt(),
+                                                 train["fuel_capacity"].asUInt(),
+                                                 train["fuel_consumption"].asUInt(),
+                                                 train["fuel"].asUInt(),
+                                                 train["goods"].asUInt(),
+                                                 Train::GoodsType::NOTHING,
+                                                 train["level"].asUInt(),
+                                                 train["player_idx"].asCString(),
+                                                 true));
+                        }
+                    }
+                }
 
                 break;
 
