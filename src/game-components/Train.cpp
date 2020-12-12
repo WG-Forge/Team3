@@ -21,6 +21,8 @@ Train::Train(int32_t idx, int32_t lineIdx, uint32_t position, int32_t speed, uin
 
     isMine_ = isMine;
     cooldown_ = cooldown;
+
+    attachedEdge_ = nullptr;
 }
 
 int32_t Train::getIdx() const {
@@ -83,6 +85,10 @@ bool Train::isMine() const {
     return isMine_;
 }
 
+const Edge* Train::getEdge() const {
+    return attachedEdge_;
+}
+
 void Train::setCooldown(uint32_t cooldown) {
     cooldown_ = cooldown;
 }
@@ -101,6 +107,10 @@ void Train::setSpeed(int32_t speed) {
 
 void Train::setFuel(uint32_t fuel) {
     fuel_ = fuel;
+}
+
+void Train::setAttachedEdge(Edge* edge) {
+    attachedEdge_ = edge;
 }
 
 void Train::buy(GoodsType goodsType, uint32_t goods) {

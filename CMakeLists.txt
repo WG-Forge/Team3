@@ -16,7 +16,7 @@ endif()
 set(SOURCES
         main.cpp
 
-        src/Point.h
+        src/render-components/Point.h
         src/Observer.cpp src/Observer.h
         src/graph-components/Node.cpp src/graph-components/Node.h
         src/graph-components/Town.cpp src/graph-components/Town.h
@@ -33,7 +33,15 @@ set(SOURCES
         src/configs/defines.h
         src/game-components/Train.cpp src/game-components/Train.h
         src/game-components/Event.h
-        )
+        src/render-components/RotationCalculator.cpp src/render-components/RotationCalculator.h
+        src/render-components/Configuration.cpp src/render-components/Configuration.h
+        src/render-components/Camera.cpp src/render-components/Camera.h
+        src/render-components/Renderer.cpp src/render-components/Renderer.h
+        src/render-components/AssetManager.cpp src/render-components/AssetManager.h
+        src/agents/RenderAgent.cpp src/agents/RenderAgent.h
+        src/render-components/GameMapConfig.cpp src/render-components/GameMapConfig.h
+        src/agents/TrainsAgent.cpp src/agents/TrainsAgent.h
+        src/graph-components/Hometown.cpp src/graph-components/Hometown.h)
 
 if(WIN32)
     set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp)
@@ -49,6 +57,7 @@ include_directories(
         src/game-components
         src/graph-components
         src/networking-components
+        src/render-components
         libs/jsoncpp
         ${Boost_INCLUDE_DIRS}
         )
@@ -57,7 +66,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${WIN32_SOURCES})
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} sfml-system sfml-window sfml-graphics)
 endif()
 
 if(APPLE)

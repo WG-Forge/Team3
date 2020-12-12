@@ -2,11 +2,15 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <Node.h>
 #include <Town.h>
 #include <Market.h>
 #include <Storage.h>
+#include <Hometown.h>
 #include <EdgeCreationHelper.h>
+
+//TODO Move working with graph creation to GraphAgent if possible
 
 class Observer;
 
@@ -19,10 +23,14 @@ private:
 
 private:
     std::map<int32_t, uint32_t> pointIdxCompression_;
+    std::unordered_map<int32_t, Edge*> lineIdxToEdge_;
     std::vector<Node*> graph_;
 
 public:
     GraphAgent();
 
     std::vector<Node*>& getGraph();
+    Edge* findEdge(uint32_t lineIdx);
+
+    void mapEdge(Edge* edge);
 };

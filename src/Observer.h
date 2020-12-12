@@ -3,8 +3,10 @@
 #include <Player.h>
 #include <GraphAgent.h>
 #include <ServerConnectorAgent.h>
+#include <TrainsAgent.h>
 #include <JSONReader.h>
 #include <Edge.h>
+#include <GameMapConfig.h>
 #include <defines.h>
 
 //TODO NEWEST: Throw error codes, not exceptions
@@ -18,6 +20,7 @@ class Observer {
 private:
     std::vector<Player> players_; //first element is for our player
     GraphAgent graphAgent_;
+    TrainsAgent trainsAgent_;
     ServerConnectorAgent serverConnectorAgent_;
     JSONReader jsonParser_;
 
@@ -36,10 +39,13 @@ private:
     void preserveLoginData_(JSON_OBJECT_AS_MAP& root);
     void preserveLayer0Data_(JSON_OBJECT_AS_MAP& root);
     void preserveLayer1Data_(JSON_OBJECT_AS_MAP& root);
-    void preserveLayer10Data_(JSON_OBJECT_AS_MAP& root);
+    GameMapConfig preserveLayer10Data_(JSON_OBJECT_AS_MAP& root);
 
 public:
-    void launchGame();
+    GameMapConfig launchGame();
     void startGame();
     void endGame();
+
+    //temporary
+    std::vector<Node*>& getGraph();
 };

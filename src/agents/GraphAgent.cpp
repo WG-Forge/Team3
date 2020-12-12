@@ -8,3 +8,11 @@ GraphAgent::GraphAgent() {
 std::vector<Node*>& GraphAgent::getGraph() {
     return graph_;
 }
+
+Edge* GraphAgent::findEdge(uint32_t lineIdx) {
+    return lineIdxToEdge_.at(lineIdx);
+}
+
+void GraphAgent::mapEdge(Edge* edge) {
+    lineIdxToEdge_.insert(std::make_pair(edge->getLineIdx(), edge));
+}

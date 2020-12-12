@@ -9,7 +9,18 @@ namespace defines {
     }
 
     namespace server_info {
-        constexpr static std::string_view SERVER_HOSTNAME = "wgforge-srv.wargaming.net";
-        constexpr static std::string_view PORT = "443";
+        constexpr std::string_view SERVER_HOSTNAME = "wgforge-srv.wargaming.net";
+        constexpr std::string_view PORT = "443";
+    }
+
+    namespace render_info {
+        constexpr std::string_view NODE_ASSET_PATH =
+                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\unknown.png";
+        constexpr std::string_view TOWN_ASSET_PATH =
+                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\town.png";
+        constexpr std::string_view MARKET_ASSET_PATH =
+                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\market.png";
+        constexpr std::string_view STORAGE_ASSET_PATH =
+                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\storage.png";
     }
 }

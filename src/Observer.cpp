@@ -4,7 +4,7 @@
 //TODO Add parsing window size to preserveLayer10Data_(JSON_ROOT_AS_MAP& root)
 //TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
 
-void Observer::launchGame() {
+GameMapConfig Observer::launchGame() {
     auto loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
                                   std::string(defines::player_info::PASSWORD.data()));
     auto layer0 = mapAction_(0);
@@ -19,7 +19,9 @@ void Observer::launchGame() {
     preserveLoginData_(readLoginData);
     preserveLayer0Data_(readLayer0);
     preserveLayer1Data_(readLayer1);
-    preserveLayer10Data_(readLayer10);
+    auto windowConfig = preserveLayer10Data_(readLayer10);
+
+    return windowConfig;
 }
 
 void Observer::startGame() {
@@ -152,6 +154,8 @@ void Observer::preserveLayer0Data_(JSON_OBJECT_AS_MAP& root) {
 }
 
 void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
+    Hometown* hometown = nullptr;
+
     for (const auto& post : root["posts"]) {
         int32_t pointIdx = post["point_idx"].asInt();
         int32_t postIdx = post["idx"].asInt();
@@ -171,6 +175,22 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                 if (!isMine) {
                     if (playerIdx == players_[0].getIdx()) {
                         isMine = true;
+
+                        graphAgent_.graph_.push_back(new Hometown(pointIdx, postIdx,
+                                                              playerIdx,
+                                                              post["next_level_price"].asUInt(),
+                                                              post["population_capacity"].asUInt(),
+                                                              post["product_capacity"].asUInt(),
+                                                              post["armor_capacity"].asUInt(),
+                                                              post["level"].asUInt(),
+                                                              post["population"].asUInt(),
+                                                              post["product"].asUInt(),
+                                                              post["armor"].asUInt(),
+                                                              post["name"].asCString(),
+                                                              isMine));
+                        hometown = static_cast<Hometown*>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
+
+                        break;
                     }
                 }
 
@@ -186,28 +206,6 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                       post["armor"].asUInt(),
                                                       post["name"].asCString(),
                                                       isMine));
-
-                if (!playerIdx.empty()) {
-                    for (auto& train : root["trains"]) {
-                        if (playerIdx == train["player_idx"].asCString()) {
-                            Town* town = static_cast<Town*>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
-                            town->addTrain(Train(train["idx"].asInt(),
-                                                 train["line_idx"].asInt(),
-                                                 train["position"].asUInt(),
-                                                 train["speed"].asInt(),
-                                                 train["next_level_price"].asUInt(),
-                                                 train["goods_capacity"].asUInt(),
-                                                 train["fuel_capacity"].asUInt(),
-                                                 train["fuel_consumption"].asUInt(),
-                                                 train["fuel"].asUInt(),
-                                                 train["goods"].asUInt(),
-                                                 Train::GoodsType::NOTHING,
-                                                 train["level"].asUInt(),
-                                                 train["player_idx"].asCString(),
-                                                 true));
-                        }
-                    }
-                }
 
                 break;
 
@@ -231,24 +229,62 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
         }
     }
 
-    for (const auto& edge : graphAgent_.edgeCreationHelpers_) {
-        int32_t firstPointIdx = graphAgent_.pointIdxCompression_.at(edge.firstPointIdx);
-        int32_t secondPointIdx = graphAgent_.pointIdxCompression_.at(edge.secondPointIdx);
+    for (const auto& edgeCreationHelper : graphAgent_.edgeCreationHelpers_) {
+        int32_t firstPointIdx = graphAgent_.pointIdxCompression_.at(edgeCreationHelper.firstPointIdx);
+        int32_t secondPointIdx = graphAgent_.pointIdxCompression_.at(edgeCreationHelper.secondPointIdx);
 
-        Edge* completeEdge = new Edge(edge.lineIdx, edge.length,
-                                      graphAgent_.graph_[firstPointIdx],
-                                      graphAgent_.graph_[secondPointIdx]);
+        Edge* edge = new Edge(edgeCreationHelper.lineIdx, edgeCreationHelper.length,
+                  graphAgent_.graph_[firstPointIdx],
+                  graphAgent_.graph_[secondPointIdx]);
 
-        graphAgent_.graph_[firstPointIdx]->addNeighbor(completeEdge);
-        graphAgent_.graph_[secondPointIdx]->addNeighbor(completeEdge);
+        graphAgent_.mapEdge(edge);
+        graphAgent_.graph_[firstPointIdx]->addNeighbor(edge);
+        graphAgent_.graph_[secondPointIdx]->addNeighbor(edge);
+    }
+
+    for (auto& train : root["trains"]) {
+        int32_t lineIdx = train["line_idx"].asInt();
+        auto playerIdx = train["player_idx"].asCString();
+
+        Train addTrain(train["idx"].asInt(),
+                    lineIdx,
+                    train["position"].asUInt(),
+                    train["speed"].asInt(),
+                    train["next_level_price"].asUInt(),
+                    train["goods_capacity"].asUInt(),
+                    train["fuel_capacity"].asUInt(),
+                    train["fuel_consumption"].asUInt(),
+                    train["fuel"].asUInt(),
+                    train["goods"].asUInt(),
+                    Train::GoodsType::NOTHING,
+                    train["level"].asUInt(),
+                    playerIdx,
+                    true);
+
+        trainsAgent_.addTrain(addTrain);
+        addTrain.setAttachedEdge(graphAgent_.findEdge(lineIdx));
+
+        if (playerIdx == hometown->getPlayerIdx()) {
+            hometown->addTrain(addTrain);
+        }
     }
 }
 
-void Observer::preserveLayer10Data_(JSON_OBJECT_AS_MAP& root) {
+GameMapConfig Observer::preserveLayer10Data_(JSON_OBJECT_AS_MAP& root) {
     for (const auto& coordinates : root["coordinates"]) {
         uint32_t pointIndex = graphAgent_.pointIdxCompression_.at(coordinates["idx"].asInt());
 
         graphAgent_.graph_[pointIndex]->setCoordinates(
                 coordinates["x"].asUInt(), coordinates["y"].asUInt());
     }
+
+    int32_t idx = root["idx"].asInt();
+    uint32_t width = root["size"][0].asUInt();
+    uint32_t height = root["size"][1].asUInt();
+
+    return GameMapConfig(idx, width, height);
+}
+
+std::vector<Node*>& Observer::getGraph() {
+    return graphAgent_.getGraph();
 }

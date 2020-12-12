@@ -1,4 +1,5 @@
 #include <Node.h>
+#include <Edge.h>
 
 Node::Node(int32_t pointIdx, int32_t postIdx, uint32_t type) :
             pointIdx_(pointIdx), postIdx_(postIdx), type_(type) {}
@@ -19,7 +20,7 @@ Point Node::getCoordinates() const {
     return coordinates_;
 }
 
-std::vector<Edge *> &Node::getNeighbors() {
+std::vector<Edge*>& Node::getNeighbors() {
     return neighbors_;
 }
 

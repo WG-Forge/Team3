@@ -53,10 +53,6 @@ uint32_t Town::getArmor() const {
     return armor_;
 }
 
-std::vector<Train>& Town::getTrains() {
-    return trains_;
-}
-
 const std::string& Town::getName() const {
     return name_;
 }
@@ -84,8 +80,4 @@ void Town::upgrade(uint32_t level, uint32_t nextLevelPrice, uint32_t populationC
     populationCapacity_ = populationCapacity;
     productCapacity_ = productCapacity;
     armorCapacity_ = armorCapacity;
-}
-
-void Town::addTrain(const Train& train) {
-    trains_.push_back(train);
 }
