@@ -6,12 +6,6 @@
 #include <Camera.h>
 #include <GameMapConfig.h>
 
-namespace render {
-    typedef sf::RenderWindow WINDOW;
-    typedef sf::Keyboard KEYBOARD;
-    typedef sf::Event EVENT;
-}
-
 class RenderAgent {
 private:
     Configuration config_;
@@ -25,5 +19,5 @@ public:
     Renderer& getRenderer();
     std::unique_ptr<Camera>& getCamera();
 
-    std::shared_ptr<render::WINDOW>& createWindow();
+    std::shared_ptr<sf::RenderWindow>& createWindow();
 };
