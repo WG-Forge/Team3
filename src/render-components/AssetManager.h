@@ -9,5 +9,5 @@ class AssetManager {
 private:
     std::map<std::string, std::unique_ptr<sf::Texture>> assets_;
 public:
-    sf::Texture* getOrLoadAsset(std::string path);
+    sf::Texture* getOrLoadAsset(const std::string& path);
 };

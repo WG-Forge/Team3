@@ -17,8 +17,13 @@ private:
     sf::RenderWindow* window_;
     RotationCalculator rotationCalculator_;
     AssetManager assetManager_;
-    const int32_t NODE_SIZE_ = 20;
+    const int32_t NODE_SIZE_ = 10;
+    const int32_t TRAIN_SIZE_ = 8;
+    const int32_t RAIL_DIST = 1;
 public:
-    Renderer(sf::RenderWindow* window);
+    explicit Renderer(sf::RenderWindow* window);
+    void renderEdges(const std::vector<Node*>& g);
+    void renderNodes(const std::vector<Node*>& g);
+    //void renderTrains(const std::vector<Node*>& g);
     void render(const std::vector<Node*>& g);
 };

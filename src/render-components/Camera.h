@@ -6,17 +6,17 @@
 
 class Camera {
 private:
-    int32_t moveStep_ = 5;
-    double zoomStep_ = 0.1;
+    float moveStep_ = 5;
+    float zoomStep_ = 0.1;
     int32_t maxHeight_;
     int32_t minHeight_ = 50;
     std::unique_ptr<sf::View> camera_;
     sf::FloatRect bounds_;
-    double moveOutLimitPortion_ = 0.3;
-    int32_t getLimitedOffset(int32_t currentPosition, int32_t offset, int32_t size);
+    float moveOutLimitPortion_ = 0.3;
+    float getLimitedOffset(float currentPosition, int32_t offset, int32_t size) const;
 public:
-    Camera(sf::FloatRect bounds);
-    void zoom(double zoom, int32_t x, int32_t y, sf::RenderWindow* window);
+    explicit Camera(sf::FloatRect bounds);
+    void zoom(float zoom, int32_t x, int32_t y, sf::RenderWindow* window);
     void zoomIn(int32_t x, int32_t y, sf::RenderWindow* window);
     void zoomOut(int32_t x, int32_t y, sf::RenderWindow* window);
     void moveLeft(int32_t offset);
@@ -24,6 +24,6 @@ public:
     void moveUp(int32_t offset);
     void moveDown(int32_t offset);
     sf::View* getView();
-    int32_t getMoveStep() const;
+    float getMoveStep() const;
 };
 
