@@ -12,10 +12,10 @@ struct Event {
     };
 
     enum DataKey {
-        TRAIN_COLLISION = "train",
-        HIJACKERS_ASSAULT = "hijackers_power",
-        PARASITES_ASSAULT = "parasites_power",
-        REFUGEES_ARRIVAL = "refugees_number"
+        TRAIN_COLLISION_KEY = "train",
+        HIJACKERS_ASSAULT_KEY = "hijackers_power",
+        PARASITES_ASSAULT_KEY = "parasites_power",
+        REFUGEES_ARRIVAL_KEY = "refugees_number"
     };
 
     Type type;
