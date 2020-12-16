@@ -3,20 +3,21 @@
 #include <graph-components/Storage.h>
 #include "MoveAgent.h"
 
-Node* MoveAgent::move(const std::vector<Node *> &g, Train* train) {
-    int newNode;
+TrainMovement MoveAgent::move(GraphAgent* graphAgent, Train* train) {
+    Node* newNode;
     if (train->getGoodsType() == Train::NOTHING) {
-        newNode = moveTo(g, train, 2); // move to market
+        newNode = moveTo(graphAgent, train, 2); // move to market
     } else {
-        newNode = moveTo(g, train, 1); // move to home
+        newNode = moveTo(graphAgent, train, 1); // move to home
     }
-    return g[newNode];
+    return calcMovement(graphAgent, train, newNode);
 }
 
-int MoveAgent::moveTo(const std::vector<Node *> &g, Train* train, uint32_t buildingType) {
+Node* MoveAgent::moveTo(GraphAgent* graphAgent, Train* train, uint32_t buildingType) {
+    auto g = graphAgent->getGraph();
     const Edge* trainEdge = train->getEdge();
-    int s1 = trainEdge->getFirstNode()->getPointIdx();
-    int s2 = trainEdge->getSecondNode()->getPointIdx();
+    int s1 = graphAgent->compressPointIdx(trainEdge->getFirstNode()->getPointIdx());
+    int s2 = graphAgent->compressPointIdx(trainEdge->getSecondNode()->getPointIdx());
 
     std::vector<int> dist(g.size(), INF);
     std::vector<int> p(g.size());
@@ -26,7 +27,7 @@ int MoveAgent::moveTo(const std::vector<Node *> &g, Train* train, uint32_t build
     q.insert (std::make_pair (dist[s1], s1));
     dist[s2] = trainEdge->getLength() - train->getPosition();
     q.insert (std::make_pair (dist[s2], s2));
-    int end_v;
+    int end_v = s1;
 
     // dijkstra
     while (!q.empty()) {
@@ -43,9 +44,10 @@ int MoveAgent::moveTo(const std::vector<Node *> &g, Train* train, uint32_t build
         }
 
         for (auto edge : g[v]->getNeighbors()) {
-            int to = edge->getFirstNode()->getPointIdx()
-                     ? edge->getFirstNode()->getPointIdx() != v
+            int toOrigIdx = edge->getFirstNode()->getPointIdx() != v
+                     ? edge->getFirstNode()->getPointIdx()
                      : edge->getSecondNode()->getPointIdx();
+            int to = graphAgent->compressPointIdx(toOrigIdx);
             int len = edge->getLength();
             if (dist[v] + len < dist[to]) {
                 q.erase (std::make_pair (dist[to], to));
@@ -64,8 +66,42 @@ int MoveAgent::moveTo(const std::vector<Node *> &g, Train* train, uint32_t build
         v=p[v];
     }
     if (dist[v] == 0) {
-        return prev;
+        return g[prev];
     } else {
-        return v;
+        return g[v];
     }
 }
+
+TrainMovement MoveAgent::calcMovement(GraphAgent *graphAgent, Train *train, Node* nextNode) {
+    const Edge* movementEdge;
+    uint32_t currentNode;
+
+    if (train->getPosition() == 0) {
+        currentNode = train->getEdge()->getFirstNode()->getPointIdx();
+    } else if (train->getPosition() == train->getEdge()->getLength()) {
+        currentNode = train->getEdge()->getSecondNode()->getPointIdx();
+    }
+
+    if (train->getPosition() == 0 || train->getPosition() == train->getEdge()->getLength()) {
+        for (auto edge : nextNode->getNeighbors()) {
+            if (currentNode == edge->getFirstNode()->getPointIdx()
+                || currentNode == edge->getSecondNode()->getPointIdx()) {
+                movementEdge = edge;
+                break;
+            }
+        }
+    } else {
+        movementEdge = train->getEdge();
+    }
+    int speed;
+    if (nextNode->getPointIdx() == movementEdge->getFirstNode()->getPointIdx()) {
+        speed = -1;
+    } else {
+        speed = 1;
+    }
+    return TrainMovement(movementEdge->getLineIdx(), speed, train->getIdx());
+}
+
+
+TrainMovement::TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx) : lineIdx(lineIdx), speed(speed),
+                                                                                 trainIdx(trainIdx) {}

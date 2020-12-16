@@ -16,3 +16,7 @@ Edge* GraphAgent::findEdge(uint32_t lineIdx) {
 void GraphAgent::mapEdge(Edge* edge) {
     lineIdxToEdge_.insert(std::make_pair(edge->getLineIdx(), edge));
 }
+
+uint32_t GraphAgent::compressPointIdx(uint32_t idx) {
+    return pointIdxCompression_.at(idx);
+}

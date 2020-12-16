@@ -4,19 +4,23 @@
 #include <Node.h>
 #include <game-components/Train.h>
 #include <set>
+#include "GraphAgent.h"
 
 struct TrainMovement {
     int32_t lineIdx;
     int32_t speed;
     int32_t trainIdx;
+
+    TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx);
 };
 
 class MoveAgent {
 private:
     const int INF = 1000000000;
-    int moveTo(const std::vector<Node *> &g, Train* train, uint32_t buildingType);
+    Node* moveTo(GraphAgent* graphAgent, Train* train, uint32_t buildingType);
+    TrainMovement calcMovement(GraphAgent* graphAgent, Train* train, Node* nextNode);
 public:
-    Node* move(const std::vector<Node*>& g, Train* train);
+    TrainMovement move(GraphAgent* graphAgent, Train* train);
 };
 
 

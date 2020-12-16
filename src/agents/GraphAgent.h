@@ -31,6 +31,7 @@ public:
 
     std::vector<Node*>& getGraph();
     Edge* findEdge(uint32_t lineIdx);
+    uint32_t compressPointIdx(uint32_t idx);
 
     void mapEdge(Edge* edge);
 };
