@@ -3,9 +3,10 @@
 Renderer::Renderer(sf::RenderWindow *window)
         : window_(window) {}
 
-void Renderer::render(const std::vector<Node*>& g) {
+void Renderer::render(const std::vector<Node*>& g, const std::vector<Train> &trains) {
     renderEdges(g);
     renderNodes(g);
+    renderTrains(trains);
 }
 
 void Renderer::renderEdges(const std::vector<Node*>& g) {
@@ -68,20 +69,21 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
     }
 }
 
-/*void Renderer::renderTrains(const std::vector<Node*>& g) {
-    for (auto const& edge : g->edges) {
-        Train* train = edge.second->train;
-        if (train != nullptr
-            && train->getPosition() > 0
-            && train->getPosition() < edge.second->getLength()) {
-            Point p1 = Point(edge.second->getFirstNode()->getPosition());
-            Point p2 = Point(edge.second->getSecondNode()->getPosition());
-            Point train2DPosition = rotationCalculator_.calcPointOnLine(p1, p2, train->getPosition()/edge.second->getLength());
+void Renderer::renderTrains(const std::vector<Train> &trains) {
+    for (auto const& train : trains) {
+        auto trainEdge = train.getEdge();
+        if (train.getPosition() > 0
+            && train.getPosition() < trainEdge->getLength()) {
+            Point p1 = Point(trainEdge->getFirstNode()->getCoordinates());
+            Point p2 = Point(trainEdge->getSecondNode()->getCoordinates());
+            Point train2DPosition = rotationCalculator_.calcPointOnLine(
+                    p1, p2, (float)train.getPosition()/trainEdge->getLength());
+
             sf::Sprite s;
             sf::Texture* texture;
             texture = assetManager_.getOrLoadAsset("resources/images/train.png");
             s = sf::Sprite(*texture);
-            s.setOrigin(texture->getSize().x/2, texture->getSize().y/2);
+            s.setOrigin((float) texture->getSize().x/2, (float) texture->getSize().y/2);
             s.scale((float) TRAIN_SIZE_ / texture->getSize().x,
                     (float) TRAIN_SIZE_ / texture->getSize().y);
             s.setPosition(train2DPosition.x,
@@ -90,4 +92,4 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
             window_->draw(s);
         }
     }
-}*/
+}

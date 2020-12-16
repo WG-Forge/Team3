@@ -11,6 +11,7 @@
 #include <RotationCalculator.h>
 #include <AssetManager.h>
 #include <defines.h>
+#include <game-components/Train.h>
 
 class Renderer {
 private:
@@ -24,6 +25,6 @@ public:
     explicit Renderer(sf::RenderWindow* window);
     void renderEdges(const std::vector<Node*>& g);
     void renderNodes(const std::vector<Node*>& g);
-    //void renderTrains(const std::vector<Node*>& g);
-    void render(const std::vector<Node*>& g);
+    void renderTrains(const std::vector<Train>& trains);
+    void render(const std::vector<Node*>& g, const std::vector<Train>& trains);
 };

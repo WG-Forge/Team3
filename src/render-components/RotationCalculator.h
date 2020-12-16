@@ -13,6 +13,7 @@ public:
     Point calcUpperLineP2(Point p1, Point p2, float d);
     Point calcLowerLineP1(Point p1, Point p2, float d);
     Point calcLowerLineP2(Point p1, Point p2, float d);
+    Point calcPointOnLine(Point p1, Point p2, float ratio);
 
     float calcTrainRotation(Point p1, Point p2);
 };

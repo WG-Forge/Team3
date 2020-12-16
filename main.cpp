@@ -9,9 +9,6 @@ int main() {
     RenderAgent renderAgent(windowConfig);
     auto window = renderAgent.createWindow();
 
-    renderAgent.getRenderer().render(observer.getGraph());
-    window->display();
-
     //temporary
     while (window->isOpen()) {
         sf::Event e;
@@ -46,7 +43,7 @@ int main() {
         window->clear(sf::Color::White);
         window->setView(*renderAgent.getCamera()->getView());
 
-        renderAgent.getRenderer().render(observer.getGraph());
+        renderAgent.getRenderer().render(observer.getGraph(), observer.getTrains());
         window->display();
     }
 

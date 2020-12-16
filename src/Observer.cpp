@@ -288,3 +288,7 @@ GameMapConfig Observer::preserveLayer10Data_(JSON_OBJECT_AS_MAP& root) {
 std::vector<Node*>& Observer::getGraph() {
     return graphAgent_.getGraph();
 }
+
+std::vector<Train> &Observer::getTrains() {
+    return trainsAgent_.getAllTrains();
+}
