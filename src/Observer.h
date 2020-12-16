@@ -8,6 +8,7 @@
 #include <Edge.h>
 #include <GameMapConfig.h>
 #include <defines.h>
+#include <agents/MoveAgent.h>
 
 //TODO NEWEST: Throw error codes, not exceptions
 //TODO Handle exceptions, possibly thrown by Action methods (if its needed (?))
@@ -22,6 +23,7 @@ private:
     GraphAgent graphAgent_;
     TrainsAgent trainsAgent_;
     ServerConnectorAgent serverConnectorAgent_;
+    MoveAgent moveAgent_;
     JSONReader jsonParser_;
 
     Response loginAction_(const std::string& playerName,

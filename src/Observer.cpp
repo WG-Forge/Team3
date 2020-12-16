@@ -21,6 +21,8 @@ GameMapConfig Observer::launchGame() {
     preserveLayer1Data_(readLayer1);
     auto windowConfig = preserveLayer10Data_(readLayer10);
 
+    moveAgent_.move(graphAgent_.getGraph(), trainsAgent_.getAllTrains()[0]);
+
     return windowConfig;
 }
 

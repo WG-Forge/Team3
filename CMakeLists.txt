@@ -41,10 +41,11 @@ set(SOURCES
         src/agents/RenderAgent.cpp src/agents/RenderAgent.h
         src/render-components/GameMapConfig.cpp src/render-components/GameMapConfig.h
         src/agents/TrainsAgent.cpp src/agents/TrainsAgent.h
-        src/graph-components/Hometown.cpp src/graph-components/Hometown.h)
+        src/graph-components/Hometown.cpp src/graph-components/Hometown.h
+        src/agents/MoveAgent.cpp src/agents/MoveAgent.h)
 
 if(WIN32)
-    set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp)
+    set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp src/agents/MoveAgent.cpp src/agents/MoveAgent.h)
 
     find_package(Boost REQUIRED)
     find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
