@@ -246,7 +246,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
         int32_t lineIdx = train["line_idx"].asInt();
         auto playerIdx = train["player_idx"].asCString();
 
-        Train addTrain(train["idx"].asInt(),
+        Train* addTrain = new Train(train["idx"].asInt(),
                     lineIdx,
                     train["position"].asUInt(),
                     train["speed"].asInt(),
@@ -262,7 +262,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                     true);
 
         trainsAgent_.addTrain(addTrain);
-        addTrain.setAttachedEdge(graphAgent_.findEdge(lineIdx));
+        addTrain->setAttachedEdge(graphAgent_.findEdge(lineIdx));
 
         if (playerIdx == hometown->getPlayerIdx()) {
             hometown->addTrain(addTrain);
@@ -289,6 +289,6 @@ std::vector<Node*>& Observer::getGraph() {
     return graphAgent_.getGraph();
 }
 
-std::vector<Train> &Observer::getTrains() {
+std::vector<Train*> &Observer::getTrains() {
     return trainsAgent_.getAllTrains();
 }

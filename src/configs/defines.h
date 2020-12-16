@@ -22,5 +22,7 @@ namespace defines {
                 "resources/assets/market.png";
         constexpr std::string_view STORAGE_ASSET_PATH =
                 "resources/assets/storage.png";
+        constexpr std::string_view TRAIN_ASSET_PATH =
+                "resources/assets/train.png";
     }
 }

@@ -3,7 +3,7 @@
 Renderer::Renderer(sf::RenderWindow *window)
         : window_(window) {}
 
-void Renderer::render(const std::vector<Node*>& g, const std::vector<Train> &trains) {
+void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &trains) {
     renderEdges(g);
     renderNodes(g);
     renderTrains(trains);
@@ -69,19 +69,19 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
     }
 }
 
-void Renderer::renderTrains(const std::vector<Train> &trains) {
+void Renderer::renderTrains(const std::vector<Train*> &trains) {
     for (auto const& train : trains) {
-        auto trainEdge = train.getEdge();
-        if (train.getPosition() > 0
-            && train.getPosition() < trainEdge->getLength()) {
+        auto trainEdge = train->getEdge();
+        if (train->getPosition() > 0
+            && train->getPosition() < trainEdge->getLength()) {
             Point p1 = Point(trainEdge->getFirstNode()->getCoordinates());
             Point p2 = Point(trainEdge->getSecondNode()->getCoordinates());
             Point train2DPosition = rotationCalculator_.calcPointOnLine(
-                    p1, p2, (float)train.getPosition()/trainEdge->getLength());
+                    p1, p2, (float)train->getPosition()/trainEdge->getLength());
 
             sf::Sprite s;
             sf::Texture* texture;
-            texture = assetManager_.getOrLoadAsset("resources/images/train.png");
+            texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::TRAIN_ASSET_PATH));
             s = sf::Sprite(*texture);
             s.setOrigin((float) texture->getSize().x/2, (float) texture->getSize().y/2);
             s.scale((float) TRAIN_SIZE_ / texture->getSize().x,

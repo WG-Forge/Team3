@@ -48,5 +48,5 @@ public:
 
     //temporary
     std::vector<Node*>& getGraph();
-    std::vector<Train>& getTrains();
+    std::vector<Train*>& getTrains();
 };
