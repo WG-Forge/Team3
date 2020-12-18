@@ -36,6 +36,12 @@ float RotationCalculator::calcBias(float z1, float z2, float d, float diag) {
     return d*(z2-z1) / diag;
 }
 
+Point RotationCalculator::calcPointOnLine(Point p1, Point p2, float ratio) {
+    float x = p1.x+(p2.x - p1.x)*ratio;
+    float y = p1.y+(p2.y - p1.y)*ratio;
+    return Point(x, y);
+}
+
 float RotationCalculator::calcTrainRotation(Point p1, Point p2) {
     float x = p2.x - p1.x;
     float y = p2.y - p1.y;
