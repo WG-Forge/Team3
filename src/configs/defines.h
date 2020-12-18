@@ -15,12 +15,12 @@ namespace defines {
 
     namespace render_info {
         constexpr std::string_view NODE_ASSET_PATH =
-                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\unknown.png";
+                "resources/assets/unknown.png";
         constexpr std::string_view TOWN_ASSET_PATH =
-                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\town.png";
+                "resources/assets/town.png";
         constexpr std::string_view MARKET_ASSET_PATH =
-                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\market.png";
+                "resources/assets/market.png";
         constexpr std::string_view STORAGE_ASSET_PATH =
-                "D:\\yanvarskii\\WGForge\\Team3\\resources\\assets\\storage.png";
+                "resources/assets/storage.png";
     }
 }

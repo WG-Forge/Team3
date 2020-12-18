@@ -11,13 +11,6 @@ struct Event {
         GAME_OVER = 100
     };
 
-    enum DataKey {
-        TRAIN_COLLISION = "train",
-        HIJACKERS_ASSAULT = "hijackers_power",
-        PARASITES_ASSAULT = "parasites_power",
-        REFUGEES_ARRIVAL = "refugees_number"
-    };
-
     Type type;
     uint32_t tick;
     std::string data;
