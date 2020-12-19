@@ -5,6 +5,12 @@ GraphAgent::GraphAgent() {
     graph_.reserve(100);
 }
 
+GraphAgent::~GraphAgent() {
+    for (int32_t i = 0; i < graph_.size(); ++i) {
+        delete graph_[i];
+    }
+}
+
 std::vector<Node*>& GraphAgent::getGraph() {
     return graph_;
 }

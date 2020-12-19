@@ -93,10 +93,6 @@ void Train::setCooldown(uint32_t cooldown) {
     cooldown_ = cooldown;
 }
 
-void Train::setLineIdx(int32_t lineIdx) {
-    lineIdx_ = lineIdx;
-}
-
 void Train::setPosition(uint32_t position) {
     position_ = position;
 }
@@ -111,6 +107,7 @@ void Train::setFuel(uint32_t fuel) {
 
 void Train::setAttachedEdge(Edge* edge) {
     attachedEdge_ = edge;
+    lineIdx_ = edge->getLineIdx();
 }
 
 void Train::buy(GoodsType goodsType, uint32_t goods) {

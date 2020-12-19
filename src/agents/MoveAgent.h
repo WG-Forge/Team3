@@ -1,10 +1,9 @@
-#ifndef TEAM3_MOVEAGENT_H
-#define TEAM3_MOVEAGENT_H
+#pragma once
 
-#include <Node.h>
-#include <game-components/Train.h>
 #include <set>
-#include "GraphAgent.h"
+#include <Node.h>
+#include <Train.h>
+#include <GraphAgent.h>
 
 struct TrainMovement {
     int32_t lineIdx;
@@ -16,12 +15,10 @@ struct TrainMovement {
 
 class MoveAgent {
 private:
-    const int INF = 1000000000;
-    Node* moveTo(GraphAgent* graphAgent, Train* train, uint32_t buildingType);
-    TrainMovement calcMovement(GraphAgent* graphAgent, Train* train, Node* nextNode);
+    const int32_t INF = INT32_MAX;
+    Node* moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& pointIdxCompression,
+                 Train* train, uint32_t buildingType);
+    TrainMovement calcMovement(Train* train, Node* nextNode);
 public:
-    TrainMovement move(GraphAgent* graphAgent, Train* train);
+    TrainMovement move(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& pointIdxCompression, Train* train);
 };
-
-
-#endif //TEAM3_MOVEAGENT_H

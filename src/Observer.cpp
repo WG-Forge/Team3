@@ -1,7 +1,6 @@
 #include <Observer.h>
 
 //TODO Remove constructor arguments in agregated classes were possible (after testing different responses from server)
-//TODO Add parsing window size to preserveLayer10Data_(JSON_ROOT_AS_MAP& root)
 //TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
 
 GameMapConfig Observer::launchGame() {
@@ -24,8 +23,46 @@ GameMapConfig Observer::launchGame() {
     return windowConfig;
 }
 
-void Observer::startGame() {
+void Observer::startGame(GameMapConfig config) {
+    RenderAgent renderAgent(config);
+    auto window = renderAgent.createWindow();
 
+    while (window->isOpen()) {
+        sf::Event e;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            renderAgent.getCamera()->moveLeft(renderAgent.getCamera()->getMoveStep());
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            renderAgent.getCamera()->moveUp(renderAgent.getCamera()->getMoveStep());
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            renderAgent.getCamera()->moveRight(renderAgent.getCamera()->getMoveStep());
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            renderAgent.getCamera()->moveDown(renderAgent.getCamera()->getMoveStep());
+        }
+
+        while (window->pollEvent(e)) {
+            if (e.type == sf::Event::Closed) {
+                window->close();
+                break;
+            }
+
+            if (e.type == sf::Event::MouseWheelMoved) {
+                if (e.mouseWheel.delta > 0) {
+                    renderAgent.getCamera()->zoomOut(e.mouseWheel.x, e.mouseWheel.y, window.get());
+                } else if (e.mouseWheel.delta < 0) {
+                    renderAgent.getCamera()->zoomIn(e.mouseWheel.x, e.mouseWheel.y, window.get());
+                }
+            }
+        }
+        window->clear(sf::Color::White);
+        window->setView(*renderAgent.getCamera()->getView());
+
+        renderAgent.getRenderer().render(graphAgent_.graph_, trainsAgent_.trains_);
+        window->display();
+    }
 }
 
 void Observer::endGame() {
@@ -154,118 +191,168 @@ void Observer::preserveLayer0Data_(JSON_OBJECT_AS_MAP& root) {
 }
 
 void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
+    Town* town = nullptr;
     Hometown* hometown = nullptr;
+    Market* market = nullptr;
+    Storage* storage = nullptr;
 
-    for (const auto& post : root["posts"]) {
-        int32_t pointIdx = post["point_idx"].asInt();
-        int32_t postIdx = post["idx"].asInt();
+    auto& trains = trainsAgent_.getAllTrains();
+
+    for (const auto& readPost : root["posts"]) {
+        int32_t pointIdx = readPost["point_idx"].asInt();
+        int32_t postIdx = readPost["idx"].asInt();
         std::string playerIdx;
 
-        static bool isMine = false;
+        bool exists = false;
+        auto index = graphAgent_.pointIdxCompression_.find(pointIdx);
 
-        graphAgent_.pointIdxCompression_[pointIdx] =
-                graphAgent_.graph_.size();
+        if (index != graphAgent_.pointIdxCompression_.end()) {
+            exists = true;
+        } else {
+            graphAgent_.pointIdxCompression_[pointIdx] =
+                    graphAgent_.graph_.size();
+        }
 
-        switch (post["type"].asUInt()) {
+        switch (readPost["type"].asUInt()) {
             case Town::TYPE :
-                if (post["player_idx"].type() == JSON_VALUE_TYPE::stringValue) {
-                    playerIdx = post["player_idx"].asCString();
+                if (readPost["player_idx"].type() == JSON_VALUE_TYPE::stringValue) {
+                    playerIdx = readPost["player_idx"].asCString();
                 }
 
-                if (!isMine) {
-                    if (playerIdx == players_[0].getIdx()) {
-                        isMine = true;
+                if (playerIdx == players_[0].getIdx()) {
+                    if (exists) {
+                        hometown = static_cast<Hometown*>(graphAgent_.graph_[index->second]);
 
+                        hometown->setProduct(readPost["product"].asUInt());
+                        hometown->setArmor(readPost["armor"].asUInt());
+                        hometown->setPopulation(readPost["population"].asUInt());
+                    } else {
                         graphAgent_.graph_.push_back(new Hometown(pointIdx, postIdx,
-                                                              playerIdx,
-                                                              post["next_level_price"].asUInt(),
-                                                              post["population_capacity"].asUInt(),
-                                                              post["product_capacity"].asUInt(),
-                                                              post["armor_capacity"].asUInt(),
-                                                              post["level"].asUInt(),
-                                                              post["population"].asUInt(),
-                                                              post["product"].asUInt(),
-                                                              post["armor"].asUInt(),
-                                                              post["name"].asCString(),
-                                                              isMine));
+                                                                  playerIdx,
+                                                                  readPost["next_level_price"].asUInt(),
+                                                                  readPost["population_capacity"].asUInt(),
+                                                                  readPost["product_capacity"].asUInt(),
+                                                                  readPost["armor_capacity"].asUInt(),
+                                                                  readPost["level"].asUInt(),
+                                                                  readPost["population"].asUInt(),
+                                                                  readPost["product"].asUInt(),
+                                                                  readPost["armor"].asUInt(),
+                                                                  readPost["name"].asCString(),
+                                                                  true));
                         hometown = static_cast<Hometown*>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
 
                         break;
                     }
                 }
 
-                graphAgent_.graph_.push_back(new Town(pointIdx, postIdx,
-                                                      playerIdx,
-                                                      post["next_level_price"].asUInt(),
-                                                      post["population_capacity"].asUInt(),
-                                                      post["product_capacity"].asUInt(),
-                                                      post["armor_capacity"].asUInt(),
-                                                      post["level"].asUInt(),
-                                                      post["population"].asUInt(),
-                                                      post["product"].asUInt(),
-                                                      post["armor"].asUInt(),
-                                                      post["name"].asCString(),
-                                                      isMine));
+                if (exists) {
+                    town = static_cast<Town*>(graphAgent_.graph_[index->second]);
 
-                break;
+                    town->setProduct(readPost["product"].asUInt());
+                    town->setArmor(readPost["armor"].asUInt());
+                    town->setPopulation(readPost["population"].asUInt());
+                } else {
+                    graphAgent_.graph_.push_back(new Town(pointIdx, postIdx,
+                                                          playerIdx,
+                                                          readPost["next_level_price"].asUInt(),
+                                                          readPost["population_capacity"].asUInt(),
+                                                          readPost["product_capacity"].asUInt(),
+                                                          readPost["armor_capacity"].asUInt(),
+                                                          readPost["level"].asUInt(),
+                                                          readPost["population"].asUInt(),
+                                                          readPost["product"].asUInt(),
+                                                          readPost["armor"].asUInt(),
+                                                          readPost["name"].asCString(),
+                                                          false));
+
+                    break;
+                }
 
             case Market::TYPE :
-                graphAgent_.graph_.push_back(new Market(pointIdx, postIdx,
-                                                        post["product_capacity"].asUInt(),
-                                                        post["replenishment"].asUInt(),
-                                                        post["product"].asUInt(),
-                                                        post["name"].asCString()));
+                if (exists) {
+                    market = static_cast<Market*>(graphAgent_.graph_[index->second]);
 
-                break;
+                    market->setProduct(readPost["product"].asUInt());
+                } else {
+                    graphAgent_.graph_.push_back(new Market(pointIdx, postIdx,
+                                                            readPost["product_capacity"].asUInt(),
+                                                            readPost["replenishment"].asUInt(),
+                                                            readPost["product"].asUInt(),
+                                                            readPost["name"].asCString()));
+
+                    break;
+                }
 
             case Storage::TYPE :
-                graphAgent_.graph_.push_back(new Storage(pointIdx, postIdx,
-                                                        post["armor_capacity"].asUInt(),
-                                                        post["replenishment"].asUInt(),
-                                                        post["armor"].asUInt(),
-                                                        post["name"].asCString()));
+                if (exists) {
+                    storage = static_cast<Storage*>(graphAgent_.graph_[index->second]);
 
-                break;
+                    storage->setArmor(readPost["armor"].asUInt());
+                } else {
+                    graphAgent_.graph_.push_back(new Storage(pointIdx, postIdx,
+                                                             readPost["armor_capacity"].asUInt(),
+                                                             readPost["replenishment"].asUInt(),
+                                                             readPost["armor"].asUInt(),
+                                                             readPost["name"].asCString()));
+
+                    break;
+                }
         }
     }
 
-    for (const auto& edgeCreationHelper : graphAgent_.edgeCreationHelpers_) {
+    for (const auto &edgeCreationHelper : graphAgent_.edgeCreationHelpers_) {
         int32_t firstPointIdx = graphAgent_.pointIdxCompression_.at(edgeCreationHelper.firstPointIdx);
         int32_t secondPointIdx = graphAgent_.pointIdxCompression_.at(edgeCreationHelper.secondPointIdx);
 
-        Edge* edge = new Edge(edgeCreationHelper.lineIdx, edgeCreationHelper.length,
-                  graphAgent_.graph_[firstPointIdx],
-                  graphAgent_.graph_[secondPointIdx]);
+        Edge *edge = new Edge(edgeCreationHelper.lineIdx, edgeCreationHelper.length,
+                              graphAgent_.graph_[firstPointIdx],
+                              graphAgent_.graph_[secondPointIdx]);
 
         graphAgent_.mapEdge(edge);
         graphAgent_.graph_[firstPointIdx]->addNeighbor(edge);
         graphAgent_.graph_[secondPointIdx]->addNeighbor(edge);
     }
 
-    for (auto& train : root["trains"]) {
-        int32_t lineIdx = train["line_idx"].asInt();
-        auto playerIdx = train["player_idx"].asCString();
+    graphAgent_.edgeCreationHelpers_.clear();
 
-        Train* addTrain = new Train(train["idx"].asInt(),
-                    lineIdx,
-                    train["position"].asUInt(),
-                    train["speed"].asInt(),
-                    train["next_level_price"].asUInt(),
-                    train["goods_capacity"].asUInt(),
-                    train["fuel_capacity"].asUInt(),
-                    train["fuel_consumption"].asUInt(),
-                    train["fuel"].asUInt(),
-                    train["goods"].asUInt(),
-                    Train::GoodsType::NOTHING,
-                    train["level"].asUInt(),
-                    playerIdx,
-                    true);
+    for (auto& readTrain : root["trains"]) {
+        int32_t lineIdx = readTrain["line_idx"].asInt();
+        int32_t trainIdx = readTrain["idx"].asInt();
+        auto playerIdx = readTrain["player_idx"].asCString();
 
-        trainsAgent_.addTrain(addTrain);
-        addTrain->setAttachedEdge(graphAgent_.findEdge(lineIdx));
+        auto index = trainsAgent_.trainIdxCompression_.find(trainIdx);
 
-        if (playerIdx == hometown->getPlayerIdx()) {
-            hometown->addTrain(addTrain);
+        if (index != trainsAgent_.trainIdxCompression_.end()) {
+            Train* train = trainsAgent_.trains_[index->second];
+
+            train->setSpeed(readTrain["speed"].asInt());
+            train->setPosition(readTrain["position"].asUInt());
+            train->setFuel(readTrain["fuel"].asUInt());
+            train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
+        } else {
+            trainsAgent_.trainIdxCompression_[trainIdx] = trainsAgent_.trains_.size();
+
+            Train* addTrain = new Train(trainIdx,
+                                        lineIdx,
+                                        readTrain["position"].asUInt(),
+                                        readTrain["speed"].asInt(),
+                                        readTrain["next_level_price"].asUInt(),
+                                        readTrain["goods_capacity"].asUInt(),
+                                        readTrain["fuel_capacity"].asUInt(),
+                                        readTrain["fuel_consumption"].asUInt(),
+                                        readTrain["fuel"].asUInt(),
+                                        readTrain["goods"].asUInt(),
+                                        Train::GoodsType::NOTHING,
+                                        readTrain["level"].asUInt(),
+                                        playerIdx,
+                                        true);
+
+            trainsAgent_.addTrain(addTrain);
+            addTrain->setAttachedEdge(graphAgent_.findEdge(lineIdx));
+
+            if (playerIdx == hometown->getPlayerIdx()) {
+                hometown->addTrain(addTrain);
+            }
         }
     }
 }
@@ -283,12 +370,4 @@ GameMapConfig Observer::preserveLayer10Data_(JSON_OBJECT_AS_MAP& root) {
     uint32_t height = root["size"][1].asUInt();
 
     return GameMapConfig(idx, width, height);
-}
-
-std::vector<Node*>& Observer::getGraph() {
-    return graphAgent_.getGraph();
-}
-
-std::vector<Train*> &Observer::getTrains() {
-    return trainsAgent_.getAllTrains();
 }

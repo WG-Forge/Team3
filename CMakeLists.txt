@@ -16,7 +16,7 @@ endif()
 set(SOURCES
         main.cpp
 
-        src/render-components/Point.h
+        src/configs/defines.h
         src/Observer.cpp src/Observer.h
         src/graph-components/Node.cpp src/graph-components/Node.h
         src/graph-components/Town.cpp src/graph-components/Town.h
@@ -24,28 +24,28 @@ set(SOURCES
         src/graph-components/Storage.cpp src/graph-components/Storage.h
         src/graph-components/Edge.cpp src/graph-components/Edge.h
         src/graph-components/EdgeCreationHelper.h
+        src/graph-components/Hometown.cpp src/graph-components/Hometown.h
         src/networking-components/Request.h
         src/networking-components/Response.h
         src/networking-components/JSONReader.cpp src/networking-components/JSONReader.h
-        src/agents/GraphAgent.cpp src/agents/GraphAgent.h
-        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h
         src/game-components/Player.cpp src/game-components/Player.h
-        src/configs/defines.h
         src/game-components/Train.cpp src/game-components/Train.h
         src/game-components/Event.h
+        src/render-components/Point.h
         src/render-components/RotationCalculator.cpp src/render-components/RotationCalculator.h
         src/render-components/Configuration.cpp src/render-components/Configuration.h
         src/render-components/Camera.cpp src/render-components/Camera.h
         src/render-components/Renderer.cpp src/render-components/Renderer.h
         src/render-components/AssetManager.cpp src/render-components/AssetManager.h
-        src/agents/RenderAgent.cpp src/agents/RenderAgent.h
         src/render-components/GameMapConfig.cpp src/render-components/GameMapConfig.h
+        src/agents/RenderAgent.cpp src/agents/RenderAgent.h
         src/agents/TrainsAgent.cpp src/agents/TrainsAgent.h
-        src/graph-components/Hometown.cpp src/graph-components/Hometown.h
-        src/agents/MoveAgent.cpp src/agents/MoveAgent.h)
+        src/agents/MoveAgent.cpp src/agents/MoveAgent.h
+        src/agents/GraphAgent.cpp src/agents/GraphAgent.h
+        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h)
 
 if(WIN32)
-    set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp src/agents/MoveAgent.cpp src/agents/MoveAgent.h)
+    set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp)
 
     find_package(Boost REQUIRED)
     find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)

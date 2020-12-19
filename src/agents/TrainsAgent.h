@@ -1,13 +1,18 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 #include <Train.h>
 
 class TrainsAgent {
 private:
+    std::unordered_map<int32_t, uint32_t> trainIdxCompression_;
     std::vector<Train*> trains_;
 
+    friend class Observer;
 public:
+    ~TrainsAgent();
+
     std::vector<Train*>& getAllTrains();
 
     /*void addTrain(int32_t idx, int32_t lineIdx, uint32_t position, int32_t speed, uint32_t nextLevelPrice,
