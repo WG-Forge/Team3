@@ -1,5 +1,12 @@
 #include <TrainsAgent.h>
 
+
+TrainsAgent::~TrainsAgent() {
+    for (int32_t i = 0; i < trains_.size(); ++i) {
+        delete trains_[i];
+    }
+}
+
 std::vector<Train*>& TrainsAgent::getAllTrains() {
     return trains_;
 }

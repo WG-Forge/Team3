@@ -63,7 +63,6 @@ public:
     const Edge* getEdge() const;
 
     void setCooldown(uint32_t cooldown); //would be removed if cooldown is changed only while train crush
-    void setLineIdx(int32_t lineIdx);
     void setPosition(uint32_t position);
     void setSpeed(int32_t speed);
     void setFuel(uint32_t fuel);

@@ -1,20 +1,20 @@
 #pragma once
 
+#include <defines.h>
 #include <Player.h>
+#include <Edge.h>
+#include <JSONReader.h>
+#include <GameMapConfig.h>
 #include <GraphAgent.h>
 #include <ServerConnectorAgent.h>
 #include <TrainsAgent.h>
-#include <JSONReader.h>
-#include <Edge.h>
-#include <GameMapConfig.h>
-#include <defines.h>
-#include <agents/MoveAgent.h>
+#include <MoveAgent.h>
+#include <RenderAgent.h>
 
 //TODO NEWEST: Throw error codes, not exceptions
 //TODO Handle exceptions, possibly thrown by Action methods (if its needed (?))
 
 //TODO Function that runs through players and setups them
-//TODO Add upgradeAction(...), when Train class would be implemented
 //TODO Figure out, what crushes program when one calls gamesAction_() after logoutAction_()
 
 class Observer {
@@ -45,10 +45,6 @@ private:
 
 public:
     GameMapConfig launchGame();
-    void startGame();
+    void startGame(GameMapConfig config);
     void endGame();
-
-    //temporary
-    std::vector<Node*>& getGraph();
-    std::vector<Train*>& getTrains();
 };

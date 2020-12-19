@@ -28,6 +28,7 @@ private:
 
 public:
     GraphAgent();
+    ~GraphAgent();
 
     std::vector<Node*>& getGraph();
     Edge* findEdge(uint32_t lineIdx);
