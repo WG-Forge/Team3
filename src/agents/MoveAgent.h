@@ -16,9 +16,9 @@ struct TrainMovement {
 class MoveAgent {
 private:
     const int32_t INF = INT32_MAX;
-    Node* moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& pointIdxCompression,
+    Node* moveTo(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
                  Train* train, uint32_t buildingType);
     TrainMovement calcMovement(Train* train, Node* nextNode);
 public:
-    TrainMovement move(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& pointIdxCompression, Train* train);
+    TrainMovement move(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression, Train* train);
 };
