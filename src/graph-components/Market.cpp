@@ -7,7 +7,6 @@ Market::Market(int32_t pointIdx, int32_t postIdx, uint32_t productCapacity, uint
                productCapacity_(productCapacity),
                product_(product),
                replenishment_(replenishment) {
-    product_ = product;
 }
 
 uint32_t Market::getProductCapacity() const {
