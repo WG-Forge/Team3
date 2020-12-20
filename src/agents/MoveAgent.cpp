@@ -3,7 +3,7 @@
 #include <Storage.h>
 #include <MoveAgent.h>
 
-TrainMovement MoveAgent::move(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& pointIdxCompression, Train* train) {
+TrainMovement MoveAgent::move(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression, Train* train) {
     Node* newNode;
     if (train->getGoodsType() == Train::NOTHING) {
         newNode = moveTo(graph, pointIdxCompression, train, 2); // move to market
@@ -13,7 +13,7 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph, std::map<int32_t, uint3
     return calcMovement(train, newNode);
 }
 
-Node* MoveAgent::moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& pointIdxCompression,
+Node* MoveAgent::moveTo(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
                         Train* train, uint32_t buildingType) {
     const Edge* trainEdge = train->getEdge();
     int32_t s1 = pointIdxCompression.at(trainEdge->getFirstNode()->getPointIdx());
@@ -27,7 +27,7 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& 
     q.insert (std::make_pair (dist[s1], s1));
     dist[s2] = trainEdge->getLength() - train->getPosition();
     q.insert (std::make_pair (dist[s2], s2));
-    int32_t end_v = s1;
+    int32_t end_v = -1;
 
     // dijkstra
     while (!q.empty()) {
@@ -44,7 +44,7 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& 
         }
 
         for (auto edge : graph[v]->getNeighbors()) {
-            int32_t toOrigIdx = edge->getFirstNode()->getPointIdx() != v
+            int32_t toOrigIdx = pointIdxCompression.at(edge->getFirstNode()->getPointIdx()) != v
                      ? edge->getFirstNode()->getPointIdx()
                      : edge->getSecondNode()->getPointIdx();
             int32_t to = pointIdxCompression.at(toOrigIdx);
@@ -59,6 +59,9 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& 
     }
 
     // path recovery
+    if (end_v == -1) {
+        return nullptr;
+    }
     int32_t prev;
     int32_t v = end_v;
     while (v != s1 && v != s2) {
@@ -73,6 +76,9 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph, std::map<int32_t, uint32_t>& 
 }
 
 TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
+    if (nextNode == nullptr) {
+        return TrainMovement(train->getEdge()->getLineIdx(), 0, train->getIdx());
+    }
     const Edge* movementEdge;
     uint32_t currentNode;
 
