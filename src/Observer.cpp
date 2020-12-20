@@ -240,9 +240,9 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                                   readPost["name"].asCString(),
                                                                   true));
                         hometown = static_cast<Hometown*>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
-                    }
 
-                    break;
+                        break;
+                    }
                 }
 
                 if (exists) {
@@ -265,9 +265,8 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                           readPost["name"].asCString(),
                                                           false));
 
+                    break;
                 }
-
-                break;
 
             case Market::TYPE :
                 if (exists) {
@@ -280,9 +279,9 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                             readPost["replenishment"].asUInt(),
                                                             readPost["product"].asUInt(),
                                                             readPost["name"].asCString()));
-                }
 
-                break;
+                    break;
+                }
 
             case Storage::TYPE :
                 if (exists) {
@@ -296,9 +295,8 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                              readPost["armor"].asUInt(),
                                                              readPost["name"].asCString()));
 
+                    break;
                 }
-
-                break;
         }
     }
 
