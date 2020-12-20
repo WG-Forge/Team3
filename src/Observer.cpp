@@ -27,6 +27,9 @@ void Observer::startGame(GameMapConfig config) {
     RenderAgent renderAgent(config);
     auto window = renderAgent.createWindow();
 
+    auto previous = std::chrono::system_clock::now();
+    double lag = MS_PER_UPDATE; // for first update
+
     while (window->isOpen()) {
         sf::Event e;
 
@@ -41,6 +44,9 @@ void Observer::startGame(GameMapConfig config) {
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             renderAgent.getCamera()->moveDown(renderAgent.getCamera()->getMoveStep());
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            turnAction_();
         }
 
         while (window->pollEvent(e)) {
@@ -57,6 +63,21 @@ void Observer::startGame(GameMapConfig config) {
                 }
             }
         }
+
+        auto current = std::chrono::system_clock::now();
+        auto elapsed =
+                std::chrono::duration_cast<std::chrono::milliseconds>(current - previous);
+        previous = current;
+        lag += elapsed.count();
+        while (lag >= MS_PER_UPDATE)
+        {
+            bool isNewTurn = update();
+            lag -= MS_PER_UPDATE;
+            if (isNewTurn) {
+                moveTrains();
+            }
+        }
+
         window->clear(sf::Color::White);
         window->setView(*renderAgent.getCamera()->getView());
 
@@ -329,6 +350,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
             train->setPosition(readTrain["position"].asUInt());
             train->setFuel(readTrain["fuel"].asUInt());
             train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
+            train->setGoods(readTrain["goods"].asUInt());
         } else {
             trainsAgent_.trainIdxCompression_[trainIdx] = trainsAgent_.trains_.size();
 
@@ -370,4 +392,24 @@ GameMapConfig Observer::preserveLayer10Data_(JSON_OBJECT_AS_MAP& root) {
     uint32_t height = root["size"][1].asUInt();
 
     return GameMapConfig(idx, width, height);
+}
+
+bool Observer::update() {
+    auto layer1 = mapAction_(1);
+    std::string newTurnLayer1 = layer1.data;
+    if (newTurnLayer1 == currentTurnLayer1) {
+        return false;
+    } else {
+        currentTurnLayer1 = newTurnLayer1;
+        auto readLayer1 = jsonParser_.read(layer1.data);
+        preserveLayer1Data_(readLayer1);
+        return true;
+    }
+}
+
+void Observer::moveTrains() {
+    TrainMovement movement = moveAgent_.move(graphAgent_.getGraph(),
+                                             graphAgent_.pointIdxCompression_,
+                                             trainsAgent_.getAllTrains()[0]);
+    moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
 }

@@ -11,6 +11,8 @@
 #include <MoveAgent.h>
 #include <RenderAgent.h>
 
+#include <chrono>
+
 //TODO NEWEST: Throw error codes, not exceptions
 //TODO Handle exceptions, possibly thrown by Action methods (if its needed (?))
 
@@ -19,6 +21,8 @@
 
 class Observer {
 private:
+    const int MS_PER_UPDATE = 700;
+    std::string currentTurnLayer1;
     std::vector<Player> players_; //first element is for our player
     GraphAgent graphAgent_;
     TrainsAgent trainsAgent_;
@@ -42,6 +46,9 @@ private:
     void preserveLayer0Data_(JSON_OBJECT_AS_MAP& root);
     void preserveLayer1Data_(JSON_OBJECT_AS_MAP& root);
     GameMapConfig preserveLayer10Data_(JSON_OBJECT_AS_MAP& root);
+
+    bool update();
+    void moveTrains();
 
 public:
     GameMapConfig launchGame();

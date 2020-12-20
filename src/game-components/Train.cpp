@@ -128,3 +128,11 @@ void Train::crush(int32_t lineIdx, uint32_t cooldown) {
     speed_ = 0;
     cooldown_ = cooldown;
 }
+
+void Train::setGoods(uint32_t goods) {
+    goods_ = goods;
+}
+
+void Train::setGoodsType(Train::GoodsType goodsType) {
+    goodsType_ = goodsType;
+}

@@ -19,7 +19,7 @@ private:
     RotationCalculator rotationCalculator_;
     AssetManager assetManager_;
     const int32_t NODE_SIZE_ = 10;
-    const int32_t TRAIN_SIZE_ = 8;
+    const int32_t TRAIN_SIZE_ = 10;
     const int32_t RAIL_DIST = 1;
 public:
     explicit Renderer(sf::RenderWindow* window);
