@@ -7,9 +7,9 @@
 class Train {
 public:
     enum GoodsType {
-        NOTHING = 0,
-        PRODUCTS = 1,
-        ARMOR = 2
+        NOTHING = 1,
+        PRODUCTS = 2,
+        ARMOR = 3
     };
 
 private:
@@ -67,6 +67,8 @@ public:
     void setSpeed(int32_t speed);
     void setFuel(uint32_t fuel);
     void setAttachedEdge(Edge* edge);
+    void setGoods(uint32_t goods);
+    void setGoodsType(GoodsType goodsType);
 
     void buy(GoodsType goodsType, uint32_t amount);
     void upgrade(uint32_t level, uint32_t nextLevelPrice, uint32_t goodsCapacity, uint32_t fuelCapacity);

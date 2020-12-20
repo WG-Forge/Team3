@@ -73,9 +73,6 @@ void Observer::startGame(GameMapConfig config) {
         {
             bool isNewTurn = update();
             lag -= MS_PER_UPDATE;
-            if (lag >= MS_PER_UPDATE) {
-                throw "Too fast";
-            }
             if (isNewTurn) {
                 moveTrains();
             }
@@ -353,6 +350,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
             train->setPosition(readTrain["position"].asUInt());
             train->setFuel(readTrain["fuel"].asUInt());
             train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
+            train->setGoods(readTrain["goods"].asUInt());
         } else {
             trainsAgent_.trainIdxCompression_[trainIdx] = trainsAgent_.trains_.size();
 
@@ -402,6 +400,7 @@ bool Observer::update() {
     if (newTurnLayer1 == currentTurnLayer1) {
         return false;
     } else {
+        currentTurnLayer1 = newTurnLayer1;
         auto readLayer1 = jsonParser_.read(layer1.data);
         preserveLayer1Data_(readLayer1);
         return true;

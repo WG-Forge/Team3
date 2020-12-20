@@ -5,7 +5,7 @@
 
 TrainMovement MoveAgent::move(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression, Train* train) {
     Node* newNode;
-    if (train->getGoodsType() == Train::NOTHING) {
+    if (train->getGoods() == 0) {
         newNode = moveTo(graph, pointIdxCompression, train, 2); // move to market
     } else {
         newNode = moveTo(graph, pointIdxCompression, train, 1); // move to home
