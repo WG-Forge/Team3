@@ -29,6 +29,7 @@ private:
     ServerConnectorAgent serverConnectorAgent_;
     MoveAgent moveAgent_;
     JSONReader jsonParser_;
+    uint32_t hometownIdx;
 
     Response loginAction_(const std::string& playerName,
                           const std::string& password = "",

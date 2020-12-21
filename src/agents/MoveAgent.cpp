@@ -3,19 +3,26 @@
 #include <Storage.h>
 #include <MoveAgent.h>
 
-TrainMovement MoveAgent::move(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression, Train* train) {
-    Node* newNode;
+TrainMovement MoveAgent::move(std::vector<Node*>& graph,
+                              const std::map<int32_t, uint32_t>& pointIdxCompression,
+                              Train* train,
+                              Hometown* home) {
+    NextNode newNode;
     if (train->getGoods() == 0) {
         newNode = moveTo(graph, pointIdxCompression, train,
                          PathSearchPreferences(0, 2, nullptr)); // move to market
+        if (home->getArmor() < 10) {
+            newNode = moveTo(graph, pointIdxCompression, train,
+                             PathSearchPreferences(0, 3, nullptr)); // move to storage
+        }
     } else {
         newNode = moveTo(graph, pointIdxCompression, train,
                          PathSearchPreferences(0, 1, nullptr)); // move to home
     }
-    return calcMovement(train, newNode);
+    return calcMovement(train, newNode.node);
 }
 
-Node* MoveAgent::moveTo(std::vector<Node*>& graph,
+NextNode MoveAgent::moveTo(std::vector<Node*>& graph,
                         const std::map<int32_t, uint32_t>& pointIdxCompression,
                         Train* train,
                         PathSearchPreferences prefs) {
@@ -62,8 +69,9 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph,
 
     // path recovery
     if (end_v == -1) {
-        return nullptr;
+        return NextNode(nullptr, 0);
     }
+    int32_t totalLength = dist[end_v];
     int32_t prev = -1;
     int32_t v = end_v;
     while (v != s1 && v != s2) {
@@ -72,12 +80,12 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph,
     }
     if (dist[v] == 0) {
         if (prev != -1) {
-            return graph[prev];
+            return NextNode(graph[prev], totalLength);
         } else {
-            return nullptr;
+            return NextNode(nullptr, 0);;
         }
     } else {
-        return graph[v];
+        return NextNode(graph[v], totalLength);
     }
 }
 
@@ -155,3 +163,7 @@ TrainMovement::TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx) :
 
 PathSearchPreferences::PathSearchPreferences(bool isMovingToSpecificNode, int32_t buildingType, Node *destination)
         : isMovingToSpecificNode(isMovingToSpecificNode), buildingType(buildingType), destination(destination) {}
+
+NextNode::NextNode(Node *node, uint32_t totalPathLength) : node(node), totalPathLength(totalPathLength) {}
+
+NextNode::NextNode() : node(nullptr), totalPathLength(0) {}
