@@ -6,9 +6,11 @@
 TrainMovement MoveAgent::move(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression, Train* train) {
     Node* newNode;
     if (train->getGoods() == 0) {
-        newNode = moveTo(graph, pointIdxCompression, train, 2); // move to market
+        newNode = moveTo(graph, pointIdxCompression, train,
+                         PathSearchPreferences(0, 2, nullptr)); // move to market
     } else {
-        newNode = moveTo(graph, pointIdxCompression, train, 1); // move to home
+        newNode = moveTo(graph, pointIdxCompression, train,
+                         PathSearchPreferences(0, 1, nullptr)); // move to home
     }
     return calcMovement(train, newNode);
 }
@@ -16,8 +18,7 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph, const std::map<int32_t,
 Node* MoveAgent::moveTo(std::vector<Node*>& graph,
                         const std::map<int32_t, uint32_t>& pointIdxCompression,
                         Train* train,
-                        uint32_t buildingType,
-                        uint32_t nodeIdx) {
+                        PathSearchPreferences prefs) {
     const Edge* trainEdge = train->getEdge();
     int32_t s1 = pointIdxCompression.at(trainEdge->getFirstNode()->getPointIdx());
     int32_t s2 = pointIdxCompression.at(trainEdge->getSecondNode()->getPointIdx());
@@ -37,8 +38,7 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph,
         int32_t v = q.begin()->second;
         q.erase (q.begin());
 
-        if ( (buildingType != -1 && checkBuilding(graph[v], buildingType))
-                || (nodeIdx != -1 && graph[v]->getPointIdx() == nodeIdx) ) {
+        if (checkForDestination(graph[v], prefs)) {
             end_v = v;
             break;
         }
@@ -48,12 +48,14 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph,
                      ? edge->getFirstNode()->getPointIdx()
                      : edge->getSecondNode()->getPointIdx();
             int32_t to = pointIdxCompression.at(toOrigIdx);
-            int32_t len = edge->getLength();
-            if (dist[v] + len < dist[to]) {
-                q.erase (std::make_pair (dist[to], to));
-                dist[to] = dist[v] + len;
-                p[to] = v;
-                q.insert (std::make_pair (dist[to], to));
+            if (checkForTransit(graph[to], prefs)) {
+                int32_t len = edge->getLength();
+                if (dist[v] + len < dist[to]) {
+                    q.erase(std::make_pair(dist[to], to));
+                    dist[to] = dist[v] + len;
+                    p[to] = v;
+                    q.insert(std::make_pair(dist[to], to));
+                }
             }
         }
     }
@@ -112,21 +114,44 @@ TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     return TrainMovement(movementEdge->getLineIdx(), speed, train->getIdx());
 }
 
-bool MoveAgent::checkBuilding(Node* node, uint32_t buildingType) {
-    bool isValid = false;
-    if (node->getType() == buildingType) {
-        if (buildingType == 1) {
-            isValid = ((Town*) node)->isMine();
-        }
-        else if (buildingType == 2) {
-            isValid = (((Market*) node)->getProduct() > 0) || (((Market*) node)->getReplenishment() > 0);
-        }
-        else if (buildingType == 3) {
-            isValid = (((Storage*) node)->getArmor() > 0) || (((Storage*) node)->getReplenishment() > 0);
+bool MoveAgent::checkForDestination(Node *node, PathSearchPreferences prefs) {
+    bool isValidDestination = false;
+    if (prefs.isMovingToSpecificNode) {
+        isValidDestination = node->getPointIdx() == prefs.destination->getPointIdx();
+    } else {
+        if (node->getType() == prefs.buildingType) {
+            if (prefs.buildingType == 1) {
+                isValidDestination = ((Town *) node)->isMine();
+            } else if (prefs.buildingType == 2) {
+                isValidDestination = (((Market *) node)->getProduct() > 0)
+                        || (((Market *) node)->getReplenishment() > 0);
+            } else if (prefs.buildingType == 3) {
+                isValidDestination = (((Storage *) node)->getArmor() > 0)
+                        || (((Storage *) node)->getReplenishment() > 0);
+            }
         }
     }
-    return isValid;
+    return isValidDestination;
+}
+
+bool MoveAgent::checkForTransit(Node *node, PathSearchPreferences prefs) {
+    bool isValidTransit = true;
+    uint32_t destinationBuildingType = prefs.buildingType;
+    if (prefs.isMovingToSpecificNode) {
+        destinationBuildingType = prefs.destination->getType();
+    }
+    if (destinationBuildingType == 2 && node->getType() == 3) {
+        isValidTransit = (((Storage *) node)->getArmor() == 0)
+                && (((Storage *) node)->getReplenishment() == 0);
+    } else if (destinationBuildingType == 3 && node->getType() == 2) {
+        isValidTransit = (((Market *) node)->getProduct() == 0)
+                && (((Market *) node)->getReplenishment() == 0);
+    }
+    return isValidTransit;
 }
 
 TrainMovement::TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx) : lineIdx(lineIdx), speed(speed),
                                                                                  trainIdx(trainIdx) {}
+
+PathSearchPreferences::PathSearchPreferences(bool isMovingToSpecificNode, int32_t buildingType, Node *destination)
+        : isMovingToSpecificNode(isMovingToSpecificNode), buildingType(buildingType), destination(destination) {}
