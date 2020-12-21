@@ -13,8 +13,11 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph, const std::map<int32_t,
     return calcMovement(train, newNode);
 }
 
-Node* MoveAgent::moveTo(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
-                        Train* train, uint32_t buildingType) {
+Node* MoveAgent::moveTo(std::vector<Node*>& graph,
+                        const std::map<int32_t, uint32_t>& pointIdxCompression,
+                        Train* train,
+                        uint32_t buildingType,
+                        uint32_t nodeIdx) {
     const Edge* trainEdge = train->getEdge();
     int32_t s1 = pointIdxCompression.at(trainEdge->getFirstNode()->getPointIdx());
     int32_t s2 = pointIdxCompression.at(trainEdge->getSecondNode()->getPointIdx());
@@ -34,13 +37,10 @@ Node* MoveAgent::moveTo(std::vector<Node*>& graph, const std::map<int32_t, uint3
         int32_t v = q.begin()->second;
         q.erase (q.begin());
 
-        if (graph[v]->getType() == buildingType) {
-            if ((buildingType == 1 && ((Town*) graph[v])->isMine())
-                || (buildingType == 2 && ((Market*) graph[v])->getProduct() > 0)
-                   || (buildingType == 3 && ((Storage*) graph[v])->getArmor() > 0)) {
-                end_v = v;
-                break;
-            }
+        if ( (buildingType != -1 && checkBuilding(graph[v], buildingType))
+                || (nodeIdx != -1 && graph[v]->getPointIdx() == nodeIdx) ) {
+            end_v = v;
+            break;
         }
 
         for (auto edge : graph[v]->getNeighbors()) {
@@ -112,6 +112,21 @@ TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     return TrainMovement(movementEdge->getLineIdx(), speed, train->getIdx());
 }
 
+bool MoveAgent::checkBuilding(Node* node, uint32_t buildingType) {
+    bool isValid = false;
+    if (node->getType() == buildingType) {
+        if (buildingType == 1) {
+            isValid = ((Town*) node)->isMine();
+        }
+        else if (buildingType == 2) {
+            isValid = (((Market*) node)->getProduct() > 0) || (((Market*) node)->getReplenishment() > 0);
+        }
+        else if (buildingType == 3) {
+            isValid = (((Storage*) node)->getArmor() > 0) || (((Storage*) node)->getReplenishment() > 0);
+        }
+    }
+    return isValid;
+}
 
 TrainMovement::TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx) : lineIdx(lineIdx), speed(speed),
                                                                                  trainIdx(trainIdx) {}
