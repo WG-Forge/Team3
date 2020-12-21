@@ -1,7 +1,9 @@
 #include <Renderer.h>
 
 Renderer::Renderer(sf::RenderWindow *window)
-        : window_(window) {}
+        : window_(window) {
+    font_.loadFromFile("../resources/fonts/arial.ttf");
+}
 
 void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &trains) {
     renderEdges(g);
@@ -66,6 +68,15 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
         s.setPosition(node->getCoordinates().x,
                       node->getCoordinates().y);
         window_->draw(s);
+
+        sf::Text nodeIdxText;
+        nodeIdxText.setString(std::to_string(node->getPointIdx()));
+        nodeIdxText.setCharacterSize(10);
+        nodeIdxText.setFillColor(sf::Color::Red);
+        nodeIdxText.setPosition(node->getCoordinates().x - NODE_SIZE_/2,
+                                node->getCoordinates().y - nodeIdxText.getCharacterSize());
+        nodeIdxText.setFont(font_);
+        window_->draw(nodeIdxText);
     }
 }
 
