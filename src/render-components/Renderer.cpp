@@ -83,8 +83,8 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
 void Renderer::renderTrains(const std::vector<Train*> &trains) {
     for (auto const& train : trains) {
         auto trainEdge = train->getEdge();
-        if (train->getPosition() > 0
-            && train->getPosition() < trainEdge->getLength()) {
+        //if (train->getPosition() > 0
+        //    && train->getPosition() < trainEdge->getLength()) {
             Point p1 = Point(trainEdge->getFirstNode()->getCoordinates());
             Point p2 = Point(trainEdge->getSecondNode()->getCoordinates());
             Point train2DPosition = rotationCalculator_.calcPointOnLine(
@@ -101,6 +101,6 @@ void Renderer::renderTrains(const std::vector<Train*> &trains) {
                           train2DPosition.y);
             s.rotate(rotationCalculator_.calcTrainRotation(p1, p2));
             window_->draw(s);
-        }
+        //}
     }
 }
