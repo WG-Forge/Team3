@@ -28,4 +28,5 @@ public:
     void renderNodes(const std::vector<Node*>& g);
     void renderTrains(const std::vector<Train*>& trains);
     void render(const std::vector<Node*>& g, const std::vector<Train*>& trains);
+    void renderDebugInfo(const std::vector<Node*>& g);
 };
