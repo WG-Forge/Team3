@@ -409,9 +409,10 @@ bool Observer::update() {
 }
 
 void Observer::moveTrains() {
+    Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
     TrainMovement movement = moveAgent_.move(graphAgent_.getGraph(),
                   graphAgent_.pointIdxCompression_,
-                  trainsAgent_.getAllTrains()[0],
-                  static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]));
+                  home->getHometownTrains()[0],
+                  home);
     moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
 }
