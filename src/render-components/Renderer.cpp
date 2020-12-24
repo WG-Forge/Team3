@@ -2,13 +2,14 @@
 
 Renderer::Renderer(sf::RenderWindow *window)
         : window_(window) {
-    font_.loadFromFile("../resources/fonts/arial.ttf");
+    font_.loadFromFile("../../resources/fonts/arial.ttf");
 }
 
 void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &trains) {
     renderEdges(g);
     renderNodes(g);
     renderTrains(trains);
+    renderDebugInfo(g);
 }
 
 void Renderer::renderEdges(const std::vector<Node*>& g) {
@@ -68,15 +69,6 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
         s.setPosition(node->getCoordinates().x,
                       node->getCoordinates().y);
         window_->draw(s);
-
-        sf::Text nodeIdxText;
-        nodeIdxText.setString(std::to_string(node->getPointIdx()));
-        nodeIdxText.setCharacterSize(10);
-        nodeIdxText.setFillColor(sf::Color::Red);
-        nodeIdxText.setPosition(node->getCoordinates().x - NODE_SIZE_/2,
-                                node->getCoordinates().y - nodeIdxText.getCharacterSize());
-        nodeIdxText.setFont(font_);
-        window_->draw(nodeIdxText);
     }
 }
 
@@ -103,4 +95,20 @@ void Renderer::renderTrains(const std::vector<Train*> &trains) {
             window_->draw(s);
         //}
     }
+}
+
+void Renderer::renderDebugInfo(const std::vector<Node*>& g) {
+    sf::Text nodeIdxText;
+    nodeIdxText.setFont(font_);
+    nodeIdxText.setCharacterSize(10);
+    nodeIdxText.setFillColor(sf::Color::Red);
+
+    for (const auto* node : g) {
+        nodeIdxText.setPosition(node->getCoordinates().x - NODE_SIZE_/2,
+                                node->getCoordinates().y - nodeIdxText.getCharacterSize());
+        nodeIdxText.setString(std::to_string(node->getPointIdx()));
+
+        window_->draw(nodeIdxText);
+    }
+
 }
