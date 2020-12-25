@@ -4,21 +4,25 @@
 #include <Node.h>
 #include <Train.h>
 #include <GraphAgent.h>
+#include <TrainsAgent.h>
+#include <Town.h>
+#include <Market.h>
+#include <Storage.h>
 #include <cmath>
 
 struct TrainMovement {
-    int32_t lineIdx;
+    const Edge* line;
     int32_t speed;
-    int32_t trainIdx;
+    uint32_t newPosition;
+    uint32_t trainIdx;
 
-    TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx);
+    TrainMovement(const Edge* line, int32_t speed, uint32_t newPosition, uint32_t trainIdx);
 };
 
 struct PathSearchPreferences {
     bool isMovingToSpecificNode;
     int32_t buildingType;
     Node* destination;
-    //bool doesCountingZeroReplenishment;
 
     PathSearchPreferences(bool isMovingToSpecificNode, int32_t buildingType, Node *destination);
 };
@@ -34,15 +38,22 @@ struct NextNode{
 class MoveAgent {
 private:
     const int32_t INF = INT32_MAX;
-    NextNode moveTo(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
+    NextNode getNextNode(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
                  Train* train, PathSearchPreferences prefs);
     TrainMovement calcMovement(Train* train, Node* nextNode);
 
     bool checkForDestination(Node* node, PathSearchPreferences prefs);
     bool checkForTransit(Node* node, PathSearchPreferences prefs);
 public:
+    std::vector<TrainMovement> moveAll(std::vector<Node*>& graph,
+                 const std::map<int32_t, uint32_t>& pointIdxCompression,
+                 Hometown* home);
+
     TrainMovement move(std::vector<Node*>& graph,
                        const std::map<int32_t, uint32_t>& pointIdxCompression,
                        Train* train,
+                       uint32_t building,
                        Hometown* home);
+
+    bool checkForSelfTrainsCollision(TrainMovement movement, Hometown* home, Train* currentTrain);
 };

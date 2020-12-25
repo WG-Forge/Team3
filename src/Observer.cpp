@@ -3,9 +3,16 @@
 //TODO Remove constructor arguments in agregated classes were possible (after testing different responses from server)
 //TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
 
-GameMapConfig Observer::launchGame() {
-    auto loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                                  std::string(defines::player_info::PASSWORD.data()));
+GameMapConfig Observer::launchGame(std::string gameName, int turnsNumber, int playersNumber) {
+    Response loginData;
+    if (gameName.empty()) {
+        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
+                                      std::string(defines::player_info::PASSWORD.data()));
+    } else {
+        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
+                                      std::string(defines::player_info::PASSWORD.data()),
+                                      gameName, turnsNumber, playersNumber);
+    }
     auto layer0 = mapAction_(0);
     auto layer1 = mapAction_(1);
     auto layer10 = mapAction_(10);
@@ -263,7 +270,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                                   true));
                         hometown = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
                     }
-                    
+
                     break;
                 }
 
@@ -410,9 +417,10 @@ bool Observer::update() {
 
 void Observer::moveTrains() {
     Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
-    TrainMovement movement = moveAgent_.move(graphAgent_.getGraph(),
-                  graphAgent_.pointIdxCompression_,
-                  home->getHometownTrains()[0],
-                  home);
-    moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
+    std::vector<TrainMovement> movements = moveAgent_.moveAll(graphAgent_.getGraph(),
+                                             graphAgent_.pointIdxCompression_,
+                                             home);
+    for (auto movement : movements) {
+        moveAction_(movement.line->getLineIdx(), movement.speed, movement.trainIdx);
+    }
 }
