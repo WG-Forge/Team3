@@ -1,6 +1,3 @@
-#include <Town.h>
-#include <Market.h>
-#include <Storage.h>
 #include <MoveAgent.h>
 
 TrainMovement MoveAgent::move(std::vector<Node*>& graph,
@@ -8,18 +5,19 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph,
                               Train* train,
                               Hometown* home) {
     NextNode newNode;
-    if (train->getGoods() == 0) {
+    if (train->getGoods() != train->getGoodsCapacity()) {
         newNode = moveTo(graph, pointIdxCompression, train,
-                         PathSearchPreferences(0, 2, nullptr)); // move to market
-        if (home->getArmor() < 10) {
-            newNode = moveTo(graph, pointIdxCompression, train,
-                             PathSearchPreferences(0, 3, nullptr)); // move to storage
-        }
+                         PathSearchPreferences(0, 2, nullptr));
     } else {
         newNode = moveTo(graph, pointIdxCompression, train,
-                         PathSearchPreferences(0, 1, nullptr)); // move to home
+                         PathSearchPreferences(0, 1, nullptr));
     }
-    return calcMovement(train, newNode.node);
+    TrainMovement movement = calcMovement(train, newNode.node);
+    //if (checkForSelfTrainsCollision(movement, home, train)) {
+        return movement;
+    //} else {
+    //    return TrainMovement(train->getLineIdx(), 0, train->getPosition(), train->getIdx());
+    //}
 }
 
 NextNode MoveAgent::moveTo(std::vector<Node*>& graph,
@@ -91,10 +89,12 @@ NextNode MoveAgent::moveTo(std::vector<Node*>& graph,
 
 TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     if (nextNode == nullptr) {
-        return TrainMovement(train->getEdge()->getLineIdx(), 0, train->getIdx());
+        return TrainMovement(train->getLineIdx(),
+                             0, train->getPosition(), train->getIdx());
     }
     const Edge* movementEdge;
-    uint32_t currentNode;
+    int32_t currentNode = -1;
+    uint32_t newPosition;
 
     if (train->getPosition() == 0) {
         currentNode = train->getEdge()->getFirstNode()->getPointIdx();
@@ -113,13 +113,24 @@ TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     } else {
         movementEdge = train->getEdge();
     }
+
     int32_t speed;
     if (nextNode->getPointIdx() == movementEdge->getFirstNode()->getPointIdx()) {
         speed = -1;
     } else {
         speed = 1;
     }
-    return TrainMovement(movementEdge->getLineIdx(), speed, train->getIdx());
+
+    if (currentNode == movementEdge->getFirstNode()->getPointIdx()) {
+        newPosition = 0;
+    } else if (currentNode == movementEdge->getSecondNode()->getPointIdx()) {
+        newPosition = movementEdge->getLength();
+    } else {
+        newPosition = train->getPosition();
+    }
+    newPosition += speed;
+
+    return TrainMovement(movementEdge->getLineIdx(), speed, newPosition, train->getIdx());
 }
 
 bool MoveAgent::checkForDestination(Node *node, PathSearchPreferences prefs) {
@@ -158,8 +169,32 @@ bool MoveAgent::checkForTransit(Node *node, PathSearchPreferences prefs) {
     return isValidTransit;
 }
 
-TrainMovement::TrainMovement(int32_t lineIdx, int32_t speed, int32_t trainIdx) : lineIdx(lineIdx), speed(speed),
-                                                                                 trainIdx(trainIdx) {}
+bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
+                                            Hometown* home,
+                                            Train* currentTrain) {
+    Node* potentialCollisionNode;
+    for (auto train : home->getHometownTrains()) {
+        if (train->getIdx() != currentTrain->getIdx()) {
+            potentialCollisionNode = TrainsAgent::getTrainNode(train);
+            if (potentialCollisionNode) {
+                //if (potentialCollisionNode->getPointIdx() == movement.)
+                return true;
+            } else {
+                if (movement.lineIdx == train->getLineIdx()
+                    && movement.newPosition == train->getPosition()) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+TrainMovement::TrainMovement(uint32_t lineIdx, int32_t speed, uint32_t newPos, uint32_t trainIdx)
+                                                            : lineIdx(lineIdx)
+                                                            , speed(speed)
+                                                            , trainIdx(trainIdx)
+                                                            , newPosition(newPos) {}
 
 PathSearchPreferences::PathSearchPreferences(bool isMovingToSpecificNode, int32_t buildingType, Node *destination)
         : isMovingToSpecificNode(isMovingToSpecificNode), buildingType(buildingType), destination(destination) {}

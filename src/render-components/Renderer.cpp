@@ -2,7 +2,7 @@
 
 Renderer::Renderer(sf::RenderWindow *window)
         : window_(window) {
-    font_.loadFromFile("../../resources/fonts/arial.ttf");
+    font_.loadFromFile("../resources/fonts/arial.ttf");
 }
 
 void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &trains) {
