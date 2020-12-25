@@ -165,7 +165,29 @@ Response Observer::moveAction_(int32_t lineIdx, int32_t speed, int32_t trainIdx)
     return response;
 }
 
-//Response Observer::upgradeAction_(const std::vector<Node*>& posts, container with trains) {}
+Response Observer::upgradeAction_(std::vector<int32_t> posts, std::vector<int32_t> trains) {
+    Request request{Request::UPGRADE};
+
+    std::string postsStr = "";
+    for (auto post : posts) {
+        postsStr += std::to_string(post)+",";
+    }
+    postsStr.pop_back();
+
+    std::string trainsStr = "";
+    for (auto train : trains) {
+        trainsStr += std::to_string(train)+",";
+    }
+    trainsStr.pop_back();
+
+    request.data = std::string("{\"posts\":[").append(postsStr).append(
+            "],\"trains\":[").append(trainsStr).append("]}");
+    request.dataSize = request.data.size();
+
+    Response response = serverConnectorAgent_.proceedRequest(request);
+
+    return response;
+}
 
 Response Observer::turnAction_() {
     Response response = serverConnectorAgent_.proceedRequest(
@@ -356,6 +378,10 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
             train->setFuel(readTrain["fuel"].asUInt());
             train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
             train->setGoods(readTrain["goods"].asUInt());
+            train->upgrade(readTrain["level"].asUInt(),
+                           readTrain["next_level_price"].asUInt(),
+                           readTrain["goods_capacity"].asUInt(),
+                           readTrain["fuel_capacity"].asUInt());
         } else {
             trainsAgent_.trainIdxCompression_[trainIdx] = trainsAgent_.trains_.size();
 

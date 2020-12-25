@@ -40,6 +40,7 @@ private:
     Response playerAction_();
     Response mapAction_(uint32_t layerNumber);
     Response moveAction_(int32_t lineIdx, int32_t speed, int32_t trainIdx);
+    Response upgradeAction_(std::vector<int32_t> posts, std::vector<int32_t> trains);
     Response turnAction_();
     Response gamesAction_();
 
