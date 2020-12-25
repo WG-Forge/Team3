@@ -9,7 +9,7 @@ void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &tr
     renderEdges(g);
     renderNodes(g);
     renderTrains(trains);
-    renderDebugInfo(g);
+    //renderDebugInfo(g);
 }
 
 void Renderer::renderEdges(const std::vector<Node*>& g) {

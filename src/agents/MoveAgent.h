@@ -19,31 +19,28 @@ struct TrainMovement {
     TrainMovement(const Edge* line, int32_t speed, uint32_t newPosition, uint32_t trainIdx);
 };
 
-struct PathSearchPreferences {
-    bool isMovingToSpecificNode;
-    int32_t buildingType;
-    Node* destination;
-
-    PathSearchPreferences(bool isMovingToSpecificNode, int32_t buildingType, Node *destination);
-};
-
-struct NextNode{
-    Node* node;
-    uint32_t totalPathLength;
-
-    NextNode(Node *node, uint32_t totalPathLength);
-    NextNode();
-};
-
 class MoveAgent {
 private:
     const int32_t INF = INT32_MAX;
-    NextNode getNextNode(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
-                 Train* train, PathSearchPreferences prefs);
+    const std::vector<int> M1 {57, 58, 59, 60, 70, 80, 90, 89, 88, 87, 77, 67};
+    const std::vector<int> M2 {66, 65, 64, 63, 73, 83, 93, 94, 95, 96, 86, 76};
+    const std::vector<int> M3 {147, 148, 149, 150, 140, 130 ,120, 119, 118, 117, 127, 137};
+    const std::vector<int> M4 {156, 155, 154, 153, 143, 133, 123, 124, 125, 126, 136, 146};
+    const std::vector< std::vector<int> > marketCycles {M1, M2, M3, M4};
+
+    const std::vector<int> S1 {57, 58, 59, 60, 61, 71, 81, 91, 101, 100, 99, 98, 97, 87, 77, 67};
+    const std::vector<int> S2 {66, 65, 64, 63, 62, 72, 82, 92, 102, 103, 104, 105, 106, 96, 86, 76};
+    const std::vector<int> S3 {147, 148, 149, 150, 151, 141, 131 ,121, 111, 110, 109, 108, 107, 117, 127, 137};
+    const std::vector<int> S4 {156, 155, 154, 153, 152, 142, 132, 122, 112, 113, 114, 115, 116, 126, 136, 146};
+    const std::vector< std::vector<int> > storageCycles {S1, S2, S3, S4};
+
+    int getNextIndex(int currentIndex, int vectorSize);
+
+    Node* getNextNodeCycles(std::vector<Node*>& graph,
+                            const std::map<int32_t, uint32_t>& pointIdxCompression,
+                              Train* train, int32_t buildingType, uint32_t homeIdx);
     TrainMovement calcMovement(Train* train, Node* nextNode);
 
-    bool checkForDestination(Node* node, PathSearchPreferences prefs);
-    bool checkForTransit(Node* node, PathSearchPreferences prefs);
 public:
     std::vector<TrainMovement> moveAll(std::vector<Node*>& graph,
                  const std::map<int32_t, uint32_t>& pointIdxCompression,

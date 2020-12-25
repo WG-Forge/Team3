@@ -52,9 +52,6 @@ void Observer::startGame(GameMapConfig config) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             renderAgent.getCamera()->moveDown(renderAgent.getCamera()->getMoveStep());
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            turnAction_();
-        }
 
         while (window->pollEvent(e)) {
             if (e.type == sf::Event::Closed) {
