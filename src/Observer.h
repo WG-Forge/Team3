@@ -52,7 +52,7 @@ private:
     void moveTrains();
 
 public:
-    GameMapConfig launchGame();
+    GameMapConfig launchGame(std::string gameName = "", int turnsNumber = -1, int playersNumber = 4);
     void startGame(GameMapConfig config);
     void endGame();
 };

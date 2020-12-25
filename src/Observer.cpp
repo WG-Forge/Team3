@@ -3,9 +3,16 @@
 //TODO Remove constructor arguments in agregated classes were possible (after testing different responses from server)
 //TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
 
-GameMapConfig Observer::launchGame() {
-    auto loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                                  std::string(defines::player_info::PASSWORD.data()));
+GameMapConfig Observer::launchGame(std::string gameName, int turnsNumber, int playersNumber) {
+    Response loginData;
+    if (gameName.empty()) {
+        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
+                                      std::string(defines::player_info::PASSWORD.data()));
+    } else {
+        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
+                                      std::string(defines::player_info::PASSWORD.data()),
+                                      gameName, turnsNumber, playersNumber);
+    }
     auto layer0 = mapAction_(0);
     auto layer1 = mapAction_(1);
     auto layer10 = mapAction_(10);
