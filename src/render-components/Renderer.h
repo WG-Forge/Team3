@@ -19,7 +19,7 @@ private:
     RotationCalculator rotationCalculator_;
     AssetManager assetManager_;
     const int32_t NODE_SIZE_ = 10;
-    const int32_t TRAIN_SIZE_ = 10;
+    const int32_t TRAIN_SIZE_ = 4;
     const int32_t RAIL_DIST = 1;
     sf::Font font_;
 public:

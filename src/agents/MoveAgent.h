@@ -11,12 +11,12 @@
 #include <cmath>
 
 struct TrainMovement {
-    uint32_t lineIdx;
+    const Edge* line;
     int32_t speed;
     uint32_t newPosition;
     uint32_t trainIdx;
 
-    TrainMovement(uint32_t lineIdx, int32_t speed, uint32_t newPosition, uint32_t trainIdx);
+    TrainMovement(const Edge* line, int32_t speed, uint32_t newPosition, uint32_t trainIdx);
 };
 
 struct PathSearchPreferences {
@@ -38,7 +38,7 @@ struct NextNode{
 class MoveAgent {
 private:
     const int32_t INF = INT32_MAX;
-    NextNode moveTo(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
+    NextNode getNextNode(std::vector<Node*>& graph, const std::map<int32_t, uint32_t>& pointIdxCompression,
                  Train* train, PathSearchPreferences prefs);
     TrainMovement calcMovement(Train* train, Node* nextNode);
 
@@ -48,9 +48,11 @@ public:
     std::vector<TrainMovement> moveAll(std::vector<Node*>& graph,
                  const std::map<int32_t, uint32_t>& pointIdxCompression,
                  Hometown* home);
+
     TrainMovement move(std::vector<Node*>& graph,
                        const std::map<int32_t, uint32_t>& pointIdxCompression,
                        Train* train,
+                       uint32_t building,
                        Hometown* home);
 
     bool checkForSelfTrainsCollision(TrainMovement movement, Hometown* home, Train* currentTrain);

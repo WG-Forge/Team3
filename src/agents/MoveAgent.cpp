@@ -3,24 +3,25 @@
 TrainMovement MoveAgent::move(std::vector<Node*>& graph,
                               const std::map<int32_t, uint32_t>& pointIdxCompression,
                               Train* train,
+                              uint32_t building,
                               Hometown* home) {
     NextNode newNode;
     if (train->getGoods() != train->getGoodsCapacity()) {
-        newNode = moveTo(graph, pointIdxCompression, train,
-                         PathSearchPreferences(0, 2, nullptr));
+        newNode = getNextNode(graph, pointIdxCompression, train,
+                         PathSearchPreferences(0, building, nullptr));
     } else {
-        newNode = moveTo(graph, pointIdxCompression, train,
+        newNode = getNextNode(graph, pointIdxCompression, train,
                          PathSearchPreferences(0, 1, nullptr));
     }
     TrainMovement movement = calcMovement(train, newNode.node);
-    //if (checkForSelfTrainsCollision(movement, home, train)) {
+    if (checkForSelfTrainsCollision(movement, home, train)) {
         return movement;
-    //} else {
-    //    return TrainMovement(train->getLineIdx(), 0, train->getPosition(), train->getIdx());
-    //}
+    } else {
+        return TrainMovement(train->getEdge(), 0, train->getPosition(), train->getIdx());
+    }
 }
 
-NextNode MoveAgent::moveTo(std::vector<Node*>& graph,
+NextNode MoveAgent::getNextNode(std::vector<Node*>& graph,
                         const std::map<int32_t, uint32_t>& pointIdxCompression,
                         Train* train,
                         PathSearchPreferences prefs) {
@@ -89,7 +90,7 @@ NextNode MoveAgent::moveTo(std::vector<Node*>& graph,
 
 TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     if (nextNode == nullptr) {
-        return TrainMovement(train->getLineIdx(),
+        return TrainMovement(train->getEdge(),
                              0, train->getPosition(), train->getIdx());
     }
     const Edge* movementEdge;
@@ -130,7 +131,7 @@ TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     }
     newPosition += speed;
 
-    return TrainMovement(movementEdge->getLineIdx(), speed, newPosition, train->getIdx());
+    return TrainMovement(movementEdge, speed, newPosition, train->getIdx());
 }
 
 bool MoveAgent::checkForDestination(Node *node, PathSearchPreferences prefs) {
@@ -176,11 +177,18 @@ bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
     for (auto train : home->getHometownTrains()) {
         if (train->getIdx() != currentTrain->getIdx()) {
             potentialCollisionNode = TrainsAgent::getTrainNode(train);
-            if (potentialCollisionNode) {
-                //if (potentialCollisionNode->getPointIdx() == movement.)
-                return true;
+            if (potentialCollisionNode
+                && potentialCollisionNode->getPointIdx() != home->getPointIdx()) {
+                if ((potentialCollisionNode->getPointIdx()
+                                    == movement.line->getFirstNode()->getPointIdx()
+                            && movement.newPosition == 0)
+                   || (potentialCollisionNode->getPointIdx()
+                            == movement.line->getSecondNode()->getPointIdx()
+                            && movement.newPosition == movement.line->getLength())) {
+                    return false;
+                }
             } else {
-                if (movement.lineIdx == train->getLineIdx()
+                if (movement.line->getLineIdx() == train->getLineIdx()
                     && movement.newPosition == train->getPosition()) {
                     return false;
                 }
@@ -194,16 +202,25 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
                         const std::map<int32_t, uint32_t>& pointIdxCompression,
                         Hometown* home) {
     std::vector<TrainMovement> movements;
-    for (int i = 0; i < 1; i++) {
+    uint32_t building;
+    for (int i = 0; i < 3; i++) {
+        if (i == 0) {
+            building = 3;
+        } else {
+            building = 2;
+        }
+        Train* train = home->getHometownTrains()[i];
         TrainMovement movement = move(graph, pointIdxCompression,
-                                      home->getHometownTrains()[i], home);
+                                      train, building, home);
         movements.push_back(movement);
+        train->setPosition(movement.newPosition);
+        train->setAttachedEdge(const_cast<Edge *>(movement.line));
     }
     return movements;
 }
 
-TrainMovement::TrainMovement(uint32_t lineIdx, int32_t speed, uint32_t newPos, uint32_t trainIdx)
-                                                            : lineIdx(lineIdx)
+TrainMovement::TrainMovement(const Edge* line, int32_t speed, uint32_t newPos, uint32_t trainIdx)
+                                                            : line(line)
                                                             , speed(speed)
                                                             , trainIdx(trainIdx)
                                                             , newPosition(newPos) {}

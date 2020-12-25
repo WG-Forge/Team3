@@ -263,7 +263,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                                   true));
                         hometown = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
                     }
-                    
+
                     break;
                 }
 
@@ -414,6 +414,6 @@ void Observer::moveTrains() {
                                              graphAgent_.pointIdxCompression_,
                                              home);
     for (auto movement : movements) {
-        moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
+        moveAction_(movement.line->getLineIdx(), movement.speed, movement.trainIdx);
     }
 }
