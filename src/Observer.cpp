@@ -410,9 +410,10 @@ bool Observer::update() {
 
 void Observer::moveTrains() {
     Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
-    TrainMovement movement = moveAgent_.move(graphAgent_.getGraph(),
-                  graphAgent_.pointIdxCompression_,
-                  home->getHometownTrains()[0],
-                  home);
-    moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
+    std::vector<TrainMovement> movements = moveAgent_.moveAll(graphAgent_.getGraph(),
+                                             graphAgent_.pointIdxCompression_,
+                                             home);
+    for (auto movement : movements) {
+        moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
+    }
 }

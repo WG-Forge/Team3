@@ -190,6 +190,18 @@ bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
     return true;
 }
 
+std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
+                        const std::map<int32_t, uint32_t>& pointIdxCompression,
+                        Hometown* home) {
+    std::vector<TrainMovement> movements;
+    for (int i = 0; i < 1; i++) {
+        TrainMovement movement = move(graph, pointIdxCompression,
+                                      home->getHometownTrains()[i], home);
+        movements.push_back(movement);
+    }
+    return movements;
+}
+
 TrainMovement::TrainMovement(uint32_t lineIdx, int32_t speed, uint32_t newPos, uint32_t trainIdx)
                                                             : lineIdx(lineIdx)
                                                             , speed(speed)

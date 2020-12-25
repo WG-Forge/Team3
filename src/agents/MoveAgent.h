@@ -45,7 +45,9 @@ private:
     bool checkForDestination(Node* node, PathSearchPreferences prefs);
     bool checkForTransit(Node* node, PathSearchPreferences prefs);
 public:
-
+    std::vector<TrainMovement> moveAll(std::vector<Node*>& graph,
+                 const std::map<int32_t, uint32_t>& pointIdxCompression,
+                 Hometown* home);
     TrainMovement move(std::vector<Node*>& graph,
                        const std::map<int32_t, uint32_t>& pointIdxCompression,
                        Train* train,
