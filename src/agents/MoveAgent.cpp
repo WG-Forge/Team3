@@ -177,15 +177,16 @@ bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
     for (auto train : home->getHometownTrains()) {
         if (train->getIdx() != currentTrain->getIdx()) {
             potentialCollisionNode = TrainsAgent::getTrainNode(train);
-            if (potentialCollisionNode
-                && potentialCollisionNode->getPointIdx() != home->getPointIdx()) {
-                if ((potentialCollisionNode->getPointIdx()
-                                    == movement.line->getFirstNode()->getPointIdx()
-                            && movement.newPosition == 0)
-                   || (potentialCollisionNode->getPointIdx()
+            if (potentialCollisionNode) {
+                if (potentialCollisionNode->getPointIdx() != home->getPointIdx()) {
+                    if ((potentialCollisionNode->getPointIdx()
+                         == movement.line->getFirstNode()->getPointIdx()
+                         && movement.newPosition == 0)
+                        || (potentialCollisionNode->getPointIdx()
                             == movement.line->getSecondNode()->getPointIdx()
                             && movement.newPosition == movement.line->getLength())) {
-                    return false;
+                        return false;
+                    }
                 }
             } else {
                 if (movement.line->getLineIdx() == train->getLineIdx()
@@ -201,21 +202,35 @@ bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
 std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
                         const std::map<int32_t, uint32_t>& pointIdxCompression,
                         Hometown* home) {
+    std::map<uint32_t, uint32_t> currentPositions;
+    std::map<uint32_t, const Edge*> currentLines;
+
     std::vector<TrainMovement> movements;
     uint32_t building;
     for (int i = 0; i < 3; i++) {
+        Train* train = home->getHometownTrains()[i];
+        currentPositions.insert(std::make_pair(train->getIdx(), train->getPosition()));
+        currentLines.insert(std::make_pair(train->getIdx(), train->getEdge()));
+
         if (i == 0) {
             building = 3;
         } else {
             building = 2;
         }
-        Train* train = home->getHometownTrains()[i];
         TrainMovement movement = move(graph, pointIdxCompression,
                                       train, building, home);
         movements.push_back(movement);
         train->setPosition(movement.newPosition);
         train->setAttachedEdge(const_cast<Edge *>(movement.line));
     }
+
+    // return back to positions
+    for (int i = 0; i < 3; i++) {
+        Train* train = home->getHometownTrains()[i];
+        train->setPosition(currentPositions.at(train->getIdx()));
+        train->setAttachedEdge(const_cast<Edge *>(currentLines.at(train->getIdx())));
+    }
+
     return movements;
 }
 
