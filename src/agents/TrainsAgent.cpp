@@ -22,3 +22,13 @@ std::vector<Train*>& TrainsAgent::getAllTrains() {
 void TrainsAgent::addTrain(Train* train) {
     trains_.push_back(train);
 }
+
+Node* TrainsAgent::getTrainNode(Train* train) {
+    if (train->getPosition() == 0) {
+        return train->getEdge()->getFirstNode();
+    } else if (train->getPosition() == train->getEdge()->getLength()) {
+        return train->getEdge()->getSecondNode();
+    } else {
+        return nullptr;
+    }
+}

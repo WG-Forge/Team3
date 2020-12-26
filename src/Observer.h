@@ -21,7 +21,7 @@
 
 class Observer {
 private:
-    const int MS_PER_UPDATE = 700;
+    const int MS_PER_UPDATE = 300;
     std::string currentTurnLayer1;
     std::vector<Player> players_; //first element is for our player
     GraphAgent graphAgent_;
@@ -52,7 +52,7 @@ private:
     void moveTrains();
 
 public:
-    GameMapConfig launchGame();
+    GameMapConfig launchGame(std::string gameName = "", int turnsNumber = -1, int playersNumber = 1);
     void startGame(GameMapConfig config);
     void endGame();
 };
