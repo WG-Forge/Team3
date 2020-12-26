@@ -415,6 +415,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
             train->setFuel(readTrain["fuel"].asUInt());
             train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
             train->setGoods(readTrain["goods"].asUInt());
+            train->setGoodsType(static_cast<Train::GoodsType>(readTrain["goods_type"].asUInt()));
             train->upgrade(readTrain["level"].asUInt(),
                            readTrain["next_level_price"].asUInt(),
                            readTrain["goods_capacity"].asUInt(),
