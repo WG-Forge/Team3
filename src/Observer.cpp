@@ -252,6 +252,8 @@ void Observer::preserveLayer0Data_(JSON_OBJECT_AS_MAP& root) {
 }
 
 void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
+    static uint32_t  lastTick = 0;
+
     Town* town = nullptr;
     Hometown* hometown = nullptr;
     Market* market = nullptr;
@@ -364,23 +366,27 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
         auto events = readPost["events"];
 
         if (!events.empty()) {
-            for (uint32_t i = 0; i < events.size(); ++i) {
-               switch (events[i]["type"].asUInt()) {
-                   case type::REFUGEES_ARRIVAL :
-                       refugeesCount_ += events[i][data_key::REFUGEES_ARRIVAL_KEY.data()].asUInt();
+            if (events[0]["tick"].asUInt() != lastTick) {
+                for (uint32_t i = 0; i < events.size(); ++i) {
+                    switch (events[i]["type"].asUInt()) {
+                        case type::REFUGEES_ARRIVAL :
+                            refugeesCount_ += events[i][data_key::REFUGEES_ARRIVAL_KEY.data()].asUInt();
 
-                       break;
+                            break;
 
-                   case type::HIJACKERS_ASSAULT :
-                       hijackersCount_ += events[i][data_key::HIJACKERS_ASSAULT_KEY.data()].asUInt();
+                        case type::HIJACKERS_ASSAULT :
+                            hijackersCount_ += events[i][data_key::HIJACKERS_ASSAULT_KEY.data()].asUInt();
 
-                       break;
+                            break;
 
-                   case type::PARASITES_ASSAULT :
-                       parasitesCount_ += events[i][data_key::PARASITES_ASSAULT_KEY.data()].asUInt();
+                        case type::PARASITES_ASSAULT :
+                            parasitesCount_ += events[i][data_key::PARASITES_ASSAULT_KEY.data()].asUInt();
 
-                       break;
-               }
+                            break;
+                    }
+                }
+
+                lastTick = events[0]["tick"].asUInt();
             }
         }
     }
