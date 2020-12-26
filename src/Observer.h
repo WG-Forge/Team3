@@ -21,6 +21,17 @@
 
 class Observer {
 private:
+    uint32_t refugeesCount_ = 0;
+    uint32_t hijackersCount_ = 0;
+    uint32_t parasitesCount_ = 0;
+
+public:
+    //maybe would be deleted
+    uint32_t getRefugeesCount() const;
+    uint32_t getHijackersCount() const;
+    uint32_t getParasitesCount() const;
+
+private:
     const int MS_PER_UPDATE = 300;
     std::string currentTurnLayer1;
     std::vector<Player> players_; //first element is for our player

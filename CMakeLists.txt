@@ -30,7 +30,6 @@ set(SOURCES
         src/networking-components/JSONReader.cpp src/networking-components/JSONReader.h
         src/game-components/Player.cpp src/game-components/Player.h
         src/game-components/Train.cpp src/game-components/Train.h
-        src/game-components/Event.h
         src/render-components/Point.h
         src/render-components/RotationCalculator.cpp src/render-components/RotationCalculator.h
         src/render-components/Configuration.cpp src/render-components/Configuration.h

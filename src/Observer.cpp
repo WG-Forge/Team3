@@ -1,7 +1,21 @@
 #include <Observer.h>
 
-//TODO Remove constructor arguments in agregated classes were possible (after testing different responses from server)
+//TODO Remove constructor arguments in aggregated classes were possible (after testing different responses from server)
 //TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
+
+using namespace defines::event_info;
+
+uint32_t Observer::getRefugeesCount() const {
+    return refugeesCount_;
+}
+
+uint32_t Observer::getHijackersCount() const {
+    return hijackersCount_;
+}
+
+uint32_t Observer::getParasitesCount() const {
+    return parasitesCount_;
+}
 
 GameMapConfig Observer::launchGame(std::string gameName, int turnsNumber, int playersNumber) {
     Response loginData;
@@ -345,6 +359,29 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                 }
 
                 break;
+        }
+
+        auto events = readPost["events"];
+
+        if (!events.empty()) {
+            for (uint32_t i = 0; i < events.size(); ++i) {
+               switch (events[i]["type"].asUInt()) {
+                   case type::REFUGEES_ARRIVAL :
+                       refugeesCount_ += events[i][data_key::REFUGEES_ARRIVAL_KEY.data()].asUInt();
+
+                       break;
+
+                   case type::HIJACKERS_ASSAULT :
+                       hijackersCount_ += events[i][data_key::HIJACKERS_ASSAULT_KEY.data()].asUInt();
+
+                       break;
+
+                   case type::PARASITES_ASSAULT :
+                       parasitesCount_ += events[i][data_key::PARASITES_ASSAULT_KEY.data()].asUInt();
+
+                       break;
+               }
+            }
         }
     }
 
