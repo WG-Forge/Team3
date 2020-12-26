@@ -93,6 +93,7 @@ void Observer::startGame(GameMapConfig config) {
             lag = 0;
             if (isNewTurn) {
                 moveTrains();
+                upgrade(static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]));
             }
         }
 
@@ -490,4 +491,10 @@ void Observer::moveTrains() {
     for (auto movement : movements) {
         moveAction_(movement.line->getLineIdx(), movement.speed, movement.trainIdx);
     }
+}
+
+void Observer::upgrade(Hometown* home) {
+    std::vector<int32_t> trainUpgrades
+                    = upgradeAgent_.upgradeTrains(home, hijackersCount_);
+    upgradeAction_(std::vector<int32_t>{}, trainUpgrades);
 }
