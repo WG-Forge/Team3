@@ -52,5 +52,8 @@ public:
                        uint32_t building,
                        Hometown* home);
 
-    bool checkForSelfTrainsCollision(TrainMovement movement, Hometown* home, Train* currentTrain);
+    bool isSelfTrainsCollisionOccurs(TrainMovement movement, Hometown* home, Train* currentTrain);
+    bool isTownOverProduct(TrainMovement movement, Hometown* home, Train* currentTrain);
+    bool isSafeToLeaveNode(TrainMovement movement, Hometown* home, Train* currentTrain);
+
 };

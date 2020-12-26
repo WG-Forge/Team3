@@ -8,7 +8,9 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph,
     Node* newNode = getNextNodeCycles(graph, pointIdxCompression, train,
                          building, home->getPointIdx());
     TrainMovement movement = calcMovement(train, newNode);
-    if (checkForSelfTrainsCollision(movement, home, train)) {
+    if (!isSelfTrainsCollisionOccurs(movement, home, train)
+        && !isTownOverProduct(movement, home, train)
+        && isSafeToLeaveNode(movement, home, train)) {
         return movement;
     } else {
         return TrainMovement(train->getEdge(), 0, train->getPosition(), train->getIdx());
@@ -61,7 +63,7 @@ TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     return TrainMovement(movementEdge, speed, newPosition, train->getIdx());
 }
 
-bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
+bool MoveAgent::isSelfTrainsCollisionOccurs(TrainMovement movement,
                                             Hometown* home,
                                             Train* currentTrain) {
     Node* potentialCollisionNode;
@@ -76,18 +78,18 @@ bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
                         || (potentialCollisionNode->getPointIdx()
                             == movement.line->getSecondNode()->getPointIdx()
                             && movement.newPosition == movement.line->getLength())) {
-                        return false;
+                        return true;
                     }
                 }
             } else {
                 if (movement.line->getLineIdx() == train->getLineIdx()
                     && movement.newPosition == train->getPosition()) {
-                    return false;
+                    return true;
                 }
             }
         }
     }
-    return true;
+    return false;
 }
 
 std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
@@ -98,7 +100,7 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
 
     std::vector<TrainMovement> movements;
     uint32_t building;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         Train* train = home->getHometownTrains()[i];
         currentPositions.insert(std::make_pair(train->getIdx(), train->getPosition()));
         currentLines.insert(std::make_pair(train->getIdx(), train->getEdge()));
@@ -116,7 +118,7 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
     }
 
     // return back to positions
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         Train* train = home->getHometownTrains()[i];
         train->setPosition(currentPositions.at(train->getIdx()));
         train->setAttachedEdge(const_cast<Edge *>(currentLines.at(train->getIdx())));
@@ -176,6 +178,38 @@ int MoveAgent::getNextIndex(int currentIndex, int vectorSize) {
         nextPosition = 0;
     }
     return nextPosition;
+}
+
+bool MoveAgent::isTownOverProduct(TrainMovement movement, Hometown *home, Train *currentTrain) {
+    int32_t firstNode = currentTrain->getEdge()->getFirstNode()->getPointIdx();
+    int32_t secondNode = currentTrain->getEdge()->getSecondNode()->getPointIdx();
+    bool isNextHome = (firstNode == home->getPointIdx()
+            && movement.newPosition == 0
+            && movement.speed == -1)
+            || (secondNode == home->getPointIdx()
+            && movement.newPosition == movement.line->getLength()
+            && movement.speed == 1);
+    if (isNextHome && currentTrain->getGoodsType() == Train::GoodsType::PRODUCTS) {
+        int freeSpace = home->getProductCapacity() - home->getProduct() + home->getPopulation();
+        return freeSpace <= currentTrain->getGoods();
+    } else {
+        return false;
+    }
+}
+
+bool MoveAgent::isSafeToLeaveNode(TrainMovement movement, Hometown *home, Train *currentTrain) {
+    Node* curNode = TrainsAgent::getTrainNode(currentTrain);
+    if (curNode) {
+        for (auto train : home->getHometownTrains()) {
+            if ((TrainsAgent::getTrainNode(train) == nullptr
+                        || TrainsAgent::getTrainNode(train)->getPointIdx() != curNode->getPointIdx())
+                && train->getIdx() != currentTrain->getIdx()
+                && train->getLineIdx() == movement.line->getLineIdx()) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 TrainMovement::TrainMovement(const Edge* line, int32_t speed, uint32_t newPos, uint32_t trainIdx)
