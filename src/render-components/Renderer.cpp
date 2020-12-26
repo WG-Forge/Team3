@@ -1,14 +1,13 @@
 #include <Renderer.h>
 
 Renderer::Renderer(sf::RenderWindow *window)
-        : window_(window) {
-    font_.loadFromFile("../resources/fonts/arial.ttf");
-}
+        : window_(window) {}
 
 void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &trains) {
     renderEdges(g);
     renderNodes(g);
     renderTrains(trains);
+    renderTownsInfo(g);
     //renderDebugInfo(g);
 }
 
@@ -42,23 +41,23 @@ void Renderer::renderNodes(const std::vector<Node*>& g) {
 
         switch (node->getType()) {
             case Node::TYPE :
-                texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::NODE_ASSET_PATH));
+                texture = resourceManager.getOrLoadAsset(std::string(defines::render_info::NODE_ASSET_PATH));
                 break;
 
             case Town::TYPE :
-                texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::TOWN_ASSET_PATH));
+                texture = resourceManager.getOrLoadAsset(std::string(defines::render_info::TOWN_ASSET_PATH));
                 break;
 
             case Market::TYPE :
-                texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::MARKET_ASSET_PATH));
+                texture = resourceManager.getOrLoadAsset(std::string(defines::render_info::MARKET_ASSET_PATH));
                 break;
 
             case Storage::TYPE :
-                texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::STORAGE_ASSET_PATH));
+                texture = resourceManager.getOrLoadAsset(std::string(defines::render_info::STORAGE_ASSET_PATH));
                 break;
 
             default :
-                texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::NODE_ASSET_PATH));
+                texture = resourceManager.getOrLoadAsset(std::string(defines::render_info::NODE_ASSET_PATH));
                 break;
         }
 
@@ -84,7 +83,7 @@ void Renderer::renderTrains(const std::vector<Train*> &trains) {
 
             sf::Sprite s;
             sf::Texture* texture;
-            texture = assetManager_.getOrLoadAsset(std::string(defines::render_info::TRAIN_ASSET_PATH));
+            texture = resourceManager.getOrLoadAsset(std::string(defines::render_info::TRAIN_ASSET_PATH));
             s = sf::Sprite(*texture);
             s.setOrigin((float) texture->getSize().x/2, (float) texture->getSize().y/2);
             s.scale((float) TRAIN_SIZE_ / texture->getSize().x,
@@ -97,15 +96,48 @@ void Renderer::renderTrains(const std::vector<Train*> &trains) {
     }
 }
 
+void Renderer::renderTownsInfo(const std::vector<Node*>& g) {
+
+    float scale = 0.2f;
+    sf::Text townText;
+    townText.setFont(*resourceManager.getOrLoadFont(std::string(defines::render_info::FONT_PATH)));
+    townText.setCharacterSize(16);
+    townText.setFillColor(sf::Color::Blue);
+    townText.scale(sf::Vector2f(scale, scale));
+
+    for (auto* node : g) {
+        if (node->getType() == Town::TYPE) {
+            Town* town = static_cast<Town *>(node);
+            int population = town->getPopulation();
+            int products = town->getProduct();
+            int armor = town->getArmor();
+            std::string info = "Population: " + std::to_string(population)
+                    + "\n Products: " + std::to_string(products)
+                    + "\n Armor: " + std::to_string(armor);
+            townText.setString(info);
+            sf::FloatRect textRect = townText.getLocalBounds();
+            townText.setOrigin(textRect.left + textRect.width/2.0f,
+                           textRect.top  + textRect.height/2.0f);
+            townText.setPosition(node->getCoordinates().x,
+                                    node->getCoordinates().y);
+
+            window_->draw(townText);
+        }
+    }
+}
+
+
 void Renderer::renderDebugInfo(const std::vector<Node*>& g) {
+    float scale = 0.25f;
     sf::Text nodeIdxText;
-    nodeIdxText.setFont(font_);
+    nodeIdxText.setFont(*resourceManager.getOrLoadFont(std::string(defines::render_info::FONT_PATH)));
     nodeIdxText.setCharacterSize(10);
     nodeIdxText.setFillColor(sf::Color::Red);
+    nodeIdxText.scale(sf::Vector2f(scale, scale));
 
     for (const auto* node : g) {
         nodeIdxText.setPosition(node->getCoordinates().x - NODE_SIZE_/2,
-                                node->getCoordinates().y - nodeIdxText.getCharacterSize());
+                                node->getCoordinates().y - NODE_SIZE_/2 - nodeIdxText.getCharacterSize()*scale);
         nodeIdxText.setString(std::to_string(node->getPointIdx()));
 
         window_->draw(nodeIdxText);

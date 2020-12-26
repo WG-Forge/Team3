@@ -24,6 +24,8 @@ namespace defines {
                 "resources/assets/storage.png";
         constexpr std::string_view TRAIN_ASSET_PATH =
                 "resources/assets/train.png";
+        constexpr std::string_view FONT_PATH =
+                "resources/fonts/Minuscule6ital.otf";
     }
 
     namespace event_info {
