@@ -61,9 +61,9 @@ void Observer::startGame(GameMapConfig config) {
 
             if (e.type == sf::Event::MouseWheelMoved) {
                 if (e.mouseWheel.delta > 0) {
-                    renderAgent.getCamera()->zoomOut(e.mouseWheel.x, e.mouseWheel.y, window.get());
+                    renderAgent.getCamera()->zoomOut(e.mouseWheel.x, e.mouseWheel.y, window);
                 } else if (e.mouseWheel.delta < 0) {
-                    renderAgent.getCamera()->zoomIn(e.mouseWheel.x, e.mouseWheel.y, window.get());
+                    renderAgent.getCamera()->zoomIn(e.mouseWheel.x, e.mouseWheel.y, window);
                 }
             }
         }
