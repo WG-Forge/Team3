@@ -36,7 +36,7 @@ set(SOURCES
         src/render-components/Configuration.cpp src/render-components/Configuration.h
         src/render-components/Camera.cpp src/render-components/Camera.h
         src/render-components/Renderer.cpp src/render-components/Renderer.h
-        src/render-components/AssetManager.cpp src/render-components/AssetManager.h
+        src/render-components/ResourceManager.cpp src/render-components/ResourceManager.h
         src/render-components/GameMapConfig.cpp src/render-components/GameMapConfig.h
         src/agents/RenderAgent.cpp src/agents/RenderAgent.h
         src/agents/TrainsAgent.cpp src/agents/TrainsAgent.h
