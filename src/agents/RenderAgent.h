@@ -9,7 +9,7 @@
 class RenderAgent {
 private:
     Configuration config_;
-    std::shared_ptr<sf::RenderWindow> window_;
+    std::unique_ptr<sf::RenderWindow> window_;
     Renderer renderer_;
     std::unique_ptr<Camera> camera_;
 public:
@@ -19,5 +19,5 @@ public:
     Renderer& getRenderer();
     std::unique_ptr<Camera>& getCamera();
 
-    std::shared_ptr<sf::RenderWindow>& createWindow();
+    sf::RenderWindow* createWindow();
 };
