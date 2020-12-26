@@ -26,6 +26,7 @@ public:
     void renderEdges(const std::vector<Node*>& g);
     void renderNodes(const std::vector<Node*>& g);
     void renderTrains(const std::vector<Train*>& trains);
+    void renderTownsInfo(const std::vector<Node*>& g);
     void render(const std::vector<Node*>& g, const std::vector<Train*>& trains);
     void renderDebugInfo(const std::vector<Node*>& g);
 };

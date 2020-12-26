@@ -7,8 +7,8 @@ void Renderer::render(const std::vector<Node*>& g, const std::vector<Train*> &tr
     renderEdges(g);
     renderNodes(g);
     renderTrains(trains);
-    //renderHometownInfo(g);
-    renderDebugInfo(g);
+    renderTownsInfo(g);
+    //renderDebugInfo(g);
 }
 
 void Renderer::renderEdges(const std::vector<Node*>& g) {
@@ -95,6 +95,37 @@ void Renderer::renderTrains(const std::vector<Train*> &trains) {
         //}
     }
 }
+
+void Renderer::renderTownsInfo(const std::vector<Node*>& g) {
+
+    float scale = 0.2f;
+    sf::Text townText;
+    townText.setFont(*resourceManager.getOrLoadFont(std::string(defines::render_info::FONT_PATH)));
+    townText.setCharacterSize(16);
+    townText.setFillColor(sf::Color::Blue);
+    townText.scale(sf::Vector2f(scale, scale));
+
+    for (auto* node : g) {
+        if (node->getType() == Town::TYPE) {
+            Town* town = static_cast<Town *>(node);
+            int population = town->getPopulation();
+            int products = town->getProduct();
+            int armor = town->getArmor();
+            std::string info = "Population: " + std::to_string(population)
+                    + "\n Products: " + std::to_string(products)
+                    + "\n Armor: " + std::to_string(armor);
+            townText.setString(info);
+            sf::FloatRect textRect = townText.getLocalBounds();
+            townText.setOrigin(textRect.left + textRect.width/2.0f,
+                           textRect.top  + textRect.height/2.0f);
+            townText.setPosition(node->getCoordinates().x,
+                                    node->getCoordinates().y);
+
+            window_->draw(townText);
+        }
+    }
+}
+
 
 void Renderer::renderDebugInfo(const std::vector<Node*>& g) {
     float scale = 0.25f;
