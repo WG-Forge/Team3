@@ -97,7 +97,7 @@ void Renderer::renderTrains(const std::vector<Train*> &trains) {
 }
 
 void Renderer::renderDebugInfo(const std::vector<Node*>& g) {
-    float scale = 0.3f;
+    float scale = 0.25f;
     sf::Text nodeIdxText;
     nodeIdxText.setFont(*resourceManager.getOrLoadFont(std::string(defines::render_info::FONT_PATH)));
     nodeIdxText.setCharacterSize(10);
