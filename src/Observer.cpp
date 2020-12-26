@@ -72,7 +72,7 @@ void Observer::startGame(GameMapConfig config) {
         while (lag >= MS_PER_UPDATE)
         {
             bool isNewTurn = update();
-            lag -= MS_PER_UPDATE;
+            lag = 0;
             if (isNewTurn) {
                 moveTrains();
             }
@@ -248,6 +248,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                         hometown->setArmor(readPost["armor"].asUInt());
                         hometown->setPopulation(readPost["population"].asUInt());
                     } else {
+                        hometownIdx = pointIdx;
                         graphAgent_.graph_.push_back(new Hometown(pointIdx, postIdx,
                                                                   playerIdx,
                                                                   readPost["next_level_price"].asUInt(),
@@ -260,9 +261,9 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                                                                   readPost["armor"].asUInt(),
                                                                   readPost["name"].asCString(),
                                                                   true));
-                        hometown = static_cast<Hometown*>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
+                        hometown = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.graph_.size() - 1]);
                     }
-
+                    
                     break;
                 }
 
@@ -409,7 +410,8 @@ bool Observer::update() {
 
 void Observer::moveTrains() {
     TrainMovement movement = moveAgent_.move(graphAgent_.getGraph(),
-                                             graphAgent_.pointIdxCompression_,
-                                             trainsAgent_.getAllTrains()[0]);
+                  graphAgent_.pointIdxCompression_,
+                  trainsAgent_.getAllTrains()[0],
+                  static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]));
     moveAction_(movement.lineIdx, movement.speed, movement.trainIdx);
 }
