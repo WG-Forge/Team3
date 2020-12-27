@@ -45,10 +45,10 @@ private:
     uint32_t hometownIdx;
 
     Response loginAction_(const std::string& playerName,
-                          const std::string& password = "",
-                          const std::string& gameName = "",
-                          int32_t turnsNumber = -1,
-                          uint32_t playersNumber = 1);
+                          const std::string& password,
+                          const std::string& gameName,
+                          int32_t turnsNumber,
+                          uint32_t playersNumber);
     Response logoutAction_();
     Response playerAction_();
     Response mapAction_(uint32_t layerNumber);
@@ -67,7 +67,11 @@ private:
     void upgrade(Hometown* home);
 
 public:
-    GameMapConfig launchGame(std::string gameName = "", int turnsNumber = -1, int playersNumber = 1);
+    GameMapConfig launchGame(const std::string& playerName,
+                             const std::string& password = "",
+                             const std::string& gameName = "",
+                             int32_t turnsNumber = -1,
+                             uint32_t playersNumber = 1);
     void startGame(GameMapConfig config);
     void endGame();
 };

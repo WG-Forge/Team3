@@ -17,16 +17,15 @@ uint32_t Observer::getParasitesCount() const {
     return parasitesCount_;
 }
 
-GameMapConfig Observer::launchGame(std::string gameName, int turnsNumber, int playersNumber) {
-    Response loginData;
-    if (gameName.empty()) {
-        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                                      std::string(defines::player_info::PASSWORD.data()));
-    } else {
-        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                                      std::string(defines::player_info::PASSWORD.data()),
-                                      gameName, turnsNumber, playersNumber);
-    }
+GameMapConfig Observer::launchGame(const std::string& playerName,
+                                   const std::string& password,
+                                   const std::string& gameName,
+                                   int32_t turnsNumber,
+                                   uint32_t playersNumber) {
+    auto loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
+                             std::string(defines::player_info::PASSWORD.data()),
+                             gameName, turnsNumber, playersNumber);
+
     auto layer0 = mapAction_(0);
     auto layer1 = mapAction_(1);
     auto layer10 = mapAction_(10);
@@ -187,13 +186,18 @@ Response Observer::upgradeAction_(std::vector<int32_t> posts, std::vector<int32_
     for (auto post : posts) {
         postsStr += std::to_string(post)+",";
     }
-    postsStr.pop_back();
+
+    if (!postsStr.empty()) {
+        postsStr.pop_back();
+    }
 
     std::string trainsStr = "";
     for (auto train : trains) {
         trainsStr += std::to_string(train)+",";
     }
-    trainsStr.pop_back();
+    if (!trainsStr.empty()) {
+        trainsStr.pop_back();
+    }
 
     request.data = std::string("{\"posts\":[").append(postsStr).append(
             "],\"trains\":[").append(trainsStr).append("]}");
