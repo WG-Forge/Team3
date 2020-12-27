@@ -19,9 +19,19 @@ struct TrainMovement {
     TrainMovement(const Edge* line, int32_t speed, uint32_t newPosition, uint32_t trainIdx);
 };
 
+enum Strategy {
+    STORAGE_START,
+    STORAGE_IN_PROC,
+    MARKET_PREPARE,
+    MARKET
+};
+
 class MoveAgent {
 private:
     const int32_t INF = INT32_MAX;
+    const int numberOfTrains = 4;
+    const int marketCycleLen = 54;
+    const int maxRefugeesCount = 16;
     const std::vector<int> M1 {57, 58, 59, 60, 70, 80, 90, 89, 88, 87, 77, 67};
     const std::vector<int> M2 {66, 65, 64, 63, 73, 83, 93, 94, 95, 96, 86, 76};
     const std::vector<int> M3 {147, 148, 149, 150, 140, 130 ,120, 119, 118, 117, 127, 137};
@@ -34,17 +44,23 @@ private:
     const std::vector<int> S4 {156, 155, 154, 153, 152, 142, 132, 122, 112, 113, 114, 115, 116, 126, 136, 146};
     const std::vector< std::vector<int> > storageCycles {S1, S2, S3, S4};
 
+    std::map<uint32_t, Strategy> trainStrategies;
     int getNextIndex(int currentIndex, int vectorSize);
 
     Node* getNextNodeCycles(std::vector<Node*>& graph,
                             const std::map<int32_t, uint32_t>& pointIdxCompression,
                               Train* train, int32_t buildingType, uint32_t homeIdx);
     TrainMovement calcMovement(Train* train, Node* nextNode);
-
+    void changeStrategy(Train* train, Hometown* home, uint32_t refugeesCount);
+    uint32_t getBuildingType(Strategy strategy);
+    bool isAbleToKeepSettlers(Hometown* home, uint32_t refugeesCount);
+    bool isNextHome(Hometown* home, Train* train, TrainMovement movement);
+    bool canEnterHomeTown(Hometown* home, Train* train, TrainMovement movement);
+    bool isAnyoneStillOnArmor(Hometown* home);
 public:
     std::vector<TrainMovement> moveAll(std::vector<Node*>& graph,
                  const std::map<int32_t, uint32_t>& pointIdxCompression,
-                 Hometown* home);
+                 Hometown* home, uint32_t refugeesCount);
 
     TrainMovement move(std::vector<Node*>& graph,
                        const std::map<int32_t, uint32_t>& pointIdxCompression,
@@ -52,5 +68,8 @@ public:
                        uint32_t building,
                        Hometown* home);
 
-    bool checkForSelfTrainsCollision(TrainMovement movement, Hometown* home, Train* currentTrain);
+    bool isSelfTrainsCollisionOccurs(TrainMovement movement, Hometown* home, Train* currentTrain);
+    bool isTownOverProduct(TrainMovement movement, Hometown* home, Train* currentTrain);
+    bool isSafeToLeaveNode(TrainMovement movement, Hometown* home, Train* currentTrain);
+
 };

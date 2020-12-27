@@ -41,7 +41,8 @@ set(SOURCES
         src/agents/TrainsAgent.cpp src/agents/TrainsAgent.h
         src/agents/MoveAgent.cpp src/agents/MoveAgent.h
         src/agents/GraphAgent.cpp src/agents/GraphAgent.h
-        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h)
+        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h
+        src/agents/UpgradeAgent.cpp src/agents/UpgradeAgent.h)
 
 if(WIN32)
     set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp)

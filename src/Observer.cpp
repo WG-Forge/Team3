@@ -93,6 +93,7 @@ void Observer::startGame(GameMapConfig config) {
             lag = 0;
             if (isNewTurn) {
                 moveTrains();
+                upgrade(static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]));
             }
         }
 
@@ -385,7 +386,6 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                             break;
                     }
                 }
-
                 lastTick = events[0]["tick"].asUInt();
             }
         }
@@ -421,6 +421,7 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
             train->setFuel(readTrain["fuel"].asUInt());
             train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
             train->setGoods(readTrain["goods"].asUInt());
+            train->setGoodsType(static_cast<Train::GoodsType>(readTrain["goods_type"].asUInt()));
             train->upgrade(readTrain["level"].asUInt(),
                            readTrain["next_level_price"].asUInt(),
                            readTrain["goods_capacity"].asUInt(),
@@ -485,8 +486,14 @@ void Observer::moveTrains() {
     Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
     std::vector<TrainMovement> movements = moveAgent_.moveAll(graphAgent_.getGraph(),
                                              graphAgent_.pointIdxCompression_,
-                                             home);
+                                             home, refugeesCount_);
     for (auto movement : movements) {
         moveAction_(movement.line->getLineIdx(), movement.speed, movement.trainIdx);
     }
+}
+
+void Observer::upgrade(Hometown* home) {
+    std::vector<int32_t> trainUpgrades
+                    = upgradeAgent_.upgradeTrains(home, hijackersCount_);
+    upgradeAction_(std::vector<int32_t>{}, trainUpgrades);
 }

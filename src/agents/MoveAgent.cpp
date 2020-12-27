@@ -8,7 +8,10 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph,
     Node* newNode = getNextNodeCycles(graph, pointIdxCompression, train,
                          building, home->getPointIdx());
     TrainMovement movement = calcMovement(train, newNode);
-    if (checkForSelfTrainsCollision(movement, home, train)) {
+    if (!isSelfTrainsCollisionOccurs(movement, home, train)
+        && !isTownOverProduct(movement, home, train)
+        && isSafeToLeaveNode(movement, home, train)
+        && canEnterHomeTown(home, train, movement)) {
         return movement;
     } else {
         return TrainMovement(train->getEdge(), 0, train->getPosition(), train->getIdx());
@@ -61,7 +64,7 @@ TrainMovement MoveAgent::calcMovement(Train *train, Node* nextNode) {
     return TrainMovement(movementEdge, speed, newPosition, train->getIdx());
 }
 
-bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
+bool MoveAgent::isSelfTrainsCollisionOccurs(TrainMovement movement,
                                             Hometown* home,
                                             Train* currentTrain) {
     Node* potentialCollisionNode;
@@ -76,38 +79,35 @@ bool MoveAgent::checkForSelfTrainsCollision(TrainMovement movement,
                         || (potentialCollisionNode->getPointIdx()
                             == movement.line->getSecondNode()->getPointIdx()
                             && movement.newPosition == movement.line->getLength())) {
-                        return false;
+                        return true;
                     }
                 }
             } else {
                 if (movement.line->getLineIdx() == train->getLineIdx()
                     && movement.newPosition == train->getPosition()) {
-                    return false;
+                    return true;
                 }
             }
         }
     }
-    return true;
+    return false;
 }
 
 std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
                         const std::map<int32_t, uint32_t>& pointIdxCompression,
-                        Hometown* home) {
+                        Hometown* home, uint32_t refugeesCount) {
     std::map<uint32_t, uint32_t> currentPositions;
     std::map<uint32_t, const Edge*> currentLines;
 
     std::vector<TrainMovement> movements;
     uint32_t building;
-    for (int i = 0; i < 3; i++) {
-        Train* train = home->getHometownTrains()[i];
+    for (auto train : home->getHometownTrains()) {
         currentPositions.insert(std::make_pair(train->getIdx(), train->getPosition()));
         currentLines.insert(std::make_pair(train->getIdx(), train->getEdge()));
 
-        if (i == 0) {
-            building = 3;
-        } else {
-            building = 2;
-        }
+        changeStrategy(train, home, refugeesCount);
+        building = getBuildingType(trainStrategies[train->getIdx()]);
+
         TrainMovement movement = move(graph, pointIdxCompression,
                                       train, building, home);
         movements.push_back(movement);
@@ -116,8 +116,7 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
     }
 
     // return back to positions
-    for (int i = 0; i < 3; i++) {
-        Train* train = home->getHometownTrains()[i];
+    for (auto train : home->getHometownTrains()) {
         train->setPosition(currentPositions.at(train->getIdx()));
         train->setAttachedEdge(const_cast<Edge *>(currentLines.at(train->getIdx())));
     }
@@ -176,6 +175,124 @@ int MoveAgent::getNextIndex(int currentIndex, int vectorSize) {
         nextPosition = 0;
     }
     return nextPosition;
+}
+
+bool MoveAgent::canEnterHomeTown(Hometown* home, Train* train, TrainMovement movement) {
+    bool canEnterHomeTown = true;
+    if (trainStrategies[train->getIdx()] == MARKET_PREPARE
+        && isNextHome(home, train, movement)) {
+        canEnterHomeTown = false;
+    }
+    return canEnterHomeTown;
+}
+
+bool MoveAgent::isNextHome(Hometown* home, Train* train, TrainMovement movement) {
+    int32_t firstNode = train->getEdge()->getFirstNode()->getPointIdx();
+    int32_t secondNode = train->getEdge()->getSecondNode()->getPointIdx();
+    bool isNextHome = (firstNode == home->getPointIdx()
+                       && movement.newPosition == 0
+                       && movement.speed == -1)
+                      || (secondNode == home->getPointIdx()
+                          && movement.newPosition == movement.line->getLength()
+                          && movement.speed == 1);
+    return isNextHome;
+}
+
+bool MoveAgent::isTownOverProduct(TrainMovement movement, Hometown *home, Train *currentTrain) {
+    if (isNextHome(home, currentTrain, movement)
+            && currentTrain->getGoodsType() == Train::GoodsType::PRODUCTS) {
+        int freeSpace = home->getProductCapacity() - home->getProduct() + home->getPopulation();
+        return freeSpace <= currentTrain->getGoods();
+    } else {
+        return false;
+    }
+}
+
+bool MoveAgent::isSafeToLeaveNode(TrainMovement movement, Hometown *home, Train *currentTrain) {
+    Node* curNode = TrainsAgent::getTrainNode(currentTrain);
+    if (curNode) {
+        for (auto train : home->getHometownTrains()) {
+            if ((TrainsAgent::getTrainNode(train) == nullptr
+                        || TrainsAgent::getTrainNode(train)->getPointIdx() != curNode->getPointIdx())
+                && train->getIdx() != currentTrain->getIdx()
+                && train->getLineIdx() == movement.line->getLineIdx()) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void MoveAgent::changeStrategy(Train* currentTrain, Hometown* home, uint32_t refugeesCount) {
+    if (trainStrategies.empty()) {
+        for (auto train : home->getHometownTrains()) {
+            trainStrategies.insert(std::make_pair(train->getIdx(), STORAGE_START));
+        }
+    }
+
+    Node* curNode = TrainsAgent::getTrainNode(currentTrain);
+    switch (trainStrategies.at(currentTrain->getIdx())) {
+        case STORAGE_START:
+            if (curNode == nullptr || curNode->getPointIdx() != home->getPointIdx()) {
+                trainStrategies[currentTrain->getIdx()] = STORAGE_IN_PROC;
+            }
+            break;
+        case STORAGE_IN_PROC:
+            if (curNode && curNode->getPointIdx() == home->getPointIdx()) {
+                trainStrategies[currentTrain->getIdx()] = MARKET_PREPARE;
+            }
+            break;
+        case MARKET_PREPARE:
+            if (isAbleToKeepSettlers(home, refugeesCount)
+                    || isAnyoneStillOnArmor(home)) {
+                trainStrategies[currentTrain->getIdx()] = MARKET;
+            }
+            break;
+        case MARKET:
+            if (!isAbleToKeepSettlers(home, refugeesCount)
+                    && !isAnyoneStillOnArmor(home)) {
+                trainStrategies[currentTrain->getIdx()] = MARKET_PREPARE;
+            }
+            break;
+    }
+}
+
+uint32_t MoveAgent::getBuildingType(Strategy strategy) {
+    uint32_t building;
+    switch (strategy) {
+        case STORAGE_START:
+            building = 3;
+            break;
+        case STORAGE_IN_PROC:
+            building = 3;
+            break;
+        case MARKET_PREPARE:
+            building = 2;
+            break;
+        case MARKET:
+            building = 2;
+            break;
+    }
+    return building;
+}
+
+bool MoveAgent::isAbleToKeepSettlers(Hometown *home, uint32_t refugeesCount) {
+    float totalCapacity = 0;
+    for (auto train : home->getHometownTrains()) {
+        totalCapacity += train->getGoodsCapacity();
+    }
+    float maxPopulation = totalCapacity / marketCycleLen;
+    int settlersEndGame = home->getPopulation() + (maxRefugeesCount - refugeesCount);
+    return settlersEndGame < maxPopulation;
+}
+
+bool MoveAgent::isAnyoneStillOnArmor(Hometown *home) {
+    for (auto strategy : trainStrategies) {
+        if (strategy.second == STORAGE_START || strategy.second == STORAGE_IN_PROC) {
+            return true;
+        }
+    }
+    return false;
 }
 
 TrainMovement::TrainMovement(const Edge* line, int32_t speed, uint32_t newPos, uint32_t trainIdx)

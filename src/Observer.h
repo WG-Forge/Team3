@@ -9,6 +9,7 @@
 #include <ServerConnectorAgent.h>
 #include <TrainsAgent.h>
 #include <MoveAgent.h>
+#include <UpgradeAgent.h>
 #include <RenderAgent.h>
 
 #include <chrono>
@@ -37,6 +38,7 @@ private:
     std::vector<Player> players_; //first element is for our player
     GraphAgent graphAgent_;
     TrainsAgent trainsAgent_;
+    UpgradeAgent upgradeAgent_;
     ServerConnectorAgent serverConnectorAgent_;
     MoveAgent moveAgent_;
     JSONReader jsonParser_;
@@ -62,6 +64,7 @@ private:
 
     bool update();
     void moveTrains();
+    void upgrade(Hometown* home);
 
 public:
     GameMapConfig launchGame(std::string gameName = "", int turnsNumber = -1, int playersNumber = 1);
