@@ -56,6 +56,7 @@ private:
     bool isAbleToKeepSettlers(Hometown* home, uint32_t refugeesCount);
     bool isNextHome(Hometown* home, Train* train, TrainMovement movement);
     bool canEnterHomeTown(Hometown* home, Train* train, TrainMovement movement);
+    bool isAnyoneStillOnArmor(Hometown* home);
 public:
     std::vector<TrainMovement> moveAll(std::vector<Node*>& graph,
                  const std::map<int32_t, uint32_t>& pointIdxCompression,
