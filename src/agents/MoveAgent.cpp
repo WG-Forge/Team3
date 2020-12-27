@@ -4,13 +4,12 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph,
                               const std::map<int32_t, uint32_t>& pointIdxCompression,
                               Train* train,
                               uint32_t building,
-                              Hometown* home,
-                              uint32_t refugeesCount) {
+                              Hometown* home) {
     Node* newNode = getNextNodeCycles(graph, pointIdxCompression, train,
                          building, home->getPointIdx());
     TrainMovement movement = calcMovement(train, newNode);
     if (!isSelfTrainsCollisionOccurs(movement, home, train)
-        && (!isTownOverProduct(movement, home, train) || (isAnyoneStillOnArmor(home) && !isAbleToKeepSettlers(home, refugeesCount)))
+        && !isTownOverProduct(movement, home, train)
         && isSafeToLeaveNode(movement, home, train)
         && canEnterHomeTown(home, train, movement)) {
         return movement;
@@ -111,7 +110,7 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
         building = getBuildingType(trainStrategies[train->getIdx()]);
 
         TrainMovement movement = move(graph, pointIdxCompression,
-                                      train, building, home, refugeesCount);
+                                      train, building, home);
         movements.push_back(movement);
         train->setPosition(movement.newPosition);
         train->setAttachedEdge(const_cast<Edge *>(movement.line));

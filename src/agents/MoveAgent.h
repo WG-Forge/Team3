@@ -66,8 +66,7 @@ public:
                        const std::map<int32_t, uint32_t>& pointIdxCompression,
                        Train* train,
                        uint32_t building,
-                       Hometown* home,
-                       uint32_t refugeesCount);
+                       Hometown* home);
 
     bool isSelfTrainsCollisionOccurs(TrainMovement movement, Hometown* home, Train* currentTrain);
     bool isTownOverProduct(TrainMovement movement, Hometown* home, Train* currentTrain);

@@ -91,8 +91,11 @@ void Observer::startGame(GameMapConfig config) {
             bool isNewTurn = update();
             lag = 0;
             if (isNewTurn) {
-                moveTrains();
-                upgrade(static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]));
+                Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
+                if (trainsAgent_.getAllTrains()[0]->getLevel() > 1) {
+                    moveTrains();
+                }
+                upgrade(home);
             }
         }
 
