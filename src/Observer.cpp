@@ -22,9 +22,10 @@ GameMapConfig Observer::launchGame(const std::string& playerName,
                                    const std::string& gameName,
                                    int32_t turnsNumber,
                                    uint32_t playersNumber) {
-    auto loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                             std::string(defines::player_info::PASSWORD.data()),
-                             gameName, turnsNumber, playersNumber);
+    auto loginData = loginAction_(
+            std::string(defines::player_info::PLAYER_NAME.data()),
+            std::string(defines::player_info::PASSWORD.data()),
+            gameName, turnsNumber, playersNumber);
 
     auto layer0 = mapAction_(0);
     auto layer1 = mapAction_(1);
@@ -92,10 +93,11 @@ void Observer::startGame(GameMapConfig config) {
             lag = 0;
             if (isNewTurn) {
                 Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
+                upgrade(home);
+
                 if (trainsAgent_.getAllTrains()[0]->getLevel() > 1) {
                     moveTrains();
                 }
-                upgrade(home);
             }
         }
 
@@ -373,7 +375,9 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
 
         auto events = readPost["events"];
 
-        if (!events.empty()) {
+        if (!events.empty()
+                && readPost["type"].asUInt() == Town::TYPE
+                && playerIdx == players_[0].getIdx()) {
             if (events[0]["tick"].asUInt() != lastTick) {
                 for (uint32_t i = 0; i < events.size(); ++i) {
                     switch (events[i]["type"].asUInt()) {
