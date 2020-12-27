@@ -8,7 +8,6 @@ class UpgradeAgent {
 private:
     const int maxHijackers = 19;
     const int secondLevelPrice = 60;
-    std::vector<int32_t> firstUpgrade(Hometown* home);
     bool isFirstUpgradeMade;
 public:
     UpgradeAgent();
