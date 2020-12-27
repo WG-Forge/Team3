@@ -4,12 +4,13 @@ TrainMovement MoveAgent::move(std::vector<Node*>& graph,
                               const std::map<int32_t, uint32_t>& pointIdxCompression,
                               Train* train,
                               uint32_t building,
-                              Hometown* home) {
+                              Hometown* home,
+                              uint32_t refugeesCount) {
     Node* newNode = getNextNodeCycles(graph, pointIdxCompression, train,
                          building, home->getPointIdx());
     TrainMovement movement = calcMovement(train, newNode);
     if (!isSelfTrainsCollisionOccurs(movement, home, train)
-        && !isTownOverProduct(movement, home, train)
+        && (!isTownOverProduct(movement, home, train) || (isAnyoneStillOnArmor(home) && !isAbleToKeepSettlers(home, refugeesCount)))
         && isSafeToLeaveNode(movement, home, train)
         && canEnterHomeTown(home, train, movement)) {
         return movement;
@@ -101,6 +102,7 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
 
     std::vector<TrainMovement> movements;
     uint32_t building;
+
     for (auto train : home->getHometownTrains()) {
         currentPositions.insert(std::make_pair(train->getIdx(), train->getPosition()));
         currentLines.insert(std::make_pair(train->getIdx(), train->getEdge()));
@@ -109,7 +111,7 @@ std::vector<TrainMovement> MoveAgent::moveAll(std::vector<Node*>& graph,
         building = getBuildingType(trainStrategies[train->getIdx()]);
 
         TrainMovement movement = move(graph, pointIdxCompression,
-                                      train, building, home);
+                                      train, building, home, refugeesCount);
         movements.push_back(movement);
         train->setPosition(movement.newPosition);
         train->setAttachedEdge(const_cast<Edge *>(movement.line));
@@ -180,26 +182,24 @@ int MoveAgent::getNextIndex(int currentIndex, int vectorSize) {
 bool MoveAgent::canEnterHomeTown(Hometown* home, Train* train, TrainMovement movement) {
     bool canEnterHomeTown = true;
     if (trainStrategies[train->getIdx()] == MARKET_PREPARE
-        && isNextHome(home, train, movement)) {
+        && isNextHome(home, movement)) {
         canEnterHomeTown = false;
     }
     return canEnterHomeTown;
 }
 
-bool MoveAgent::isNextHome(Hometown* home, Train* train, TrainMovement movement) {
-    int32_t firstNode = train->getEdge()->getFirstNode()->getPointIdx();
-    int32_t secondNode = train->getEdge()->getSecondNode()->getPointIdx();
+bool MoveAgent::isNextHome(Hometown* home, TrainMovement movement) {
+    int32_t firstNode = movement.line->getFirstNode()->getPointIdx();
+    int32_t secondNode = movement.line->getSecondNode()->getPointIdx();
     bool isNextHome = (firstNode == home->getPointIdx()
-                       && movement.newPosition == 0
-                       && movement.speed == -1)
+                       && movement.newPosition == 0)
                       || (secondNode == home->getPointIdx()
-                          && movement.newPosition == movement.line->getLength()
-                          && movement.speed == 1);
+                          && movement.newPosition == movement.line->getLength());
     return isNextHome;
 }
 
 bool MoveAgent::isTownOverProduct(TrainMovement movement, Hometown *home, Train *currentTrain) {
-    if (isNextHome(home, currentTrain, movement)
+    if (isNextHome(home, movement)
             && currentTrain->getGoodsType() == Train::GoodsType::PRODUCTS) {
         int freeSpace = home->getProductCapacity() - home->getProduct() + home->getPopulation();
         return freeSpace <= currentTrain->getGoods();
@@ -211,12 +211,30 @@ bool MoveAgent::isTownOverProduct(TrainMovement movement, Hometown *home, Train 
 bool MoveAgent::isSafeToLeaveNode(TrainMovement movement, Hometown *home, Train *currentTrain) {
     Node* curNode = TrainsAgent::getTrainNode(currentTrain);
     if (curNode) {
+        Node* nextNode = curNode->getPointIdx() == movement.line->getFirstNode()->getPointIdx()
+                ? movement.line->getSecondNode()
+                : movement.line->getFirstNode();
+
         for (auto train : home->getHometownTrains()) {
+            // on same line
             if ((TrainsAgent::getTrainNode(train) == nullptr
-                        || TrainsAgent::getTrainNode(train)->getPointIdx() != curNode->getPointIdx())
+                || (TrainsAgent::getTrainNode(train)->getPointIdx() != curNode->getPointIdx()
+                        && TrainsAgent::getTrainNode(train)->getPointIdx() != home->getPointIdx()))
                 && train->getIdx() != currentTrain->getIdx()
                 && train->getLineIdx() == movement.line->getLineIdx()) {
                 return false;
+            }
+
+            // on way to nextNode
+            if (train->getEdge()->getLineIdx() != movement.line->getLineIdx()
+                    && nextNode->getPointIdx() != home->getPointIdx()) {
+                if (train->getEdge()->getFirstNode()->getPointIdx() == nextNode->getPointIdx()
+                    && train->getSpeed() == -1) {
+                    return false;
+                } else if (train->getEdge()->getSecondNode()->getPointIdx() == nextNode->getPointIdx()
+                           && train->getSpeed() == 1) {
+                    return false;
+                }
             }
         }
     }
