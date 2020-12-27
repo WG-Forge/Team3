@@ -54,7 +54,7 @@ private:
     void changeStrategy(Train* train, Hometown* home, uint32_t refugeesCount);
     uint32_t getBuildingType(Strategy strategy);
     bool isAbleToKeepSettlers(Hometown* home, uint32_t refugeesCount);
-    bool isNextHome(Hometown* home, Train* train, TrainMovement movement);
+    bool isNextHome(Hometown* home, TrainMovement movement);
     bool canEnterHomeTown(Hometown* home, Train* train, TrainMovement movement);
     bool isAnyoneStillOnArmor(Hometown* home);
 public:
@@ -66,7 +66,8 @@ public:
                        const std::map<int32_t, uint32_t>& pointIdxCompression,
                        Train* train,
                        uint32_t building,
-                       Hometown* home);
+                       Hometown* home,
+                       uint32_t refugeesCount);
 
     bool isSelfTrainsCollisionOccurs(TrainMovement movement, Hometown* home, Train* currentTrain);
     bool isTownOverProduct(TrainMovement movement, Hometown* home, Train* currentTrain);
