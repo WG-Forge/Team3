@@ -487,7 +487,7 @@ void Observer::moveTrains() {
     Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
     std::vector<TrainMovement> movements = moveAgent_.moveAll(graphAgent_.getGraph(),
                                              graphAgent_.pointIdxCompression_,
-                                             home);
+                                             home, refugeesCount_);
     for (auto movement : movements) {
         moveAction_(movement.line->getLineIdx(), movement.speed, movement.trainIdx);
     }
