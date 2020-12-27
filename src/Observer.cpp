@@ -386,7 +386,6 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                             break;
                     }
                 }
-
                 lastTick = events[0]["tick"].asUInt();
             }
         }
