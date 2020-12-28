@@ -9,6 +9,7 @@
 #include <ServerConnectorAgent.h>
 #include <TrainsAgent.h>
 #include <MoveAgent.h>
+#include <UpgradeAgent.h>
 #include <RenderAgent.h>
 
 #include <chrono>
@@ -21,25 +22,38 @@
 
 class Observer {
 private:
+    uint32_t refugeesCount_ = 0;
+    uint32_t hijackersCount_ = 0;
+    uint32_t parasitesCount_ = 0;
+
+public:
+    //maybe would be deleted
+    uint32_t getRefugeesCount() const;
+    uint32_t getHijackersCount() const;
+    uint32_t getParasitesCount() const;
+
+private:
     const int MS_PER_UPDATE = 300;
     std::string currentTurnLayer1;
     std::vector<Player> players_; //first element is for our player
     GraphAgent graphAgent_;
     TrainsAgent trainsAgent_;
+    UpgradeAgent upgradeAgent_;
     ServerConnectorAgent serverConnectorAgent_;
     MoveAgent moveAgent_;
     JSONReader jsonParser_;
     uint32_t hometownIdx;
 
     Response loginAction_(const std::string& playerName,
-                          const std::string& password = "",
-                          const std::string& gameName = "",
-                          int32_t turnsNumber = -1,
-                          uint32_t playersNumber = 1);
+                          const std::string& password,
+                          const std::string& gameName,
+                          int32_t turnsNumber,
+                          uint32_t playersNumber);
     Response logoutAction_();
     Response playerAction_();
     Response mapAction_(uint32_t layerNumber);
     Response moveAction_(int32_t lineIdx, int32_t speed, int32_t trainIdx);
+    Response upgradeAction_(std::vector<int32_t> posts, std::vector<int32_t> trains);
     Response turnAction_();
     Response gamesAction_();
 
@@ -50,9 +64,14 @@ private:
 
     bool update();
     void moveTrains();
+    void upgrade(Hometown* home);
 
 public:
-    GameMapConfig launchGame(std::string gameName = "", int turnsNumber = -1, int playersNumber = 1);
+    GameMapConfig launchGame(const std::string& playerName,
+                             const std::string& password = "",
+                             const std::string& gameName = "",
+                             int32_t turnsNumber = -1,
+                             uint32_t playersNumber = 1);
     void startGame(GameMapConfig config);
     void endGame();
 };

@@ -30,19 +30,19 @@ set(SOURCES
         src/networking-components/JSONReader.cpp src/networking-components/JSONReader.h
         src/game-components/Player.cpp src/game-components/Player.h
         src/game-components/Train.cpp src/game-components/Train.h
-        src/game-components/Event.h
         src/render-components/Point.h
         src/render-components/RotationCalculator.cpp src/render-components/RotationCalculator.h
         src/render-components/Configuration.cpp src/render-components/Configuration.h
         src/render-components/Camera.cpp src/render-components/Camera.h
         src/render-components/Renderer.cpp src/render-components/Renderer.h
-        src/render-components/AssetManager.cpp src/render-components/AssetManager.h
+        src/render-components/ResourceManager.cpp src/render-components/ResourceManager.h
         src/render-components/GameMapConfig.cpp src/render-components/GameMapConfig.h
         src/agents/RenderAgent.cpp src/agents/RenderAgent.h
         src/agents/TrainsAgent.cpp src/agents/TrainsAgent.h
         src/agents/MoveAgent.cpp src/agents/MoveAgent.h
         src/agents/GraphAgent.cpp src/agents/GraphAgent.h
-        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h)
+        src/agents/ServerConnectorAgent.cpp src/agents/ServerConnectorAgent.h
+        src/agents/UpgradeAgent.cpp src/agents/UpgradeAgent.h)
 
 if(WIN32)
     set(WIN32_SOURCES libs/jsoncpp/jsoncpp.cpp)

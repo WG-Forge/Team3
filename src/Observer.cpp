@@ -1,18 +1,32 @@
 #include <Observer.h>
 
-//TODO Remove constructor arguments in agregated classes were possible (after testing different responses from server)
+//TODO Remove constructor arguments in aggregated classes were possible (after testing different responses from server)
 //TODO Add parsing ratings to preserveLayer1Data_(JSON_ROOT_AS_MAP& root)
 
-GameMapConfig Observer::launchGame(std::string gameName, int turnsNumber, int playersNumber) {
-    Response loginData;
-    if (gameName.empty()) {
-        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                                      std::string(defines::player_info::PASSWORD.data()));
-    } else {
-        loginData = loginAction_(std::string(defines::player_info::PLAYER_NAME.data()),
-                                      std::string(defines::player_info::PASSWORD.data()),
-                                      gameName, turnsNumber, playersNumber);
-    }
+using namespace defines::event_info;
+
+uint32_t Observer::getRefugeesCount() const {
+    return refugeesCount_;
+}
+
+uint32_t Observer::getHijackersCount() const {
+    return hijackersCount_;
+}
+
+uint32_t Observer::getParasitesCount() const {
+    return parasitesCount_;
+}
+
+GameMapConfig Observer::launchGame(const std::string& playerName,
+                                   const std::string& password,
+                                   const std::string& gameName,
+                                   int32_t turnsNumber,
+                                   uint32_t playersNumber) {
+    auto loginData = loginAction_(
+            std::string(defines::player_info::PLAYER_NAME.data()),
+            std::string(defines::player_info::PASSWORD.data()),
+            gameName, turnsNumber, playersNumber);
+
     auto layer0 = mapAction_(0);
     auto layer1 = mapAction_(1);
     auto layer10 = mapAction_(10);
@@ -61,9 +75,9 @@ void Observer::startGame(GameMapConfig config) {
 
             if (e.type == sf::Event::MouseWheelMoved) {
                 if (e.mouseWheel.delta > 0) {
-                    renderAgent.getCamera()->zoomOut(e.mouseWheel.x, e.mouseWheel.y, window.get());
+                    renderAgent.getCamera()->zoomOut(e.mouseWheel.x, e.mouseWheel.y, window);
                 } else if (e.mouseWheel.delta < 0) {
-                    renderAgent.getCamera()->zoomIn(e.mouseWheel.x, e.mouseWheel.y, window.get());
+                    renderAgent.getCamera()->zoomIn(e.mouseWheel.x, e.mouseWheel.y, window);
                 }
             }
         }
@@ -78,7 +92,12 @@ void Observer::startGame(GameMapConfig config) {
             bool isNewTurn = update();
             lag = 0;
             if (isNewTurn) {
-                moveTrains();
+                Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
+                upgrade(home);
+
+                if (trainsAgent_.getAllTrains()[0]->getLevel() > 1) {
+                    moveTrains();
+                }
             }
         }
 
@@ -165,7 +184,34 @@ Response Observer::moveAction_(int32_t lineIdx, int32_t speed, int32_t trainIdx)
     return response;
 }
 
-//Response Observer::upgradeAction_(const std::vector<Node*>& posts, container with trains) {}
+Response Observer::upgradeAction_(std::vector<int32_t> posts, std::vector<int32_t> trains) {
+    Request request{Request::UPGRADE};
+
+    std::string postsStr = "";
+    for (auto post : posts) {
+        postsStr += std::to_string(post)+",";
+    }
+
+    if (!postsStr.empty()) {
+        postsStr.pop_back();
+    }
+
+    std::string trainsStr = "";
+    for (auto train : trains) {
+        trainsStr += std::to_string(train)+",";
+    }
+    if (!trainsStr.empty()) {
+        trainsStr.pop_back();
+    }
+
+    request.data = std::string("{\"posts\":[").append(postsStr).append(
+            "],\"trains\":[").append(trainsStr).append("]}");
+    request.dataSize = request.data.size();
+
+    Response response = serverConnectorAgent_.proceedRequest(request);
+
+    return response;
+}
 
 Response Observer::turnAction_() {
     Response response = serverConnectorAgent_.proceedRequest(
@@ -216,6 +262,8 @@ void Observer::preserveLayer0Data_(JSON_OBJECT_AS_MAP& root) {
 }
 
 void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
+    static uint32_t  lastTick = 0;
+
     Town* town = nullptr;
     Hometown* hometown = nullptr;
     Market* market = nullptr;
@@ -324,6 +372,34 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
 
                 break;
         }
+
+        auto events = readPost["events"];
+
+        if (!events.empty()
+                && readPost["type"].asUInt() == Town::TYPE
+                && playerIdx == players_[0].getIdx()) {
+            if (events[0]["tick"].asUInt() != lastTick) {
+                for (uint32_t i = 0; i < events.size(); ++i) {
+                    switch (events[i]["type"].asUInt()) {
+                        case type::REFUGEES_ARRIVAL :
+                            refugeesCount_ += events[i][data_key::REFUGEES_ARRIVAL_KEY.data()].asUInt();
+
+                            break;
+
+                        case type::HIJACKERS_ASSAULT :
+                            hijackersCount_ += events[i][data_key::HIJACKERS_ASSAULT_KEY.data()].asUInt();
+
+                            break;
+
+                        case type::PARASITES_ASSAULT :
+                            parasitesCount_ += events[i][data_key::PARASITES_ASSAULT_KEY.data()].asUInt();
+
+                            break;
+                    }
+                }
+                lastTick = events[0]["tick"].asUInt();
+            }
+        }
     }
 
     for (const auto &edgeCreationHelper : graphAgent_.edgeCreationHelpers_) {
@@ -356,6 +432,11 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
             train->setFuel(readTrain["fuel"].asUInt());
             train->setAttachedEdge(graphAgent_.findEdge(lineIdx));
             train->setGoods(readTrain["goods"].asUInt());
+            train->setGoodsType(static_cast<Train::GoodsType>(readTrain["goods_type"].asUInt()));
+            train->upgrade(readTrain["level"].asUInt(),
+                           readTrain["next_level_price"].asUInt(),
+                           readTrain["goods_capacity"].asUInt(),
+                           readTrain["fuel_capacity"].asUInt());
         } else {
             trainsAgent_.trainIdxCompression_[trainIdx] = trainsAgent_.trains_.size();
 
@@ -416,8 +497,14 @@ void Observer::moveTrains() {
     Hometown* home = static_cast<Hometown *>(graphAgent_.graph_[graphAgent_.pointIdxCompression_.at(hometownIdx)]);
     std::vector<TrainMovement> movements = moveAgent_.moveAll(graphAgent_.getGraph(),
                                              graphAgent_.pointIdxCompression_,
-                                             home);
+                                             home, refugeesCount_);
     for (auto movement : movements) {
         moveAction_(movement.line->getLineIdx(), movement.speed, movement.trainIdx);
     }
+}
+
+void Observer::upgrade(Hometown* home) {
+    std::vector<int32_t> trainUpgrades
+                    = upgradeAgent_.upgradeTrains(home, hijackersCount_);
+    upgradeAction_(std::vector<int32_t>{}, trainUpgrades);
 }
