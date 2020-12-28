@@ -281,13 +281,7 @@ void MoveAgent::changeStrategy(Train* currentTrain, Hometown* home, uint32_t ref
             break;
         case STORAGE_IN_PROC:
             if (curNode && curNode->getPointIdx() == home->getPointIdx()) {
-                if ((currentTrain->getIdx() == home->getHometownTrains()[1]->getIdx()
-                    || currentTrain->getIdx() == home->getHometownTrains()[2]->getIdx())
-                    && home->getLevel() != 3 && home->getArmor() < 150) {
-                    trainStrategies[currentTrain->getIdx()] = STORAGE_START;
-                } else {
-                    trainStrategies[currentTrain->getIdx()] = MARKET_PREPARE;
-                }
+                trainStrategies[currentTrain->getIdx()] = MARKET_PREPARE;
             }
             break;
         case MARKET_PREPARE:
@@ -329,7 +323,7 @@ bool MoveAgent::isAbleToKeepSettlers(Hometown *home, uint32_t refugeesCount) {
     for (auto train : home->getHometownTrains()) {
         totalCapacity += train->getGoodsCapacity();
     }
-    float maxPopulation = totalCapacity / marketCycleLen + 8;
+    float maxPopulation = totalCapacity / marketCycleLen;
     int settlersEndGame = home->getPopulation() + (maxRefugeesCount - refugeesCount);
     return settlersEndGame < maxPopulation;
 }

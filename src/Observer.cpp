@@ -299,11 +299,6 @@ void Observer::preserveLayer1Data_(JSON_OBJECT_AS_MAP& root) {
                         hometown->setProduct(readPost["product"].asUInt());
                         hometown->setArmor(readPost["armor"].asUInt());
                         hometown->setPopulation(readPost["population"].asUInt());
-                        hometown->upgrade(readPost["level"].asUInt(),
-                                          readPost["next_level_price"].asUInt(),
-                                          readPost["population_capacity"].asUInt(),
-                                          readPost["product_capacity"].asUInt(),
-                                          readPost["armor_capacity"].asUInt());
                     } else {
                         hometownIdx = pointIdx;
                         graphAgent_.graph_.push_back(new Hometown(pointIdx, postIdx,
@@ -509,9 +504,6 @@ void Observer::moveTrains() {
 }
 
 void Observer::upgrade(Hometown* home) {
-    std::vector<int32_t> townUpgrade = upgradeAgent_.upgradeTown(home);
-    upgradeAction_(townUpgrade, std::vector<int32_t>{});
-
     std::vector<int32_t> trainUpgrades
                     = upgradeAgent_.upgradeTrains(home, hijackersCount_);
     upgradeAction_(std::vector<int32_t>{}, trainUpgrades);

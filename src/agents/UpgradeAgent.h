@@ -12,7 +12,6 @@ private:
 public:
     UpgradeAgent();
 
-    std::vector<int32_t> upgradeTown(Hometown* home);
     std::vector<int32_t> upgradeTrains(Hometown* home, int hijackersCount);
 };
 
