@@ -45,16 +45,3 @@ std::vector<int32_t> UpgradeAgent::upgradeTrains(Hometown *home, int hijackersCo
 }
 
 UpgradeAgent::UpgradeAgent() : isFirstUpgradeMade(false) {}
-
-std::vector<int32_t> UpgradeAgent::upgradeTown(Hometown *home) {
-    if (home->getLevel() == 1
-        && home->getHometownTrains()[1]->getLevel() == 3
-        && home->getArmor() > 75) {
-        return std::vector<int32_t> {home->getPostIdx()};
-    } else if (home->getLevel() == 2
-        && home->getHometownTrains()[4]->getLevel() >= 2
-           && home->getArmor() > 150) {
-        return std::vector<int32_t> {home->getPostIdx()};
-    }
-    return std::vector<int32_t>();
-}
