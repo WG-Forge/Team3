@@ -55,6 +55,7 @@ private:
     uint32_t getBuildingType(Strategy strategy);
     bool isAbleToKeepSettlers(Hometown* home, uint32_t refugeesCount);
     bool isNextHome(Hometown* home, TrainMovement movement);
+    bool areAnyTrainsBeforeHome(Hometown* home, Train* train, TrainMovement movement);
     bool canEnterHomeTown(Hometown* home, Train* train, TrainMovement movement);
     bool isAnyoneStillOnArmor(Hometown* home);
 public:

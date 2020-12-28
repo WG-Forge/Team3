@@ -197,11 +197,36 @@ bool MoveAgent::isNextHome(Hometown* home, TrainMovement movement) {
     return isNextHome;
 }
 
+bool MoveAgent::areAnyTrainsBeforeHome(Hometown* home, Train* curTrain, TrainMovement movement) {
+
+    for (auto train : home->getHometownTrains()) {
+        if (train->getIdx() != curTrain->getIdx()
+                && (train->getEdge()->getLineIdx() == movement.line->getLineIdx()
+                || (TrainsAgent::getTrainNode(train)
+                && TrainsAgent::getTrainNode(train)->getPointIdx() == home->getPointIdx()))) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool MoveAgent::isTownOverProduct(TrainMovement movement, Hometown *home, Train *currentTrain) {
-    if (isNextHome(home, movement)
+    int32_t firstNode = movement.line->getFirstNode()->getPointIdx();
+    int32_t secondNode = movement.line->getSecondNode()->getPointIdx();
+    bool isNextNodeHome = (firstNode == home->getPointIdx()
+                           && movement.speed == -1)
+                          || (secondNode == home->getPointIdx()
+                              && movement.speed == 1);
+    if (isNextNodeHome && TrainsAgent::getTrainNode(currentTrain)
+            && TrainsAgent::getTrainNode(currentTrain)->getPointIdx() != home->getPointIdx()
             && currentTrain->getGoodsType() == Train::GoodsType::PRODUCTS) {
-        int freeSpace = home->getProductCapacity() - home->getProduct() + home->getPopulation();
-        return freeSpace <= currentTrain->getGoods();
+        if (!areAnyTrainsBeforeHome(home, currentTrain, movement)) {
+            int freeSpace = home->getProductCapacity() - home->getProduct()
+                            + home->getPopulation() * movement.line->getLength();
+            return freeSpace <= currentTrain->getGoods();
+        } else {
+            return true;
+        }
     } else {
         return false;
     }
