@@ -21,9 +21,9 @@ std::unique_ptr<Camera>& RenderAgent::getCamera() {
     return camera_;
 }
 
-std::shared_ptr<sf::RenderWindow>& RenderAgent::createWindow() {
+sf::RenderWindow* RenderAgent::createWindow() {
     window_->create(sf::VideoMode(config_.width, config_.height), config_.title);
     window_->setFramerateLimit(config_.framerateLimit);
 
-    return window_;
+    return window_.get();
 }

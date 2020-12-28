@@ -7,7 +7,7 @@
 class Train {
 public:
     enum GoodsType {
-        NOTHING = 1,
+        NOTHING = 0,
         PRODUCTS = 2,
         ARMOR = 3
     };
