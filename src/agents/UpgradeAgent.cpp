@@ -52,7 +52,7 @@ std::vector<int32_t> UpgradeAgent::upgradeTown(Hometown *home) {
         && home->getArmor() > 75) {
         return std::vector<int32_t> {home->getPostIdx()};
     } else if (home->getLevel() == 2
-        && home->getHometownTrains()[4]->getLevel() >= 2
+        && home->getHometownTrains()[3]->getLevel() >= 2
            && home->getArmor() > 150) {
         return std::vector<int32_t> {home->getPostIdx()};
     }
